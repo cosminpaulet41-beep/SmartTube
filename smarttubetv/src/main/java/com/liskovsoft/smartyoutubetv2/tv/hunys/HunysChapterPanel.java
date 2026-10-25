@@ -91,6 +91,7 @@ public final class HunysChapterPanel {
         }
 
         mPanel.setVisibility(View.VISIBLE);
+        HunysChapters.setPanelOpen(true); // playerul stă 30 s / the player stays 30 s
 
         if (mDimView != null) {
             mDimView.setAlpha(0.35f);
@@ -107,6 +108,7 @@ public final class HunysChapterPanel {
         }
 
         mPanel.setVisibility(View.GONE);
+        HunysChapters.setPanelOpen(false);
 
         if (mDimView != null) {
             mDimView.setAlpha(1f);
@@ -166,6 +168,7 @@ public final class HunysChapterPanel {
                 v.animate().translationY(hasFocus ? -HunysUi.dp(v.getContext(), 4) : 0).setDuration(120).start();
                 if (hasFocus) {
                     mPanel.removeCallbacks(mCheckFocus);
+                    HunysChapters.markPanelActivity();
                     if (mSeekBar != null) {
                         mSeekBar.setHunysHighlight(start, end);
                     }

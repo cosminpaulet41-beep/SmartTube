@@ -31,6 +31,10 @@ public final class HunysChapters {
     private static final List<Runnable> sListeners = new ArrayList<>();
     private static List<Chapter> sChapters = Collections.emptyList();
     private static int sVersion;
+    /** Cât rămân reperele pe ecran fără apăsări / how long the chapter row stays without key presses */
+    public static final long PANEL_HOLD_MS = 30_000;
+    private static boolean sPanelOpen;
+    private static long sPanelActivityMs;
 
     private HunysChapters() {
     }
@@ -72,6 +76,30 @@ public final class HunysChapters {
 
     public static void removeListener(Runnable listener) {
         sListeners.remove(listener);
+    }
+
+    /**
+     * Rândul de repere e deschis; fiecare apăsare în el ține playerul pe ecran încă 30 s.<br/>
+     * The chapter row is open; every key press in it keeps the player visible for another 30 s.
+     */
+    public static void setPanelOpen(boolean open) {
+        sPanelOpen = open;
+        sPanelActivityMs = System.currentTimeMillis();
+    }
+
+    public static void markPanelActivity() {
+        sPanelActivityMs = System.currentTimeMillis();
+    }
+
+    /**
+     * Cât mai trebuie ținut playerul pe ecran (0 = se poate ascunde) / how much longer to keep the player shown (0 = may hide)
+     */
+    public static long getPanelHoldRemainingMs() {
+        if (!sPanelOpen) {
+            return 0;
+        }
+
+        return Math.max(0, sPanelActivityMs + PANEL_HOLD_MS - System.currentTimeMillis());
     }
 
     /**

@@ -18,6 +18,7 @@ import com.liskovsoft.sharedutils.helpers.MessageHelpers;
 import com.liskovsoft.sharedutils.mylogger.Log;
 import com.liskovsoft.sharedutils.rx.RxHelper;
 import com.liskovsoft.smartyoutubetv2.common.R;
+import com.liskovsoft.smartyoutubetv2.common.hunys.HunysChapters;
 import com.liskovsoft.smartyoutubetv2.common.app.models.data.Video;
 import com.liskovsoft.smartyoutubetv2.common.app.models.data.VideoGroup;
 import com.liskovsoft.smartyoutubetv2.common.app.models.playback.BasePlayerController;
@@ -68,6 +69,15 @@ public class PlayerUIController extends BasePlayerController {
     };
     private final Runnable mUiAutoHideHandler = () -> {
         if (getPlayer() == null) {
+            return;
+        }
+
+        // Hunys mod: cât timp sunt deschise reperele, playerul rămâne 30 s de la ultima apăsare
+        // Hunys mod: while the chapter row is open, the player stays 30 s after the last key press
+        long hunysHoldMs = HunysChapters.getPanelHoldRemainingMs();
+        if (hunysHoldMs > 0) {
+            mHandler.removeCallbacks(this.mUiAutoHideHandler);
+            mHandler.postDelayed(this.mUiAutoHideHandler, hunysHoldMs);
             return;
         }
 
