@@ -298,8 +298,8 @@ public final class HunysUi {
     }
 
     /**
-     * Meniuri: elementul cu focus devine o pastilă albă cu text închis (ca în machetă).<br/>
-     * Menus: the focused item becomes a white pill with dark text (like the mockup).
+     * Meniuri: elementul cu focus devine o pastilă în culoarea temei, scrisul rămâne alb (varianta C aleasă).<br/>
+     * Menus: the focused item becomes a theme-colored pill, text stays white (chosen variant C).
      */
     public static void stylePreferenceList(RecyclerView list) {
         if (list == null || !isHunys(list.getContext())) {
@@ -334,7 +334,8 @@ public final class HunysUi {
         Context context = target.getContext();
 
         GradientDrawable pill = new GradientDrawable();
-        pill.setColor(Color.WHITE);
+        // Culoarea temei la ~35%, peste panoul închis / theme color at ~35%, over the dark panel
+        pill.setColor((accent(context) & 0x00FFFFFF) | 0x5A000000);
         pill.setCornerRadius(dp(context, 14));
         StateListDrawable states = new StateListDrawable();
         states.addState(new int[] {android.R.attr.state_focused}, new InsetDrawable(pill, dp(context, 6), dp(context, 2), dp(context, 6), dp(context, 2)));
@@ -346,29 +347,6 @@ public final class HunysUi {
         int bottom = target.getPaddingBottom();
         target.setBackground(states);
         target.setPadding(left, top, right, bottom);
-
-        styleTexts(target);
-    }
-
-    private static void styleTexts(View view) {
-        if (view instanceof TextView) {
-            TextView text = (TextView) view;
-            int normal = text.getCurrentTextColor();
-            // Titlul închis, descrierea gri / dark title, grey description
-            int focused = text.getId() == android.R.id.summary ? 0xFF555555 : 0xFF111111;
-            text.setDuplicateParentStateEnabled(true);
-            text.setTextColor(new ColorStateList(new int[][] {{android.R.attr.state_focused}, {}}, new int[] {focused, normal}));
-        } else if (view instanceof ViewGroup) {
-            ViewGroup group = (ViewGroup) view;
-            for (int i = 0; i < group.getChildCount(); i++) {
-                View child = group.getChildAt(i);
-                if (child instanceof ViewGroup) {
-                    // copiii primesc starea de focus de la părinte / children get the focus state from the parent
-                    ((ViewGroup) child).setDuplicateParentStateEnabled(true);
-                }
-                styleTexts(child);
-            }
-        }
     }
 
     private static View findFocusable(View view) {
@@ -390,6 +368,18 @@ public final class HunysUi {
         }
 
         return null;
+    }
+
+    /**
+     * Contur în jurul cardului selectat (varianta C aleasă), restul cardului rămâne la fel.<br/>
+     * Outline around the selected card (chosen variant C), the rest of the card stays the same.
+     */
+    public static Drawable cardOutline(Context context) {
+        GradientDrawable outline = new GradientDrawable();
+        outline.setColor(Color.TRANSPARENT);
+        outline.setStroke(dp(context, 3), accent(context));
+        outline.setCornerRadius(dp(context, 6));
+        return outline;
     }
 
     /**

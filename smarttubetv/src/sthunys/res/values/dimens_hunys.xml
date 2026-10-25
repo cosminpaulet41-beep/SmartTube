@@ -7,4 +7,10 @@
     <!-- Sugestiile se văd puțin sub butoanele playerului (implicit 28dp) -->
     <!-- Suggestions peek below the player buttons (default 28dp) -->
     <dimen name="lb_playback_controls_padding_bottom">110dp</dimen>
+    <!-- Carduri: titlu și detalii puțin mai mici / cards: slightly smaller title and details -->
+    <dimen name="lb_basic_card_title_text_size">13sp</dimen>
+    <dimen name="lb_basic_card_content_text_size">10.5sp</dimen>
+    <dimen name="lb_basic_card_info_padding_top">5dp</dimen>
+    <dimen name="lb_basic_card_info_padding_bottom">6dp</dimen>
+    <dimen name="lb_basic_card_info_padding_horizontal">9dp</dimen>
 </resources>

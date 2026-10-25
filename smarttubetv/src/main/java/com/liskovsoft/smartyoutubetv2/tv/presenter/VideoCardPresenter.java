@@ -41,6 +41,7 @@ public class VideoCardPresenter extends LongClickPresenter {
     private int mDefaultTextColor = -1;
     private int mSelectedBackgroundColor = -1;
     private int mSelectedTextColor = -1;
+    private boolean mIsHunys;
     private int mCardPreviewType;
     private int mThumbQuality;
     private int mWidth;
@@ -58,6 +59,13 @@ public class VideoCardPresenter extends LongClickPresenter {
                 ContextCompat.getColor(context, Helpers.getThemeAttr(context, R.attr.cardSelectedBackground));
         mSelectedTextColor =
                 ContextCompat.getColor(context, R.color.card_selected_text_grey);
+
+        mIsHunys = HunysUi.isHunys(context);
+        if (mIsHunys) {
+            // Hunys mod: cardul selectat arată ca restul, doar cu contur / selected card looks like the rest, outline only
+            mSelectedBackgroundColor = mDefaultBackgroundColor;
+            mSelectedTextColor = mDefaultTextColor;
+        }
 
         mCardPreviewType = getCardPreviewType(context);
         mThumbQuality = getThumbQuality(context);
@@ -95,6 +103,10 @@ public class VideoCardPresenter extends LongClickPresenter {
     }
 
     private void updateCardBackgroundColor(ComplexImageCardView view, boolean selected) {
+        if (mIsHunys && VERSION.SDK_INT >= 23) {
+            view.setForeground(selected ? HunysUi.cardOutline(view.getContext()) : null);
+        }
+
         int backgroundColor = selected ? mSelectedBackgroundColor : mDefaultBackgroundColor;
         int textColor = selected ? mSelectedTextColor : mDefaultTextColor;
 
@@ -222,10 +234,16 @@ public class VideoCardPresenter extends LongClickPresenter {
     }
 
     protected boolean isCardMultilineTitleEnabled(Context context) {
+        if (HunysUi.isHunys(context)) {
+            return false; // Hunys mod: titlul pe un rând, care se derulează / one-line title that scrolls
+        }
         return MainUIData.instance(context).isCardMultilineTitleEnabled();
     }
 
     protected boolean isCardMultilineSubtitleEnabled(Context context) {
+        if (HunysUi.isHunys(context)) {
+            return false; // Hunys mod: detaliile canalului pe un rând / channel details on one line
+        }
         return MainUIData.instance(context).isCardMultilineSubtitleEnabled();
     }
 
