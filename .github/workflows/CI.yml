@@ -1,8 +1,7 @@
 name: Build Debug APK
 
+# Hunys mod: build-ul oficial pornește doar manual; versiunea Hunys are workflow-ul ei (hunys.yml)
 on:
-  push:
-    branches: [ "master" ]
   workflow_dispatch:
 
 jobs:

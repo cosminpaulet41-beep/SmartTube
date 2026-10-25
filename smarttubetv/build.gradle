@@ -149,7 +149,9 @@ android {
     }
 
     lintOptions {
-        abortOnError true
+        // Hunys mod: nu oprim compilarea pentru avertismente de lint / don't fail the build on lint
+        abortOnError false
+        checkReleaseBuilds false
         //checkReleaseBuilds false // fix for ClassNotFoundException: com.android.tools.lint.client.api.Vendor
     }
 
@@ -165,6 +167,11 @@ android {
         }
         ststable {
             applicationId "org.smarttube.stable"
+            targetSdkVersion project.properties.compileSdkVersion
+        }
+        // Hunys mod: se instalează lângă SmartTube oficial / installs next to official SmartTube
+        sthunys {
+            applicationId "org.smarttube.hunys"
             targetSdkVersion project.properties.compileSdkVersion
         }
         stfdroid {

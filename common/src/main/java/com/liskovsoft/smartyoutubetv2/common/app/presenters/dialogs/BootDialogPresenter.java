@@ -34,6 +34,11 @@ public class BootDialogPresenter extends BasePresenter<Void> {
     }
 
     private void startUpdatePresenter() {
+        // Hunys mod: nu verifica actualizările versiunii oficiale / don't check official updates
+        if (getContext() != null && getContext().getPackageName().endsWith(".hunys")) {
+            return;
+        }
+
         AppUpdatePresenter updatePresenter = AppUpdatePresenter.instance(getContext());
         //updatePresenter.setOnDone(this::startBridgePresenter);
         updatePresenter.start(false);
