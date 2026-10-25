@@ -46,6 +46,7 @@ import com.liskovsoft.smartyoutubetv2.common.prefs.PlayerTweaksData;
 import com.liskovsoft.smartyoutubetv2.tv.ui.mod.leanback.misc.SeekBar;
 import com.liskovsoft.smartyoutubetv2.tv.ui.mod.leanback.playerglue.tooltips.ControlButtonPresenterSelector;
 import com.liskovsoft.smartyoutubetv2.tv.hunys.HunysUi;
+import com.liskovsoft.smartyoutubetv2.tv.hunys.HunysChapterPanel;
 import com.liskovsoft.smartyoutubetv2.tv.ui.mod.leanback.playerglue.tweaks.ControlBarPresenter.OnControlClickedListener;
 import com.liskovsoft.smartyoutubetv2.tv.ui.mod.leanback.playerglue.tweaks.ControlBarPresenter.OnControlLongClickedListener;
 import com.liskovsoft.smartyoutubetv2.tv.ui.mod.leanback.playerglue.tweaks.ControlBarPresenter.OnControlSelectedListener;
@@ -109,6 +110,7 @@ public class PlaybackTransportRowPresenter extends PlaybackRowPresenter {
         long mSecondaryProgressInMs;
         final StringBuilder mTempBuilder = new StringBuilder();
         ControlBarPresenter.ViewHolder mControlsVh;
+        HunysChapterPanel mHunysChapters;
         ControlBarPresenter.ViewHolder mSecondaryControlsVh;
         BoundData mControlsBoundData = new BoundData();
         BoundData mSecondaryBoundData = new BoundData();
@@ -559,6 +561,12 @@ public class PlaybackTransportRowPresenter extends PlaybackRowPresenter {
                     descriptionPresenter.onCreateViewHolder(mDescriptionDock);
             if (mDescriptionViewHolder != null) {
                 mDescriptionDock.addView(mDescriptionViewHolder.view);
+            }
+            if (HunysChapterPanel.isAvailable(rootView)) {
+                // Hunys mod: rândul de repere deasupra barei / chapter row above the bar
+                mHunysChapters = new HunysChapterPanel(rootView, mProgressBar);
+                ((PlaybackTransportRowView) rootView.findViewById(R.id.transport_row))
+                        .setHunysUpListener(() -> mHunysChapters.open(mCurrentTimeInMs, mTotalTimeInMs));
             }
             mThumbsBar = (ThumbsBar) rootView.findViewById(R.id.thumbs_row);
             mThumbsBarTitle = (TextView) rootView.findViewById(com.liskovsoft.smartyoutubetv2.tv.R.id.thumbs_row_title);

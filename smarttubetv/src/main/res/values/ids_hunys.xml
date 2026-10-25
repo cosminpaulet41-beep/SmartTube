@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SmartTube Hunys: id-uri pentru rândul de repere / ids for the chapter row -->
+<resources>
+    <item name="hunys_chapters_panel" type="id" />
+    <item name="hunys_chapters_hint" type="id" />
+    <item name="hunys_chapters_scroll" type="id" />
+    <item name="hunys_chapters_row" type="id" />
+    <item name="hunys_controls_row" type="id" />
+</resources>

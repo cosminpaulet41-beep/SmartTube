@@ -113,6 +113,43 @@
                       android:focusable="true"
                       android:layout_height="1dp"/>
 
+        <!-- Repere: se deschid cu ↑ de pe bară (doar la clipurile cu capitole) -->
+        <!-- Chapters: open with up from the bar (only for videos with chapters) -->
+        <LinearLayout android:id="@+id/hunys_chapters_panel"
+                      android:layout_width="match_parent"
+                      android:layout_height="wrap_content"
+                      android:layout_marginBottom="10dp"
+                      android:orientation="vertical"
+                      android:clipChildren="false"
+                      android:clipToPadding="false"
+                      android:visibility="gone" >
+            <TextView
+                android:id="@+id/hunys_chapters_hint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"
+                android:alpha="0.85"
+                android:text="@string/hunys_chapters_hint"
+                android:textColor="#FFFFFFFF"
+                android:textSize="10.5sp" />
+            <HorizontalScrollView
+                android:id="@+id/hunys_chapters_scroll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="6dp"
+                android:clipChildren="false"
+                android:clipToPadding="false"
+                android:overScrollMode="never"
+                android:scrollbars="none" >
+                <LinearLayout android:id="@+id/hunys_chapters_row"
+                              android:layout_width="wrap_content"
+                              android:layout_height="wrap_content"
+                              android:orientation="horizontal"
+                              android:clipChildren="false"
+                              android:clipToPadding="false" />
+            </HorizontalScrollView>
+        </LinearLayout>
+
         <!-- Timpii / times -->
         <RelativeLayout android:id="@+id/time_info"
                         android:layout_width="match_parent"
@@ -167,7 +204,8 @@
 
         <!-- Butoanele: întâi ⏮ ▶ ⏭ (primesc focus primele), apoi rândul lat stânga | dreapta -->
         <!-- Buttons: prev/play/next first (they get focus first), then the wide left | right bar -->
-        <RelativeLayout android:layout_width="match_parent"
+        <RelativeLayout android:id="@+id/hunys_controls_row"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:layoutDirection="ltr"

@@ -76,6 +76,11 @@ public final class SeekBar extends View {
     private final Paint mProgressPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint mBackgroundPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint mKnobPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    // Hunys mod: conturul capitolului ales în rândul de repere / outline of the chapter chosen in the chapter row
+    private float mHunysStart = -1;
+    private float mHunysEnd = -1;
+    private final RectF mHunysRect = new RectF();
+    private Paint mHunysPaint;
 
     private int mProgress;
     private int mSecondProgress;
@@ -157,6 +162,32 @@ public final class SeekBar extends View {
         }
 
         canvas.drawCircle(mKnobx, getHeight() / 2, radius, mKnobPaint);
+
+        if (mHunysStart >= 0 && mHunysEnd > mHunysStart) {
+            if (mHunysPaint == null) {
+                mHunysPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+                mHunysPaint.setStyle(Paint.Style.STROKE);
+                mHunysPaint.setColor(0xFFFFFFFF);
+                mHunysPaint.setStrokeWidth(2 * getResources().getDisplayMetrics().density);
+            }
+            float pad = 4 * getResources().getDisplayMetrics().density;
+            float left = mBackgroundRect.left;
+            float width = mBackgroundRect.width();
+            mHunysRect.set(left + width * mHunysStart - pad / 2, mBackgroundRect.top - pad,
+                    left + width * mHunysEnd + pad / 2, mBackgroundRect.bottom + pad);
+            float r = mHunysRect.height() / 2;
+            canvas.drawRoundRect(mHunysRect, r, r, mHunysPaint);
+        }
+    }
+
+    /**
+     * Hunys mod: încercuiește bucata de bară a capitolului (0..1), sau o ascunde cu valori negative.<br/>
+     * Hunys mod: outlines the chapter's part of the bar (0..1), or hides it with negative values.
+     */
+    public void setHunysHighlight(float start, float end) {
+        mHunysStart = start;
+        mHunysEnd = end;
+        invalidate();
     }
 
     /**

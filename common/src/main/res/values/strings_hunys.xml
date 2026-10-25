@@ -64,4 +64,6 @@
     <string name="hunys_subscribe">Subscribe</string>
     <string name="hunys_subscribed">Subscribed</string>
     <string name="hunys_auto">Auto</string>
+    <string name="hunys_chapters_hint">← → choose a chapter     OK jump to it     ↓ back to the bar</string>
+    <string name="hunys_now">NOW</string>
 </resources>

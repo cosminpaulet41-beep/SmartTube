@@ -64,4 +64,6 @@
     <string name="hunys_subscribe">Abonează-te</string>
     <string name="hunys_subscribed">Abonat</string>
     <string name="hunys_auto">Automat</string>
+    <string name="hunys_chapters_hint">← → alegi reperul     OK sari la el     ↓ înapoi la bară</string>
+    <string name="hunys_now">ACUM</string>
 </resources>

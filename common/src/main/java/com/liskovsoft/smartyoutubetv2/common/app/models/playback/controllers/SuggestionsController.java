@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat;
 import com.liskovsoft.mediaserviceinterfaces.ContentService;
 import com.liskovsoft.mediaserviceinterfaces.MediaItemService;
 import com.liskovsoft.mediaserviceinterfaces.data.ChapterItem;
+import com.liskovsoft.smartyoutubetv2.common.hunys.HunysChapters;
 import com.liskovsoft.mediaserviceinterfaces.data.DislikeData;
 import com.liskovsoft.mediaserviceinterfaces.data.MediaGroup;
 import com.liskovsoft.mediaserviceinterfaces.data.MediaItemMetadata;
@@ -552,6 +553,7 @@ public class SuggestionsController extends BasePlayerController {
 
     private void appendChaptersIfNeeded(MediaItemMetadata mediaItemMetadata) {
         mChapters = mediaItemMetadata.getChapters();
+        HunysChapters.set(mChapters); // Hunys mod: rândul de repere din player / player chapter row
         
         addChapterMarkersIfNeeded();
         appendChapterSuggestionsIfNeeded();
@@ -850,6 +852,7 @@ public class SuggestionsController extends BasePlayerController {
     private void disposeActions() {
         RxHelper.disposeActions(mActions);
         mChapters = null;
+        HunysChapters.set(null);
         mNextSectionVideo = null;
         if (mBrowseProcessor != null) {
             mBrowseProcessor.dispose();

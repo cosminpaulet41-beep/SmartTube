@@ -49,6 +49,19 @@ public class PlaybackTransportRowView extends LinearLayout {
 
     private OnUnhandledKeyListener mOnUnhandledKeyListener;
 
+    /**
+     * Hunys mod: ↑ de pe bară deschide rândul de repere / up from the bar opens the chapter row
+     */
+    public interface HunysUpListener {
+        View onUpFromProgress();
+    }
+
+    private HunysUpListener mHunysUpListener;
+
+    void setHunysUpListener(HunysUpListener listener) {
+        mHunysUpListener = listener;
+    }
+
     public PlaybackTransportRowView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
@@ -91,6 +104,14 @@ public class PlaybackTransportRowView extends LinearLayout {
     @Override
     public View focusSearch(View focused, int direction) {
         // when focusSearch vertically, return the next immediate focusable child
+        if (focused != null && direction == View.FOCUS_UP && mHunysUpListener != null
+                && focused.getId() == R.id.playback_progress) {
+            View chapter = mHunysUpListener.onUpFromProgress();
+            if (chapter != null) {
+                return chapter;
+            }
+        }
+
         if (focused != null) {
             if (direction == View.FOCUS_UP) {
                 int index = indexOfChild(getFocusedChild());
