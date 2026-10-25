@@ -16,6 +16,11 @@ import android.widget.RelativeLayout;
 
 import androidx.leanback.widget.VerticalGridView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.MemoryCategory;
+import com.bumptech.glide.load.DecodeFormat;
+import com.bumptech.glide.request.RequestOptions;
+
 import com.liskovsoft.smartyoutubetv2.common.hunys.HunysData;
 import com.liskovsoft.smartyoutubetv2.tv.R;
 
@@ -26,12 +31,38 @@ import com.liskovsoft.smartyoutubetv2.tv.R;
  */
 public final class HunysUi {
     private static final int TEXT_NORMAL = 0xE6FFFFFF;
+    private static boolean sMemoryCategorySet;
 
     private HunysUi() {
     }
 
     public static boolean isHunys(Context context) {
         return HunysData.isHunysBuild(context);
+    }
+
+    public static boolean isLightMode(Context context) {
+        return isHunys(context) && HunysData.instance(context).isLightModeEnabled();
+    }
+
+    /**
+     * Mod ușor: imagini pe 16 biți și cache mai mic în memorie (proiector cu 1 GB RAM).<br/>
+     * Light mode: 16-bit images and a smaller memory cache (projector with 1 GB RAM).
+     */
+    public static RequestOptions lightOptions(Context context) {
+        if (!isLightMode(context)) {
+            return new RequestOptions();
+        }
+
+        if (!sMemoryCategorySet) {
+            sMemoryCategorySet = true;
+            try {
+                Glide.get(context.getApplicationContext()).setMemoryCategory(MemoryCategory.LOW);
+            } catch (RuntimeException e) {
+                // keep default memory category
+            }
+        }
+
+        return new RequestOptions().format(DecodeFormat.PREFER_RGB_565);
     }
 
     public static int dp(Context context, float value) {

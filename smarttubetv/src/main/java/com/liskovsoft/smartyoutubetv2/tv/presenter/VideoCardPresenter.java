@@ -23,6 +23,7 @@ import com.liskovsoft.sharedutils.mylogger.Log;
 import com.liskovsoft.smartyoutubetv2.common.app.models.data.Video;
 import com.liskovsoft.smartyoutubetv2.common.prefs.MainUIData;
 import com.liskovsoft.smartyoutubetv2.common.hunys.HunysData;
+import com.liskovsoft.smartyoutubetv2.tv.hunys.HunysUi;
 import com.liskovsoft.smartyoutubetv2.common.utils.ClickbaitRemover;
 import com.liskovsoft.smartyoutubetv2.tv.R;
 import com.liskovsoft.smartyoutubetv2.tv.presenter.base.LongClickPresenter;
@@ -156,6 +157,7 @@ public class VideoCardPresenter extends LongClickPresenter {
                 .load(ClickbaitRemover.updateThumbnail(video, mThumbQuality))
                 //.placeholder(mDefaultCardImage)
                 .apply(ViewUtil.glideOptions())
+                .apply(HunysUi.lightOptions(context)) // Hunys mod: mod ușor / light mode
                 // improve image compression on low end devices
                 .override(mWidth, mHeight)
                 // com.liskovsoft.smartyoutubetv2.tv.util.CacheGlideModule
@@ -200,6 +202,9 @@ public class VideoCardPresenter extends LongClickPresenter {
     }
 
     protected boolean isCardTextAutoScrollEnabled(Context context) {
+        if (HunysUi.isLightMode(context)) {
+            return false; // Hunys mod: fără text derulant în modul ușor / no scrolling text in light mode
+        }
         return MainUIData.instance(context).isCardTextAutoScrollEnabled();
     }
 

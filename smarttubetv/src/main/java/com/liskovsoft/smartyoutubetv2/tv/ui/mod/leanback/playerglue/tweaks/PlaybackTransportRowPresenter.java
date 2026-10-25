@@ -45,6 +45,7 @@ import com.liskovsoft.smartyoutubetv2.common.prefs.PlayerData;
 import com.liskovsoft.smartyoutubetv2.common.prefs.PlayerTweaksData;
 import com.liskovsoft.smartyoutubetv2.tv.ui.mod.leanback.misc.SeekBar;
 import com.liskovsoft.smartyoutubetv2.tv.ui.mod.leanback.playerglue.tooltips.ControlButtonPresenterSelector;
+import com.liskovsoft.smartyoutubetv2.tv.hunys.HunysUi;
 import com.liskovsoft.smartyoutubetv2.tv.ui.mod.leanback.playerglue.tweaks.ControlBarPresenter.OnControlClickedListener;
 import com.liskovsoft.smartyoutubetv2.tv.ui.mod.leanback.playerglue.tweaks.ControlBarPresenter.OnControlLongClickedListener;
 import com.liskovsoft.smartyoutubetv2.tv.ui.mod.leanback.playerglue.tweaks.ControlBarPresenter.OnControlSelectedListener;
@@ -766,6 +767,14 @@ public class PlaybackTransportRowPresenter extends PlaybackRowPresenter {
         protected void onSetEndingTimeLabel(long remainingTimeMs) {
             remainingTimeMs = applySpeedCorrection(remainingTimeMs);
 
+            if (mEndingTime != null && HunysUi.isHunys(mEndingTime.getContext())) {
+                // Hunys mod: „13:18 (−11:53)” ca în machetă / like in the mockup
+                formatTime(Math.max(0, remainingTimeMs), mTempBuilder);
+                mEndingTime.setText("(\u2212" + mTempBuilder + ")");
+                mEndingTime.setVisibility(View.VISIBLE);
+                return;
+            }
+
             if (mEndingTime != null) {
                 if (mPlayerData.isRemainingTimeEnabled()) {
                     formatTime(remainingTimeMs, mTempBuilder);
@@ -793,6 +802,11 @@ public class PlaybackTransportRowPresenter extends PlaybackRowPresenter {
         }
 
         void setDateVisibility(boolean isVisible) {
+            if (HunysUi.isHunys(mDateTime.getContext())) {
+                mDateTime.setVisibility(View.GONE); // Hunys mod: fără dată/oră / no date/time
+                return;
+            }
+
             if (mPlayerData.isClockEnabled()) {
                 mDateTime.setVisibility(View.VISIBLE);
             } else {
@@ -1057,6 +1071,15 @@ public class PlaybackTransportRowPresenter extends PlaybackRowPresenter {
         vh.mSecondaryControlsVh = (ControlBarPresenter.ViewHolder) mSecondaryControlsPresenter
                 .onCreateViewHolder(vh.mSecondaryControlsDock);
         vh.mSecondaryControlsDock.addView(vh.mSecondaryControlsVh.view);
+
+        if (HunysUi.isHunys(vh.view.getContext())) {
+            // Hunys mod: rândul lat cu grup stânga | spațiu | grup dreapta / wide bar: left group | gap | right group
+            ViewGroup.LayoutParams lp = vh.mSecondaryControlsVh.view.getLayoutParams();
+            if (lp != null) {
+                lp.width = ViewGroup.LayoutParams.MATCH_PARENT;
+                vh.mSecondaryControlsVh.view.setLayoutParams(lp);
+            }
+        }
         ((PlaybackTransportRowView) vh.view.findViewById(R.id.transport_row))
                 .setOnUnhandledKeyListener(new PlaybackTransportRowView.OnUnhandledKeyListener() {
                 @Override

@@ -14,6 +14,10 @@
 package com.liskovsoft.smartyoutubetv2.tv.ui.mod.leanback.playerglue.tweaks;
 
 import android.content.Context;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.RectF;
+import android.view.Gravity;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.View;
@@ -21,6 +25,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import java.util.ArrayList;
+
+import com.liskovsoft.smartyoutubetv2.tv.hunys.HunysUi;
 
 class ControlBar extends LinearLayout {
 
@@ -38,15 +44,90 @@ class ControlBar extends LinearLayout {
     private boolean mIsSharedFocusEnabled = true;
     private boolean mDefaultFocusToMiddle = true;
     private boolean mFocusRecovery = true;
+    // Hunys mod: fără distanțe egale între centre, pastilă de sticlă în spatele grupului din dreapta
+    // Hunys mod: no equal center spacing, glass pill behind the right group
+    private boolean mIsHunys;
+    private Paint mHunysGlassPaint;
+    private Paint mHunysStrokePaint;
+    private Paint mHunysDividerPaint;
+    private final RectF mHunysRect = new RectF();
 
     public ControlBar(Context context, AttributeSet attrs) {
         super(context, attrs);
         resetFocus(); // MOD: reset global focus index
+        initHunys(context);
     }
 
     public ControlBar(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         resetFocus(); // MOD: reset global focus index
+        initHunys(context);
+    }
+
+    private void initHunys(Context context) {
+        mIsHunys = HunysUi.isHunys(context);
+
+        if (!mIsHunys) {
+            return;
+        }
+
+        mIsSharedFocusEnabled = false;
+        setGravity(Gravity.CENTER_VERTICAL);
+        setClipChildren(false);
+        setClipToPadding(false);
+        setWillNotDraw(false);
+
+        mHunysGlassPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mHunysGlassPaint.setColor(0x1FFFFFFF);
+        mHunysStrokePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mHunysStrokePaint.setStyle(Paint.Style.STROKE);
+        mHunysStrokePaint.setStrokeWidth(HunysUi.dp(context, 1));
+        mHunysStrokePaint.setColor(0x1AFFFFFF);
+        mHunysDividerPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mHunysDividerPaint.setStrokeWidth(HunysUi.dp(context, 1));
+        mHunysDividerPaint.setColor(0x2EFFFFFF);
+    }
+
+    @Override
+    protected void dispatchDraw(Canvas canvas) {
+        if (mIsHunys) {
+            drawHunysGlass(canvas);
+        }
+
+        super.dispatchDraw(canvas);
+    }
+
+    private void drawHunysGlass(Canvas canvas) {
+        int spacer = -1;
+
+        for (int i = 0; i < getChildCount(); i++) {
+            LayoutParams lp = (LayoutParams) getChildAt(i).getLayoutParams();
+            if (lp.weight > 0) {
+                spacer = i;
+                break;
+            }
+        }
+
+        int first = spacer + 1;
+        int last = getChildCount() - 1;
+
+        if (spacer < 0 || first > last) {
+            return;
+        }
+
+        float centerY = getHeight() / 2f;
+        float half = HunysUi.dp(getContext(), 19);
+        mHunysRect.set(getChildAt(first).getLeft() - HunysUi.dp(getContext(), 3), centerY - half,
+                getChildAt(last).getRight() + HunysUi.dp(getContext(), 3), centerY + half);
+        canvas.drawRoundRect(mHunysRect, half, half, mHunysGlassPaint);
+        canvas.drawRoundRect(mHunysRect, half, half, mHunysStrokePaint);
+
+        // Linii între like | dislike | ⚙ / dividers between like | dislike | settings
+        float dividerHalf = HunysUi.dp(getContext(), 7);
+        for (int i = first; i < Math.min(first + 2, last); i++) {
+            float x = getChildAt(i).getRight();
+            canvas.drawLine(x, centerY - dividerHalf, x, centerY + dividerHalf, mHunysDividerPaint);
+        }
     }
 
     void setDefaultFocusToMiddle(boolean defaultFocusToMiddle) {
@@ -64,7 +145,7 @@ class ControlBar extends LinearLayout {
      * MOD: synced navigation between rows
      */
     void setSharedFocusEnabled(boolean enabled) {
-        mIsSharedFocusEnabled = enabled;
+        mIsSharedFocusEnabled = enabled && !mIsHunys;
     }
 
     void resetFocus() {
@@ -72,7 +153,8 @@ class ControlBar extends LinearLayout {
     }
 
     int getDefaultFocusIndex() {
-        return mDefaultFocusToMiddle ? getChildCount() / 2 : 0;
+        // Hunys mod: implicit pe ▶ (mijlocul lui ⏮ ▶ ⏭) / default on play (middle of prev, play, next)
+        return mDefaultFocusToMiddle || mIsHunys ? getChildCount() / 2 : 0;
     }
 
     @Override
@@ -111,7 +193,7 @@ class ControlBar extends LinearLayout {
     }
 
     public void setChildMarginFromCenter(int marginFromCenter) {
-        mChildMarginFromCenter = marginFromCenter;
+        mChildMarginFromCenter = mIsHunys ? 0 : marginFromCenter;
     }
 
     @Override

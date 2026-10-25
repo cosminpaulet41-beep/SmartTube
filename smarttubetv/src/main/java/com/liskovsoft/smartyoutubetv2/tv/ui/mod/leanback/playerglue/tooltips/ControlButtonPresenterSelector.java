@@ -26,6 +26,8 @@ import androidx.leanback.widget.PlaybackControlsRow;
 import androidx.leanback.widget.Presenter;
 import androidx.leanback.widget.PresenterSelector;
 import com.liskovsoft.smartyoutubetv2.tv.ui.playback.actions.PaddingAction;
+import com.liskovsoft.smartyoutubetv2.tv.hunys.HunysControls;
+import com.liskovsoft.smartyoutubetv2.tv.hunys.HunysUi;
 
 /**
  * Displays primary and secondary controls for a {@link PlaybackControlsRow}.
@@ -86,6 +88,7 @@ public class ControlButtonPresenterSelector extends PresenterSelector {
     public static class ControlButtonPresenter extends Presenter {
         private int mLayoutResourceId;
         private boolean tooltipsEnabled;
+        private boolean mIsHunys;
 
         ControlButtonPresenter(int layoutResourceId) {
             mLayoutResourceId = layoutResourceId;
@@ -93,8 +96,11 @@ public class ControlButtonPresenterSelector extends PresenterSelector {
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent) {
+            mIsHunys = HunysUi.isHunys(parent.getContext());
+            // Hunys mod: butoane rotunjite / rounded buttons
+            int layout = mIsHunys ? com.liskovsoft.smartyoutubetv2.tv.R.layout.hunys_control_button : mLayoutResourceId;
             View v = LayoutInflater.from(parent.getContext())
-                    .inflate(mLayoutResourceId, parent, false);
+                    .inflate(layout, parent, false);
             return new ActionViewHolder(v);
         }
 
@@ -104,6 +110,18 @@ public class ControlButtonPresenterSelector extends PresenterSelector {
         public void onBindViewHolder(ViewHolder viewHolder, Object item) {
             Action action = (Action) item;
             ActionViewHolder vh = (ActionViewHolder) viewHolder;
+
+            if (mIsHunys && vh.mLabel != null) {
+                HunysControls.bind(vh.view, vh.mFocusableView, vh.mIcon, vh.mLabel, action);
+                CharSequence description = TextUtils.isEmpty(action.getLabel2()) ? action.getLabel1() : action.getLabel2();
+                if (!TextUtils.equals(vh.mFocusableView.getContentDescription(), description)) {
+                    vh.mFocusableView.setContentDescription(description);
+                    if (tooltipsEnabled) {
+                        TooltipCompatHandler.setTooltipText(vh.mFocusableView, action.getLabel1());
+                    }
+                }
+                return;
+            }
 
             vh.mIcon.setImageDrawable(action.getIcon());
             if (action instanceof PaddingAction) {

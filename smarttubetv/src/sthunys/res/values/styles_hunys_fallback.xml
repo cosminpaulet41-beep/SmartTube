@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SmartTube Hunys: valori de rezervă pentru dialoguri (orice temă) / fallback values for dialogs (any theme) -->
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="App.Theme.Leanback.Preferences" parent="App.Theme.Leanback.Preferences.Base">
+        <item name="hunysPanel">#FF1B1E26</item>
+        <item name="hunysPill">#FFE8EAF0</item>
+        <item name="hunysInk">#FF1B1E26</item>
+        <item name="hunysAccent">#FF8FB4F5</item>
+    </style>
+    <style name="App.Theme.Leanback.Preferences.Opaque" parent="App.Theme.Leanback.Preferences.Base">
+        <!-- IllegalStateException: Only fullscreen opaque activities can request orientation -->
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="hunysPanel">#FF1B1E26</item>
+        <item name="hunysPill">#FFE8EAF0</item>
+        <item name="hunysInk">#FF1B1E26</item>
+        <item name="hunysAccent">#FF8FB4F5</item>
+    </style>
+</resources>

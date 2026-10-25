@@ -38,6 +38,8 @@
         <item name="android:colorAccent" tools:targetApi="21">@color/hunys_apus_accent</item>
         <item name="hunysPill">@color/hunys_apus_pill</item>
         <item name="hunysInk">@color/hunys_apus_ink</item>
+        <item name="hunysPanel">@color/hunys_apus_panel</item>
+        <item name="hunysAccent">@color/hunys_apus_accent</item>
     </style>
     <style name="ProgressBarHorizontal.Hunys.Apus" parent="@android:style/Widget.ProgressBar.Horizontal">
         <item name="android:progressDrawable">@drawable/hunys_apus_progress</item>
@@ -79,6 +81,8 @@
         <item name="android:colorAccent" tools:targetApi="21">@color/hunys_chihlimbar_accent</item>
         <item name="hunysPill">@color/hunys_chihlimbar_pill</item>
         <item name="hunysInk">@color/hunys_chihlimbar_ink</item>
+        <item name="hunysPanel">@color/hunys_chihlimbar_panel</item>
+        <item name="hunysAccent">@color/hunys_chihlimbar_accent</item>
     </style>
     <style name="ProgressBarHorizontal.Hunys.Chihlimbar" parent="@android:style/Widget.ProgressBar.Horizontal">
         <item name="android:progressDrawable">@drawable/hunys_chihlimbar_progress</item>
@@ -120,6 +124,8 @@
         <item name="android:colorAccent" tools:targetApi="21">@color/hunys_roz_accent</item>
         <item name="hunysPill">@color/hunys_roz_pill</item>
         <item name="hunysInk">@color/hunys_roz_ink</item>
+        <item name="hunysPanel">@color/hunys_roz_panel</item>
+        <item name="hunysAccent">@color/hunys_roz_accent</item>
     </style>
     <style name="ProgressBarHorizontal.Hunys.Roz" parent="@android:style/Widget.ProgressBar.Horizontal">
         <item name="android:progressDrawable">@drawable/hunys_roz_progress</item>
@@ -161,6 +167,8 @@
         <item name="android:colorAccent" tools:targetApi="21">@color/hunys_cafea_accent</item>
         <item name="hunysPill">@color/hunys_cafea_pill</item>
         <item name="hunysInk">@color/hunys_cafea_ink</item>
+        <item name="hunysPanel">@color/hunys_cafea_panel</item>
+        <item name="hunysAccent">@color/hunys_cafea_accent</item>
     </style>
     <style name="ProgressBarHorizontal.Hunys.Cafea" parent="@android:style/Widget.ProgressBar.Horizontal">
         <item name="android:progressDrawable">@drawable/hunys_cafea_progress</item>
@@ -202,6 +210,8 @@
         <item name="android:colorAccent" tools:targetApi="21">@color/hunys_visiniu_accent</item>
         <item name="hunysPill">@color/hunys_visiniu_pill</item>
         <item name="hunysInk">@color/hunys_visiniu_ink</item>
+        <item name="hunysPanel">@color/hunys_visiniu_panel</item>
+        <item name="hunysAccent">@color/hunys_visiniu_accent</item>
     </style>
     <style name="ProgressBarHorizontal.Hunys.Visiniu" parent="@android:style/Widget.ProgressBar.Horizontal">
         <item name="android:progressDrawable">@drawable/hunys_visiniu_progress</item>
@@ -243,6 +253,8 @@
         <item name="android:colorAccent" tools:targetApi="21">@color/hunys_menta_accent</item>
         <item name="hunysPill">@color/hunys_menta_pill</item>
         <item name="hunysInk">@color/hunys_menta_ink</item>
+        <item name="hunysPanel">@color/hunys_menta_panel</item>
+        <item name="hunysAccent">@color/hunys_menta_accent</item>
     </style>
     <style name="ProgressBarHorizontal.Hunys.Menta" parent="@android:style/Widget.ProgressBar.Horizontal">
         <item name="android:progressDrawable">@drawable/hunys_menta_progress</item>
@@ -284,6 +296,8 @@
         <item name="android:colorAccent" tools:targetApi="21">@color/hunys_ocean_accent</item>
         <item name="hunysPill">@color/hunys_ocean_pill</item>
         <item name="hunysInk">@color/hunys_ocean_ink</item>
+        <item name="hunysPanel">@color/hunys_ocean_panel</item>
+        <item name="hunysAccent">@color/hunys_ocean_accent</item>
     </style>
     <style name="ProgressBarHorizontal.Hunys.Ocean" parent="@android:style/Widget.ProgressBar.Horizontal">
         <item name="android:progressDrawable">@drawable/hunys_ocean_progress</item>
@@ -325,6 +339,8 @@
         <item name="android:colorAccent" tools:targetApi="21">@color/hunys_lavanda_accent</item>
         <item name="hunysPill">@color/hunys_lavanda_pill</item>
         <item name="hunysInk">@color/hunys_lavanda_ink</item>
+        <item name="hunysPanel">@color/hunys_lavanda_panel</item>
+        <item name="hunysAccent">@color/hunys_lavanda_accent</item>
     </style>
     <style name="ProgressBarHorizontal.Hunys.Lavanda" parent="@android:style/Widget.ProgressBar.Horizontal">
         <item name="android:progressDrawable">@drawable/hunys_lavanda_progress</item>
@@ -366,6 +382,8 @@
         <item name="android:colorAccent" tools:targetApi="21">@color/hunys_padure_accent</item>
         <item name="hunysPill">@color/hunys_padure_pill</item>
         <item name="hunysInk">@color/hunys_padure_ink</item>
+        <item name="hunysPanel">@color/hunys_padure_panel</item>
+        <item name="hunysAccent">@color/hunys_padure_accent</item>
     </style>
     <style name="ProgressBarHorizontal.Hunys.Padure" parent="@android:style/Widget.ProgressBar.Horizontal">
         <item name="android:progressDrawable">@drawable/hunys_padure_progress</item>
@@ -407,6 +425,8 @@
         <item name="android:colorAccent" tools:targetApi="21">@color/hunys_noapte_accent</item>
         <item name="hunysPill">@color/hunys_noapte_pill</item>
         <item name="hunysInk">@color/hunys_noapte_ink</item>
+        <item name="hunysPanel">@color/hunys_noapte_panel</item>
+        <item name="hunysAccent">@color/hunys_noapte_accent</item>
     </style>
     <style name="ProgressBarHorizontal.Hunys.Noapte" parent="@android:style/Widget.ProgressBar.Horizontal">
         <item name="android:progressDrawable">@drawable/hunys_noapte_progress</item>

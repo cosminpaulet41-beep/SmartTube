@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- SmartTube Hunys: bară laterală mai îngustă / narrower sidebar -->
+<!-- SmartTube Hunys: bară laterală și dialoguri mai înguste / narrower sidebar and dialogs -->
 <resources>
     <dimen name="lb_browse_headers_width">190dp</dimen>
     <dimen name="lb_browse_rows_margin_start">205dp</dimen>
+    <dimen name="lb_settings_pane_width">290dp</dimen>
 </resources>
