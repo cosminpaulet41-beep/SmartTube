@@ -173,6 +173,8 @@ android {
         sthunys {
             applicationId "org.smarttube.hunys"
             targetSdkVersion project.properties.compileSdkVersion
+            // modulele bibliotecă au doar stbeta/ststable/stfdroid / library modules only have those flavors
+            matchingFallbacks = ['ststable']
         }
         stfdroid {
             applicationId "app.smarttube.fdroid"
