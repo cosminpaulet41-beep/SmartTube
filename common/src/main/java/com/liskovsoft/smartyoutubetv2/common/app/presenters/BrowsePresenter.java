@@ -14,6 +14,7 @@ import com.liskovsoft.sharedutils.locale.LocaleUtility;
 import com.liskovsoft.sharedutils.mylogger.Log;
 import com.liskovsoft.sharedutils.rx.RxHelper;
 import com.liskovsoft.smartyoutubetv2.common.R;
+import com.liskovsoft.smartyoutubetv2.common.hunys.HunysData;
 import com.liskovsoft.smartyoutubetv2.common.app.models.data.BrowseSection;
 import com.liskovsoft.smartyoutubetv2.common.app.models.data.Playlist;
 import com.liskovsoft.smartyoutubetv2.common.app.models.data.SettingsGroup;
@@ -738,6 +739,11 @@ public class BrowsePresenter extends BasePresenter<BrowseView> implements Sectio
 
                             filterHomeIfNeeded(mediaGroups);
 
+                            // Hunys mod: rândul „Continuă vizionarea” sus pe Acasă / "Continue watching" row on top of Home
+                            if (groupIndex.get() == -1) {
+                                appendHunysContinueWatching(section, groupIndex);
+                            }
+
                             for (MediaGroup mediaGroup : mediaGroups) {
                                 if (mediaGroup.isEmpty()) {
                                     Log.e(TAG, "loadRowsHeader: MediaGroup is empty. Group Name: " + mediaGroup.getTitle());
@@ -1206,6 +1212,25 @@ public class BrowsePresenter extends BasePresenter<BrowseView> implements Sectio
 
             Utils.postDelayed(mRefreshSection, 30_000);
         }
+    }
+
+    private void appendHunysContinueWatching(BrowseSection section, AtomicInteger groupIndex) {
+        if (getView() == null || section == null || section.getId() != MediaGroup.TYPE_HOME || !HunysData.isHunysBuild(getContext())) {
+            return;
+        }
+
+        State lastState = VideoStateService.instance(getContext()).getLastState();
+
+        if (lastState == null || lastState.video == null || lastState.durationMs <= 0 || lastState.positionMs <= 0
+                || lastState.positionMs > lastState.durationMs * 0.95) {
+            return;
+        }
+
+        Video video = lastState.video;
+        video.percentWatched = (int) (lastState.positionMs * 100 / lastState.durationMs);
+        VideoGroup continueGroup = VideoGroup.from(Collections.singletonList(video), section, groupIndex.incrementAndGet());
+        continueGroup.setTitle(getContext().getString(R.string.hunys_continue_watching));
+        getView().updateSection(continueGroup);
     }
 
     private void appendLocalHistory(VideoGroup videoGroup) {

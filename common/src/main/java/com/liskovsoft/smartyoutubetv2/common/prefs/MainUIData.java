@@ -6,6 +6,7 @@ import android.os.Build;
 
 import com.liskovsoft.sharedutils.helpers.Helpers;
 import com.liskovsoft.smartyoutubetv2.common.R;
+import com.liskovsoft.smartyoutubetv2.common.hunys.HunysData;
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.dialogs.menu.providers.ContextMenuManager;
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.dialogs.menu.providers.ContextMenuProvider;
 import com.liskovsoft.smartyoutubetv2.common.prefs.AppPrefs.ProfileChangeListener;
@@ -100,6 +101,8 @@ public class MainUIData extends DataChangeBase implements ProfileChangeListener 
     private int mCardTitleLinesNum;
     private float mUIScale;
     private float mVideoGridScale;
+    // Hunys mod: index of "Ocean" (8 original schemes + Apus, Chihlimbar, Roz, Cafea, Visiniu, Menta, Ocean)
+    private static final int HUNYS_DEFAULT_SCHEME_INDEX = 14;
     private final List<ColorScheme> mColorSchemes = new ArrayList<>();
     private int mColorSchemeIndex;
     private int mChannelCategorySorting;
@@ -421,6 +424,67 @@ public class MainUIData extends DataChangeBase implements ProfileChangeListener 
                 "App.Theme.Leanback.Blue.OLED.Browse",
                 "App.Theme.Leanback.Blue.Preferences",
                 mContext));
+        // Hunys mod: 10 teme închise (5 calde, 5 reci) / 10 dark themes (5 warm, 5 cool)
+        mColorSchemes.add(new ColorScheme(
+                R.string.color_scheme_hunys_apus,
+                "App.Theme.Hunys.Apus.Player",
+                "App.Theme.Hunys.Apus.Browse",
+                "App.Theme.Hunys.Apus.Preferences",
+                mContext));
+        mColorSchemes.add(new ColorScheme(
+                R.string.color_scheme_hunys_chihlimbar,
+                "App.Theme.Hunys.Chihlimbar.Player",
+                "App.Theme.Hunys.Chihlimbar.Browse",
+                "App.Theme.Hunys.Chihlimbar.Preferences",
+                mContext));
+        mColorSchemes.add(new ColorScheme(
+                R.string.color_scheme_hunys_roz,
+                "App.Theme.Hunys.Roz.Player",
+                "App.Theme.Hunys.Roz.Browse",
+                "App.Theme.Hunys.Roz.Preferences",
+                mContext));
+        mColorSchemes.add(new ColorScheme(
+                R.string.color_scheme_hunys_cafea,
+                "App.Theme.Hunys.Cafea.Player",
+                "App.Theme.Hunys.Cafea.Browse",
+                "App.Theme.Hunys.Cafea.Preferences",
+                mContext));
+        mColorSchemes.add(new ColorScheme(
+                R.string.color_scheme_hunys_visiniu,
+                "App.Theme.Hunys.Visiniu.Player",
+                "App.Theme.Hunys.Visiniu.Browse",
+                "App.Theme.Hunys.Visiniu.Preferences",
+                mContext));
+        mColorSchemes.add(new ColorScheme(
+                R.string.color_scheme_hunys_menta,
+                "App.Theme.Hunys.Menta.Player",
+                "App.Theme.Hunys.Menta.Browse",
+                "App.Theme.Hunys.Menta.Preferences",
+                mContext));
+        mColorSchemes.add(new ColorScheme(
+                R.string.color_scheme_hunys_ocean,
+                "App.Theme.Hunys.Ocean.Player",
+                "App.Theme.Hunys.Ocean.Browse",
+                "App.Theme.Hunys.Ocean.Preferences",
+                mContext));
+        mColorSchemes.add(new ColorScheme(
+                R.string.color_scheme_hunys_lavanda,
+                "App.Theme.Hunys.Lavanda.Player",
+                "App.Theme.Hunys.Lavanda.Browse",
+                "App.Theme.Hunys.Lavanda.Preferences",
+                mContext));
+        mColorSchemes.add(new ColorScheme(
+                R.string.color_scheme_hunys_padure,
+                "App.Theme.Hunys.Padure.Player",
+                "App.Theme.Hunys.Padure.Browse",
+                "App.Theme.Hunys.Padure.Preferences",
+                mContext));
+        mColorSchemes.add(new ColorScheme(
+                R.string.color_scheme_hunys_noapte,
+                "App.Theme.Hunys.Noapte.Player",
+                "App.Theme.Hunys.Noapte.Browse",
+                "App.Theme.Hunys.Noapte.Preferences",
+                mContext));
     }
 
     private void restoreState() {
@@ -431,7 +495,8 @@ public class MainUIData extends DataChangeBase implements ProfileChangeListener 
         //mIsCardAnimatedPreviewsEnabled = Helpers.parseBoolean(split, 0, true);
         mVideoGridScale = Helpers.parseFloat(split, 1, 1.0f); // 4 cards in a row
         mUIScale = Helpers.parseFloat(split, 2, 1.0f);
-        mColorSchemeIndex = Helpers.parseInt(split, 3, 1);
+        // Hunys mod: tema implicită Ocean / default theme Ocean
+        mColorSchemeIndex = Helpers.parseInt(split, 3, HunysData.isHunysBuild(mContext) ? HUNYS_DEFAULT_SCHEME_INDEX : 1);
         mIsCardMultilineTitleEnabled = Helpers.parseBoolean(split, 4, true);
         mChannelCategorySorting = Helpers.parseInt(split, 5, CHANNEL_SORTING_LAST_VIEWED);
         mPlaylistsStyle = Helpers.parseInt(split, 6, PLAYLISTS_STYLE_GRID);

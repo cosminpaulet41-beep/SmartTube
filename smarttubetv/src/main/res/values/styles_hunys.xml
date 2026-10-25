@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SmartTube mod de/by Hunys with Claude AI: teme închise / dark themes -->
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Tema / theme: Apus (Sunset) -->
+    <style name="App.Theme.Hunys.Apus.Browse" parent="App.Theme.Leanback.Browse">
+        <item name="android:windowBackground">@drawable/hunys_apus_background</item>
+        <item name="shelfBackground">@drawable/hunys_apus_background</item>
+        <item name="brandColor">@color/hunys_apus_sidebar_bottom</item>
+        <item name="brandAccentColor">@color/hunys_apus_accent</item>
+        <item name="hunysSidebarTop">@color/hunys_apus_sidebar_top</item>
+        <item name="hunysPill">@color/hunys_apus_pill</item>
+        <item name="hunysInk">@color/hunys_apus_ink</item>
+        <item name="cardDefaultBackground">@color/hunys_apus_card</item>
+        <item name="cardSelectedBackground">@color/hunys_apus_pill</item>
+        <item name="cardProgressStyle">@style/ProgressBarHorizontal.Hunys.Apus</item>
+        <item name="android:colorAccent" tools:targetApi="21">@color/hunys_apus_accent</item>
+    </style>
+    <style name="App.Theme.Hunys.Apus.Player" parent="App.Theme.Leanback.Player">
+        <item name="playbackProgressPrimaryColor">@color/hunys_apus_accent</item>
+        <item name="playbackProgressSecondaryColor">@color/hunys_apus_accent_semi</item>
+        <item name="playbackControlsIconHighlightColor">@color/hunys_apus_accent</item>
+        <item name="shelfBackground">@drawable/hunys_apus_background</item>
+        <item name="hunysPill">@color/hunys_apus_pill</item>
+        <item name="hunysInk">@color/hunys_apus_ink</item>
+        <item name="cardDefaultBackground">@color/hunys_apus_card</item>
+        <item name="cardSelectedBackground">@color/hunys_apus_pill</item>
+        <item name="cardProgressStyle">@style/ProgressBarHorizontal.Hunys.Apus</item>
+        <item name="android:colorAccent" tools:targetApi="21">@color/hunys_apus_accent</item>
+    </style>
+    <style name="App.Theme.Hunys.Apus.Preferences" parent="App.Theme.Leanback.Preferences">
+        <item name="android:colorPrimary" tools:targetApi="21">@color/hunys_apus_panel</item>
+        <item name="android:colorAccent" tools:targetApi="21">@color/hunys_apus_accent</item>
+        <item name="hunysPill">@color/hunys_apus_pill</item>
+        <item name="hunysInk">@color/hunys_apus_ink</item>
+    </style>
+    <style name="ProgressBarHorizontal.Hunys.Apus" parent="@android:style/Widget.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/hunys_apus_progress</item>
+    </style>
+
+    <!-- Tema / theme: Chihlimbar (Amber) -->
+    <style name="App.Theme.Hunys.Chihlimbar.Browse" parent="App.Theme.Leanback.Browse">
+        <item name="android:windowBackground">@drawable/hunys_chihlimbar_background</item>
+        <item name="shelfBackground">@drawable/hunys_chihlimbar_background</item>
+        <item name="brandColor">@color/hunys_chihlimbar_sidebar_bottom</item>
+        <item name="brandAccentColor">@color/hunys_chihlimbar_accent</item>
+        <item name="hunysSidebarTop">@color/hunys_chihlimbar_sidebar_top</item>
+        <item name="hunysPill">@color/hunys_chihlimbar_pill</item>
+        <item name="hunysInk">@color/hunys_chihlimbar_ink</item>
+        <item name="cardDefaultBackground">@color/hunys_chihlimbar_card</item>
+        <item name="cardSelectedBackground">@color/hunys_chihlimbar_pill</item>
+        <item name="cardProgressStyle">@style/ProgressBarHorizontal.Hunys.Chihlimbar</item>
+        <item name="android:colorAccent" tools:targetApi="21">@color/hunys_chihlimbar_accent</item>
+    </style>
+    <style name="App.Theme.Hunys.Chihlimbar.Player" parent="App.Theme.Leanback.Player">
+        <item name="playbackProgressPrimaryColor">@color/hunys_chihlimbar_accent</item>
+        <item name="playbackProgressSecondaryColor">@color/hunys_chihlimbar_accent_semi</item>
+        <item name="playbackControlsIconHighlightColor">@color/hunys_chihlimbar_accent</item>
+        <item name="shelfBackground">@drawable/hunys_chihlimbar_background</item>
+        <item name="hunysPill">@color/hunys_chihlimbar_pill</item>
+        <item name="hunysInk">@color/hunys_chihlimbar_ink</item>
+        <item name="cardDefaultBackground">@color/hunys_chihlimbar_card</item>
+        <item name="cardSelectedBackground">@color/hunys_chihlimbar_pill</item>
+        <item name="cardProgressStyle">@style/ProgressBarHorizontal.Hunys.Chihlimbar</item>
+        <item name="android:colorAccent" tools:targetApi="21">@color/hunys_chihlimbar_accent</item>
+    </style>
+    <style name="App.Theme.Hunys.Chihlimbar.Preferences" parent="App.Theme.Leanback.Preferences">
+        <item name="android:colorPrimary" tools:targetApi="21">@color/hunys_chihlimbar_panel</item>
+        <item name="android:colorAccent" tools:targetApi="21">@color/hunys_chihlimbar_accent</item>
+        <item name="hunysPill">@color/hunys_chihlimbar_pill</item>
+        <item name="hunysInk">@color/hunys_chihlimbar_ink</item>
+    </style>
+    <style name="ProgressBarHorizontal.Hunys.Chihlimbar" parent="@android:style/Widget.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/hunys_chihlimbar_progress</item>
+    </style>
+
+    <!-- Tema / theme: Roz prăfuit (Dusty rose) -->
+    <style name="App.Theme.Hunys.Roz.Browse" parent="App.Theme.Leanback.Browse">
+        <item name="android:windowBackground">@drawable/hunys_roz_background</item>
+        <item name="shelfBackground">@drawable/hunys_roz_background</item>
+        <item name="brandColor">@color/hunys_roz_sidebar_bottom</item>
+        <item name="brandAccentColor">@color/hunys_roz_accent</item>
+        <item name="hunysSidebarTop">@color/hunys_roz_sidebar_top</item>
+        <item name="hunysPill">@color/hunys_roz_pill</item>
+        <item name="hunysInk">@color/hunys_roz_ink</item>
+        <item name="cardDefaultBackground">@color/hunys_roz_card</item>
+        <item name="cardSelectedBackground">@color/hunys_roz_pill</item>
+        <item name="cardProgressStyle">@style/ProgressBarHorizontal.Hunys.Roz</item>
+        <item name="android:colorAccent" tools:targetApi="21">@color/hunys_roz_accent</item>
+    </style>
+    <style name="App.Theme.Hunys.Roz.Player" parent="App.Theme.Leanback.Player">
+        <item name="playbackProgressPrimaryColor">@color/hunys_roz_accent</item>
+        <item name="playbackProgressSecondaryColor">@color/hunys_roz_accent_semi</item>
+        <item name="playbackControlsIconHighlightColor">@color/hunys_roz_accent</item>
+        <item name="shelfBackground">@drawable/hunys_roz_background</item>
+        <item name="hunysPill">@color/hunys_roz_pill</item>
+        <item name="hunysInk">@color/hunys_roz_ink</item>
+        <item name="cardDefaultBackground">@color/hunys_roz_card</item>
+        <item name="cardSelectedBackground">@color/hunys_roz_pill</item>
+        <item name="cardProgressStyle">@style/ProgressBarHorizontal.Hunys.Roz</item>
+        <item name="android:colorAccent" tools:targetApi="21">@color/hunys_roz_accent</item>
+    </style>
+    <style name="App.Theme.Hunys.Roz.Preferences" parent="App.Theme.Leanback.Preferences">
+        <item name="android:colorPrimary" tools:targetApi="21">@color/hunys_roz_panel</item>
+        <item name="android:colorAccent" tools:targetApi="21">@color/hunys_roz_accent</item>
+        <item name="hunysPill">@color/hunys_roz_pill</item>
+        <item name="hunysInk">@color/hunys_roz_ink</item>
+    </style>
+    <style name="ProgressBarHorizontal.Hunys.Roz" parent="@android:style/Widget.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/hunys_roz_progress</item>
+    </style>
+
+    <!-- Tema / theme: Cafea (Coffee) -->
+    <style name="App.Theme.Hunys.Cafea.Browse" parent="App.Theme.Leanback.Browse">
+        <item name="android:windowBackground">@drawable/hunys_cafea_background</item>
+        <item name="shelfBackground">@drawable/hunys_cafea_background</item>
+        <item name="brandColor">@color/hunys_cafea_sidebar_bottom</item>
+        <item name="brandAccentColor">@color/hunys_cafea_accent</item>
+        <item name="hunysSidebarTop">@color/hunys_cafea_sidebar_top</item>
+        <item name="hunysPill">@color/hunys_cafea_pill</item>
+        <item name="hunysInk">@color/hunys_cafea_ink</item>
+        <item name="cardDefaultBackground">@color/hunys_cafea_card</item>
+        <item name="cardSelectedBackground">@color/hunys_cafea_pill</item>
+        <item name="cardProgressStyle">@style/ProgressBarHorizontal.Hunys.Cafea</item>
+        <item name="android:colorAccent" tools:targetApi="21">@color/hunys_cafea_accent</item>
+    </style>
+    <style name="App.Theme.Hunys.Cafea.Player" parent="App.Theme.Leanback.Player">
+        <item name="playbackProgressPrimaryColor">@color/hunys_cafea_accent</item>
+        <item name="playbackProgressSecondaryColor">@color/hunys_cafea_accent_semi</item>
+        <item name="playbackControlsIconHighlightColor">@color/hunys_cafea_accent</item>
+        <item name="shelfBackground">@drawable/hunys_cafea_background</item>
+        <item name="hunysPill">@color/hunys_cafea_pill</item>
+        <item name="hunysInk">@color/hunys_cafea_ink</item>
+        <item name="cardDefaultBackground">@color/hunys_cafea_card</item>
+        <item name="cardSelectedBackground">@color/hunys_cafea_pill</item>
+        <item name="cardProgressStyle">@style/ProgressBarHorizontal.Hunys.Cafea</item>
+        <item name="android:colorAccent" tools:targetApi="21">@color/hunys_cafea_accent</item>
+    </style>
+    <style name="App.Theme.Hunys.Cafea.Preferences" parent="App.Theme.Leanback.Preferences">
+        <item name="android:colorPrimary" tools:targetApi="21">@color/hunys_cafea_panel</item>
+        <item name="android:colorAccent" tools:targetApi="21">@color/hunys_cafea_accent</item>
+        <item name="hunysPill">@color/hunys_cafea_pill</item>
+        <item name="hunysInk">@color/hunys_cafea_ink</item>
+    </style>
+    <style name="ProgressBarHorizontal.Hunys.Cafea" parent="@android:style/Widget.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/hunys_cafea_progress</item>
+    </style>
+
+    <!-- Tema / theme: Vișiniu (Burgundy) -->
+    <style name="App.Theme.Hunys.Visiniu.Browse" parent="App.Theme.Leanback.Browse">
+        <item name="android:windowBackground">@drawable/hunys_visiniu_background</item>
+        <item name="shelfBackground">@drawable/hunys_visiniu_background</item>
+        <item name="brandColor">@color/hunys_visiniu_sidebar_bottom</item>
+        <item name="brandAccentColor">@color/hunys_visiniu_accent</item>
+        <item name="hunysSidebarTop">@color/hunys_visiniu_sidebar_top</item>
+        <item name="hunysPill">@color/hunys_visiniu_pill</item>
+        <item name="hunysInk">@color/hunys_visiniu_ink</item>
+        <item name="cardDefaultBackground">@color/hunys_visiniu_card</item>
+        <item name="cardSelectedBackground">@color/hunys_visiniu_pill</item>
+        <item name="cardProgressStyle">@style/ProgressBarHorizontal.Hunys.Visiniu</item>
+        <item name="android:colorAccent" tools:targetApi="21">@color/hunys_visiniu_accent</item>
+    </style>
+    <style name="App.Theme.Hunys.Visiniu.Player" parent="App.Theme.Leanback.Player">
+        <item name="playbackProgressPrimaryColor">@color/hunys_visiniu_accent</item>
+        <item name="playbackProgressSecondaryColor">@color/hunys_visiniu_accent_semi</item>
+        <item name="playbackControlsIconHighlightColor">@color/hunys_visiniu_accent</item>
+        <item name="shelfBackground">@drawable/hunys_visiniu_background</item>
+        <item name="hunysPill">@color/hunys_visiniu_pill</item>
+        <item name="hunysInk">@color/hunys_visiniu_ink</item>
+        <item name="cardDefaultBackground">@color/hunys_visiniu_card</item>
+        <item name="cardSelectedBackground">@color/hunys_visiniu_pill</item>
+        <item name="cardProgressStyle">@style/ProgressBarHorizontal.Hunys.Visiniu</item>
+        <item name="android:colorAccent" tools:targetApi="21">@color/hunys_visiniu_accent</item>
+    </style>
+    <style name="App.Theme.Hunys.Visiniu.Preferences" parent="App.Theme.Leanback.Preferences">
+        <item name="android:colorPrimary" tools:targetApi="21">@color/hunys_visiniu_panel</item>
+        <item name="android:colorAccent" tools:targetApi="21">@color/hunys_visiniu_accent</item>
+        <item name="hunysPill">@color/hunys_visiniu_pill</item>
+        <item name="hunysInk">@color/hunys_visiniu_ink</item>
+    </style>
+    <style name="ProgressBarHorizontal.Hunys.Visiniu" parent="@android:style/Widget.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/hunys_visiniu_progress</item>
+    </style>
+
+    <!-- Tema / theme: Mentă (Mint) -->
+    <style name="App.Theme.Hunys.Menta.Browse" parent="App.Theme.Leanback.Browse">
+        <item name="android:windowBackground">@drawable/hunys_menta_background</item>
+        <item name="shelfBackground">@drawable/hunys_menta_background</item>
+        <item name="brandColor">@color/hunys_menta_sidebar_bottom</item>
+        <item name="brandAccentColor">@color/hunys_menta_accent</item>
+        <item name="hunysSidebarTop">@color/hunys_menta_sidebar_top</item>
+        <item name="hunysPill">@color/hunys_menta_pill</item>
+        <item name="hunysInk">@color/hunys_menta_ink</item>
+        <item name="cardDefaultBackground">@color/hunys_menta_card</item>
+        <item name="cardSelectedBackground">@color/hunys_menta_pill</item>
+        <item name="cardProgressStyle">@style/ProgressBarHorizontal.Hunys.Menta</item>
+        <item name="android:colorAccent" tools:targetApi="21">@color/hunys_menta_accent</item>
+    </style>
+    <style name="App.Theme.Hunys.Menta.Player" parent="App.Theme.Leanback.Player">
+        <item name="playbackProgressPrimaryColor">@color/hunys_menta_accent</item>
+        <item name="playbackProgressSecondaryColor">@color/hunys_menta_accent_semi</item>
+        <item name="playbackControlsIconHighlightColor">@color/hunys_menta_accent</item>
+        <item name="shelfBackground">@drawable/hunys_menta_background</item>
+        <item name="hunysPill">@color/hunys_menta_pill</item>
+        <item name="hunysInk">@color/hunys_menta_ink</item>
+        <item name="cardDefaultBackground">@color/hunys_menta_card</item>
+        <item name="cardSelectedBackground">@color/hunys_menta_pill</item>
+        <item name="cardProgressStyle">@style/ProgressBarHorizontal.Hunys.Menta</item>
+        <item name="android:colorAccent" tools:targetApi="21">@color/hunys_menta_accent</item>
+    </style>
+    <style name="App.Theme.Hunys.Menta.Preferences" parent="App.Theme.Leanback.Preferences">
+        <item name="android:colorPrimary" tools:targetApi="21">@color/hunys_menta_panel</item>
+        <item name="android:colorAccent" tools:targetApi="21">@color/hunys_menta_accent</item>
+        <item name="hunysPill">@color/hunys_menta_pill</item>
+        <item name="hunysInk">@color/hunys_menta_ink</item>
+    </style>
+    <style name="ProgressBarHorizontal.Hunys.Menta" parent="@android:style/Widget.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/hunys_menta_progress</item>
+    </style>
+
+    <!-- Tema / theme: Ocean (Ocean) -->
+    <style name="App.Theme.Hunys.Ocean.Browse" parent="App.Theme.Leanback.Browse">
+        <item name="android:windowBackground">@drawable/hunys_ocean_background</item>
+        <item name="shelfBackground">@drawable/hunys_ocean_background</item>
+        <item name="brandColor">@color/hunys_ocean_sidebar_bottom</item>
+        <item name="brandAccentColor">@color/hunys_ocean_accent</item>
+        <item name="hunysSidebarTop">@color/hunys_ocean_sidebar_top</item>
+        <item name="hunysPill">@color/hunys_ocean_pill</item>
+        <item name="hunysInk">@color/hunys_ocean_ink</item>
+        <item name="cardDefaultBackground">@color/hunys_ocean_card</item>
+        <item name="cardSelectedBackground">@color/hunys_ocean_pill</item>
+        <item name="cardProgressStyle">@style/ProgressBarHorizontal.Hunys.Ocean</item>
+        <item name="android:colorAccent" tools:targetApi="21">@color/hunys_ocean_accent</item>
+    </style>
+    <style name="App.Theme.Hunys.Ocean.Player" parent="App.Theme.Leanback.Player">
+        <item name="playbackProgressPrimaryColor">@color/hunys_ocean_accent</item>
+        <item name="playbackProgressSecondaryColor">@color/hunys_ocean_accent_semi</item>
+        <item name="playbackControlsIconHighlightColor">@color/hunys_ocean_accent</item>
+        <item name="shelfBackground">@drawable/hunys_ocean_background</item>
+        <item name="hunysPill">@color/hunys_ocean_pill</item>
+        <item name="hunysInk">@color/hunys_ocean_ink</item>
+        <item name="cardDefaultBackground">@color/hunys_ocean_card</item>
+        <item name="cardSelectedBackground">@color/hunys_ocean_pill</item>
+        <item name="cardProgressStyle">@style/ProgressBarHorizontal.Hunys.Ocean</item>
+        <item name="android:colorAccent" tools:targetApi="21">@color/hunys_ocean_accent</item>
+    </style>
+    <style name="App.Theme.Hunys.Ocean.Preferences" parent="App.Theme.Leanback.Preferences">
+        <item name="android:colorPrimary" tools:targetApi="21">@color/hunys_ocean_panel</item>
+        <item name="android:colorAccent" tools:targetApi="21">@color/hunys_ocean_accent</item>
+        <item name="hunysPill">@color/hunys_ocean_pill</item>
+        <item name="hunysInk">@color/hunys_ocean_ink</item>
+    </style>
+    <style name="ProgressBarHorizontal.Hunys.Ocean" parent="@android:style/Widget.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/hunys_ocean_progress</item>
+    </style>
+
+    <!-- Tema / theme: Lavandă (Lavender) -->
+    <style name="App.Theme.Hunys.Lavanda.Browse" parent="App.Theme.Leanback.Browse">
+        <item name="android:windowBackground">@drawable/hunys_lavanda_background</item>
+        <item name="shelfBackground">@drawable/hunys_lavanda_background</item>
+        <item name="brandColor">@color/hunys_lavanda_sidebar_bottom</item>
+        <item name="brandAccentColor">@color/hunys_lavanda_accent</item>
+        <item name="hunysSidebarTop">@color/hunys_lavanda_sidebar_top</item>
+        <item name="hunysPill">@color/hunys_lavanda_pill</item>
+        <item name="hunysInk">@color/hunys_lavanda_ink</item>
+        <item name="cardDefaultBackground">@color/hunys_lavanda_card</item>
+        <item name="cardSelectedBackground">@color/hunys_lavanda_pill</item>
+        <item name="cardProgressStyle">@style/ProgressBarHorizontal.Hunys.Lavanda</item>
+        <item name="android:colorAccent" tools:targetApi="21">@color/hunys_lavanda_accent</item>
+    </style>
+    <style name="App.Theme.Hunys.Lavanda.Player" parent="App.Theme.Leanback.Player">
+        <item name="playbackProgressPrimaryColor">@color/hunys_lavanda_accent</item>
+        <item name="playbackProgressSecondaryColor">@color/hunys_lavanda_accent_semi</item>
+        <item name="playbackControlsIconHighlightColor">@color/hunys_lavanda_accent</item>
+        <item name="shelfBackground">@drawable/hunys_lavanda_background</item>
+        <item name="hunysPill">@color/hunys_lavanda_pill</item>
+        <item name="hunysInk">@color/hunys_lavanda_ink</item>
+        <item name="cardDefaultBackground">@color/hunys_lavanda_card</item>
+        <item name="cardSelectedBackground">@color/hunys_lavanda_pill</item>
+        <item name="cardProgressStyle">@style/ProgressBarHorizontal.Hunys.Lavanda</item>
+        <item name="android:colorAccent" tools:targetApi="21">@color/hunys_lavanda_accent</item>
+    </style>
+    <style name="App.Theme.Hunys.Lavanda.Preferences" parent="App.Theme.Leanback.Preferences">
+        <item name="android:colorPrimary" tools:targetApi="21">@color/hunys_lavanda_panel</item>
+        <item name="android:colorAccent" tools:targetApi="21">@color/hunys_lavanda_accent</item>
+        <item name="hunysPill">@color/hunys_lavanda_pill</item>
+        <item name="hunysInk">@color/hunys_lavanda_ink</item>
+    </style>
+    <style name="ProgressBarHorizontal.Hunys.Lavanda" parent="@android:style/Widget.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/hunys_lavanda_progress</item>
+    </style>
+
+    <!-- Tema / theme: Pădure (Forest) -->
+    <style name="App.Theme.Hunys.Padure.Browse" parent="App.Theme.Leanback.Browse">
+        <item name="android:windowBackground">@drawable/hunys_padure_background</item>
+        <item name="shelfBackground">@drawable/hunys_padure_background</item>
+        <item name="brandColor">@color/hunys_padure_sidebar_bottom</item>
+        <item name="brandAccentColor">@color/hunys_padure_accent</item>
+        <item name="hunysSidebarTop">@color/hunys_padure_sidebar_top</item>
+        <item name="hunysPill">@color/hunys_padure_pill</item>
+        <item name="hunysInk">@color/hunys_padure_ink</item>
+        <item name="cardDefaultBackground">@color/hunys_padure_card</item>
+        <item name="cardSelectedBackground">@color/hunys_padure_pill</item>
+        <item name="cardProgressStyle">@style/ProgressBarHorizontal.Hunys.Padure</item>
+        <item name="android:colorAccent" tools:targetApi="21">@color/hunys_padure_accent</item>
+    </style>
+    <style name="App.Theme.Hunys.Padure.Player" parent="App.Theme.Leanback.Player">
+        <item name="playbackProgressPrimaryColor">@color/hunys_padure_accent</item>
+        <item name="playbackProgressSecondaryColor">@color/hunys_padure_accent_semi</item>
+        <item name="playbackControlsIconHighlightColor">@color/hunys_padure_accent</item>
+        <item name="shelfBackground">@drawable/hunys_padure_background</item>
+        <item name="hunysPill">@color/hunys_padure_pill</item>
+        <item name="hunysInk">@color/hunys_padure_ink</item>
+        <item name="cardDefaultBackground">@color/hunys_padure_card</item>
+        <item name="cardSelectedBackground">@color/hunys_padure_pill</item>
+        <item name="cardProgressStyle">@style/ProgressBarHorizontal.Hunys.Padure</item>
+        <item name="android:colorAccent" tools:targetApi="21">@color/hunys_padure_accent</item>
+    </style>
+    <style name="App.Theme.Hunys.Padure.Preferences" parent="App.Theme.Leanback.Preferences">
+        <item name="android:colorPrimary" tools:targetApi="21">@color/hunys_padure_panel</item>
+        <item name="android:colorAccent" tools:targetApi="21">@color/hunys_padure_accent</item>
+        <item name="hunysPill">@color/hunys_padure_pill</item>
+        <item name="hunysInk">@color/hunys_padure_ink</item>
+    </style>
+    <style name="ProgressBarHorizontal.Hunys.Padure" parent="@android:style/Widget.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/hunys_padure_progress</item>
+    </style>
+
+    <!-- Tema / theme: Noapte (Night) -->
+    <style name="App.Theme.Hunys.Noapte.Browse" parent="App.Theme.Leanback.Browse">
+        <item name="android:windowBackground">@drawable/hunys_noapte_background</item>
+        <item name="shelfBackground">@drawable/hunys_noapte_background</item>
+        <item name="brandColor">@color/hunys_noapte_sidebar_bottom</item>
+        <item name="brandAccentColor">@color/hunys_noapte_accent</item>
+        <item name="hunysSidebarTop">@color/hunys_noapte_sidebar_top</item>
+        <item name="hunysPill">@color/hunys_noapte_pill</item>
+        <item name="hunysInk">@color/hunys_noapte_ink</item>
+        <item name="cardDefaultBackground">@color/hunys_noapte_card</item>
+        <item name="cardSelectedBackground">@color/hunys_noapte_pill</item>
+        <item name="cardProgressStyle">@style/ProgressBarHorizontal.Hunys.Noapte</item>
+        <item name="android:colorAccent" tools:targetApi="21">@color/hunys_noapte_accent</item>
+    </style>
+    <style name="App.Theme.Hunys.Noapte.Player" parent="App.Theme.Leanback.Player">
+        <item name="playbackProgressPrimaryColor">@color/hunys_noapte_accent</item>
+        <item name="playbackProgressSecondaryColor">@color/hunys_noapte_accent_semi</item>
+        <item name="playbackControlsIconHighlightColor">@color/hunys_noapte_accent</item>
+        <item name="shelfBackground">@drawable/hunys_noapte_background</item>
+        <item name="hunysPill">@color/hunys_noapte_pill</item>
+        <item name="hunysInk">@color/hunys_noapte_ink</item>
+        <item name="cardDefaultBackground">@color/hunys_noapte_card</item>
+        <item name="cardSelectedBackground">@color/hunys_noapte_pill</item>
+        <item name="cardProgressStyle">@style/ProgressBarHorizontal.Hunys.Noapte</item>
+        <item name="android:colorAccent" tools:targetApi="21">@color/hunys_noapte_accent</item>
+    </style>
+    <style name="App.Theme.Hunys.Noapte.Preferences" parent="App.Theme.Leanback.Preferences">
+        <item name="android:colorPrimary" tools:targetApi="21">@color/hunys_noapte_panel</item>
+        <item name="android:colorAccent" tools:targetApi="21">@color/hunys_noapte_accent</item>
+        <item name="hunysPill">@color/hunys_noapte_pill</item>
+        <item name="hunysInk">@color/hunys_noapte_ink</item>
+    </style>
+    <style name="ProgressBarHorizontal.Hunys.Noapte" parent="@android:style/Widget.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/hunys_noapte_progress</item>
+    </style>
+</resources>

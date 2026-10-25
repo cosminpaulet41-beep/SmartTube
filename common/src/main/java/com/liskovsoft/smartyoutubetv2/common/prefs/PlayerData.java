@@ -12,6 +12,7 @@ import com.liskovsoft.sharedutils.helpers.DeviceHelpers;
 import com.liskovsoft.sharedutils.helpers.Helpers;
 import com.liskovsoft.sharedutils.locale.LocaleUtility;
 import com.liskovsoft.smartyoutubetv2.common.R;
+import com.liskovsoft.smartyoutubetv2.common.hunys.HunysData;
 import com.liskovsoft.smartyoutubetv2.common.app.models.playback.manager.PlayerEngine;
 import com.liskovsoft.smartyoutubetv2.common.app.models.playback.manager.PlayerConstants;
 import com.liskovsoft.smartyoutubetv2.common.exoplayer.other.SubtitleManager.SubtitleStyle;
@@ -29,6 +30,7 @@ import java.util.Map;
 
 public class PlayerData extends DataChangeBase implements PlayerConstants, ProfileChangeListener {
     private static final String VIDEO_PLAYER_DATA = "video_player_data";
+    private final Context mHunysContext; // Hunys mod
     public static final int OK_ONLY_UI = 0;
     public static final int OK_UI_AND_PAUSE = 1;
     public static final int OK_ONLY_PAUSE = 2;
@@ -129,6 +131,7 @@ public class PlayerData extends DataChangeBase implements PlayerConstants, Profi
     }
 
     private PlayerData(Context context) {
+        mHunysContext = context.getApplicationContext() != null ? context.getApplicationContext() : context;
         mPrefs = AppPrefs.instance(context);
         mPrefs.addListener(this);
         initSubtitleStyles();
@@ -718,6 +721,12 @@ public class PlayerData extends DataChangeBase implements PlayerConstants, Profi
     }
 
     public FormatItem getDefaultVideoFormat() {
+        // Hunys mod: implicit 1080p (60 cadre doar dacă clipul le are), niciodată peste 1080p
+        // Hunys mod: default 1080p (60 fps only if the video has it), never above 1080p
+        if (HunysData.isHunysBuild(mHunysContext)) {
+            return DeviceHelpers.isVP9ResolutionSupported(1080) ? FormatItem.VIDEO_FHD_VP9_60 : FormatItem.VIDEO_FHD_AVC_60;
+        }
+
         FormatItem formatItem = mDefaultVideoFormats.get(Build.MODEL);
 
         if (formatItem == null) {

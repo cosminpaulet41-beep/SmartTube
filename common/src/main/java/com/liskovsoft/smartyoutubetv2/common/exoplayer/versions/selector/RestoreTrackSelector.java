@@ -29,6 +29,9 @@ public class RestoreTrackSelector extends DefaultTrackSelector {
 
     public RestoreTrackSelector(Factory trackSelectionFactory) {
         super(trackSelectionFactory);
+        // Hunys mod: selecția automată nu urcă peste 1080p (permite și clipurile verticale 1080x1920)
+        // Hunys mod: auto selection never goes above 1080p (still allows vertical 1080x1920 videos)
+        setParameters(buildUponParameters().setMaxVideoSize(1920, 1920));
         // Could help with Shield resolution bug?
         //setParameters(buildUponParameters().setForceHighestSupportedBitrate(true));
     }

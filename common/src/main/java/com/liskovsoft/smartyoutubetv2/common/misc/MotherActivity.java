@@ -23,6 +23,9 @@ import com.liskovsoft.sharedutils.mylogger.Log;
 import com.liskovsoft.smartyoutubetv2.common.R;
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.PlaybackPresenter;
 import com.liskovsoft.smartyoutubetv2.common.app.views.ViewManager;
+import com.liskovsoft.smartyoutubetv2.common.hunys.HunysData;
+import com.liskovsoft.smartyoutubetv2.common.hunys.HunysFonts;
+import com.liskovsoft.smartyoutubetv2.common.hunys.HunysDimmer;
 import com.liskovsoft.smartyoutubetv2.common.prefs.GeneralData;
 import com.liskovsoft.smartyoutubetv2.common.prefs.MainUIData;
 import com.liskovsoft.smartyoutubetv2.common.prefs.PlayerData;
@@ -69,6 +72,8 @@ public class MotherActivity extends FragmentActivity {
         //if (VERSION.SDK_INT != 26) {
         //    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         //}
+        // Hunys mod: fontul Inter pe toate textele / Inter font on all texts
+        HunysFonts.install(this);
         super.onCreate(savedInstanceState);
 
         Log.d(TAG, "Starting %s...", this.getClass().getSimpleName());
@@ -220,6 +225,9 @@ public class MotherActivity extends FragmentActivity {
 
         // Restore this activity's screensaver policy after returning to the foreground.
         mScreensaverManager.resume();
+
+        // Hunys mod: întunecarea ecranului în toată aplicația / app-wide screen dimming
+        HunysDimmer.instance(this).attach(this);
     }
 
     @Override
@@ -228,6 +236,8 @@ public class MotherActivity extends FragmentActivity {
 
         // Stop managing the screensaver so a paused activity cannot keep the display awake.
         mScreensaverManager.suspend();
+
+        HunysDimmer.instance(this).detach(this);
     }
 
     @Override
@@ -274,7 +284,8 @@ public class MotherActivity extends FragmentActivity {
             float widthRatio = DEFAULT_WIDTH / widthPixels;
             float density = DEFAULT_DENSITY / widthRatio * uiScale;
             displayMetrics.density = density;
-            displayMetrics.scaledDensity = density;
+            // Hunys mod: scris puțin mai mare / slightly bigger text
+            displayMetrics.scaledDensity = HunysData.isHunysBuild(context) ? density * HunysData.instance(context).getFontScale() : density;
             sCachedDisplayMetrics = displayMetrics;
         }
 

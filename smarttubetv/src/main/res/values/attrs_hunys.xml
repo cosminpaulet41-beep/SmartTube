@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SmartTube mod de/by Hunys with Claude AI -->
+<resources>
+    <attr name="hunysSidebarTop" format="color|reference" />
+    <attr name="hunysPill" format="color|reference" />
+    <attr name="hunysInk" format="color|reference" />
+</resources>

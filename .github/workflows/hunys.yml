@@ -40,7 +40,21 @@ jobs:
       - name: Compilare / Build
         run: |
           chmod +x gradlew
-          ./gradlew assembleSthunysRelease --stacktrace
+          set -o pipefail
+          ./gradlew assembleSthunysRelease --stacktrace 2>&1 | tee build.log
+
+      - name: Raport erori / Error report
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Erorile apar ca adnotări și ca fișier pe versiunea hunys-log
+          # Errors are shown as annotations and as a file on the hunys-log release
+          grep -E "error:|\.java:[0-9]+:|\.xml:[0-9]+|AAPT|What went wrong|Could not|FAILED|Exception" build.log | head -40 > errors.txt || true
+          while IFS= read -r line; do echo "::error::${line}"; done < errors.txt
+          tail -n 400 build.log > build-tail.log
+          gh release delete hunys-log -y --cleanup-tag || true
+          gh release create hunys-log build.log build-tail.log errors.txt --title "Build log ${{ github.run_number }}" --notes "Jurnal compilare / build log" --prerelease
 
       - name: Pregătire APK / Prepare APK
         run: |

@@ -23,6 +23,7 @@ import com.liskovsoft.smartyoutubetv2.common.exoplayer.versions.selector.Restore
 import com.liskovsoft.smartyoutubetv2.common.exoplayer.versions.selector.RestoreTrackSelector.TrackSelectorCallback;
 import com.liskovsoft.smartyoutubetv2.common.prefs.PlayerData;
 import com.liskovsoft.smartyoutubetv2.common.prefs.PlayerTweaksData;
+import com.liskovsoft.smartyoutubetv2.common.hunys.HunysData;
 import com.liskovsoft.smartyoutubetv2.common.utils.Utils;
 
 import java.util.ArrayList;
@@ -202,6 +203,12 @@ public class TrackSelectorManager implements TrackSelectorCallback {
                 mediaTrack.trackIndex = trackIndex;
 
                 if (isErrorInAudio(mediaTrack)) {
+                    continue;
+                }
+
+                // Hunys mod: fără variante peste 1080p (1440p, 4K) / no formats above 1080p
+                if (rendererIndex == RENDERER_INDEX_VIDEO && HunysData.isHunysBuild(mContext) && format != null
+                        && Math.min(format.width, format.height) > 1080) {
                     continue;
                 }
 
