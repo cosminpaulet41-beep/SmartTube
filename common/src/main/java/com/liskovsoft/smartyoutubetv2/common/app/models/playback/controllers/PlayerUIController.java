@@ -76,8 +76,7 @@ public class PlayerUIController extends BasePlayerController {
         // Hunys mod: while the chapter row is open, the player stays 30 s after the last key press
         long hunysHoldMs = HunysChapters.getPanelHoldRemainingMs();
         if (hunysHoldMs > 0) {
-            mHandler.removeCallbacks(this.mUiAutoHideHandler);
-            mHandler.postDelayed(this.mUiAutoHideHandler, hunysHoldMs);
+            postUiAutoHide(hunysHoldMs);
             return;
         }
 
@@ -648,6 +647,11 @@ public class PlayerUIController extends BasePlayerController {
         } else if (buttonId == R.id.lb_control_closed_captioning) {
             onSubtitleLongClicked();
         }
+    }
+
+    private void postUiAutoHide(long delayMs) {
+        mHandler.removeCallbacks(mUiAutoHideHandler);
+        mHandler.postDelayed(mUiAutoHideHandler, delayMs);
     }
 
     private void disableUiAutoHideTimeout() {
