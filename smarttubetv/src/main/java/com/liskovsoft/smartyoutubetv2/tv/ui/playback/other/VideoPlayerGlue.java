@@ -35,6 +35,9 @@ import com.liskovsoft.smartyoutubetv2.tv.ui.playback.actions.ClosedCaptioningAct
 import com.liskovsoft.smartyoutubetv2.tv.ui.playback.actions.ContentBlockAction;
 import com.liskovsoft.smartyoutubetv2.tv.ui.playback.actions.FlipAction;
 import com.liskovsoft.smartyoutubetv2.tv.ui.playback.actions.HighQualityAction;
+import com.liskovsoft.smartyoutubetv2.tv.ui.playback.actions.HunysSettingsAction;
+import com.liskovsoft.smartyoutubetv2.tv.ui.playback.actions.HunysSpacerAction;
+import com.liskovsoft.smartyoutubetv2.tv.hunys.HunysUi;
 import com.liskovsoft.smartyoutubetv2.tv.ui.playback.actions.RotateAction;
 import com.liskovsoft.smartyoutubetv2.tv.ui.playback.actions.ScreenDimmingAction;
 import com.liskovsoft.smartyoutubetv2.tv.ui.playback.actions.SeekIntervalAction;
@@ -88,6 +91,8 @@ public class VideoPlayerGlue extends MaxControlsVideoPlayerGlue<PlayerAdapter> i
     private final PlayerTweaksData mPlayerTweaksData;
     private final GeneralData mGeneralData;
     private int mPreviousAction = KeyEvent.ACTION_UP;
+    private final boolean mIsHunys;
+    private final HunysSpacerAction mHunysSpacer = new HunysSpacerAction();
 
     public VideoPlayerGlue(
             Context context,
@@ -134,10 +139,21 @@ public class VideoPlayerGlue extends MaxControlsVideoPlayerGlue<PlayerAdapter> i
         putAction(new RotateAction(context));
         putAction(new FlipAction(context));
         putAction(new SoundOffAction(context));
+        putAction(new HunysSettingsAction(context));
+
+        mIsHunys = HunysUi.isHunys(context);
     }
 
     @Override
     protected void onCreatePrimaryActions(ArrayObjectAdapter adapter) {
+        if (HunysUi.isHunys(getContext())) {
+            // Hunys mod: în centru doar ⏮ ▶ ⏭ / only prev, play, next in the center
+            adapter.add(mSkipPreviousAction);
+            super.onCreatePrimaryActions(adapter);
+            adapter.add(mSkipNextAction);
+            return;
+        }
+
         // Order matters, super.onCreatePrimaryActions() will create the play / pause action.
         // Will display as follows:
         // play/pause, previous, rewind, fast forward, next
@@ -199,6 +215,22 @@ public class VideoPlayerGlue extends MaxControlsVideoPlayerGlue<PlayerAdapter> i
     protected void onCreateSecondaryActions(ArrayObjectAdapter adapter) {
         // Does nothing
         super.onCreateSecondaryActions(adapter);
+
+        if (HunysUi.isHunys(getContext())) {
+            // Hunys mod: ca la YouTube: canal, Descriere, Abonează-te | like, dislike, ⚙, comentarii, playlist, CC
+            // Hunys mod: like YouTube: channel, Description, Subscribe | like, dislike, ⚙, comments, playlist, CC
+            adapter.add(mActions.get(R.id.action_channel));
+            adapter.add(mActions.get(R.id.action_info));
+            adapter.add(mActions.get(R.id.action_subscribe));
+            adapter.add(mHunysSpacer);
+            adapter.add(mActions.get(R.id.action_thumbs_up));
+            adapter.add(mActions.get(R.id.action_thumbs_down));
+            adapter.add(mActions.get(R.id.action_player_settings));
+            adapter.add(mActions.get(R.id.action_chat));
+            adapter.add(mActions.get(R.id.action_playlist_add));
+            adapter.add(mActions.get(R.id.lb_control_closed_captioning));
+            return;
+        }
 
         // MAX: 7 items. But with custom modification it supports more.
         // Origin: {@link androidx.leanback.widget.ControlBarPresenter#MAX_CONTROLS}

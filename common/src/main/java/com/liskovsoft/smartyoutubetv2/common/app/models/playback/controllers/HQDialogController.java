@@ -10,7 +10,10 @@ import com.liskovsoft.smartyoutubetv2.common.app.presenters.AppDialogPresenter;
 import com.liskovsoft.smartyoutubetv2.common.exoplayer.selector.FormatItem;
 import com.liskovsoft.smartyoutubetv2.common.utils.AppDialogUtil;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Locale;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +43,8 @@ public class HQDialogController extends BasePlayerController {
     public void onButtonClicked(int buttonId, int buttonState) {
         if (buttonId == R.id.lb_control_high_quality) {
             onHighQualityClicked();
+        } else if (buttonId == R.id.action_player_settings) {
+            onHunysSettingsClicked();
         }
     }
 
@@ -61,6 +66,208 @@ public class HQDialogController extends BasePlayerController {
         appendOptions(mCategories);
 
         mAppDialogPresenter.showDialog(getContext().getString(R.string.playback_settings), this::onDialogHide);
+    }
+
+    // ---- Hunys mod: meniul ⚙ / the ⚙ menu
+
+    /**
+     * Ordinea aprobată: Calitate, Limbă audio, Viteză, Repetare, PiP, Doar sunet, Căutare, Statistici.<br/>
+     * Approved order: Quality, Audio language, Speed, Repeat, PiP, Audio only, Search, Stats.
+     */
+    private void onHunysSettingsClicked() {
+        if (getPlayer() == null) {
+            return;
+        }
+
+        AppDialogPresenter dialog = AppDialogPresenter.instance(getContext());
+
+        dialog.appendSingleButton(UiOptionItem.from(
+                hunysTitle(R.string.hunys_quality, hunysQualityValue()), option -> showHunysQuality()));
+        dialog.appendSingleButton(UiOptionItem.from(
+                hunysTitle(R.string.hunys_audio_language, hunysAudioLanguageValue()), option -> showHunysAudioLanguage()));
+        dialog.appendSingleButton(UiOptionItem.from(
+                hunysTitle(R.string.hunys_speed, formatSpeed(getPlayerData().getSpeed())), option -> {
+                    getMainController().onButtonLongClicked(R.id.action_video_speed, getPlayer().getButtonState(R.id.action_video_speed));
+                }));
+        dialog.appendSingleButton(UiOptionItem.from(
+                getContext().getString(R.string.hunys_repeat), option -> {
+                    getMainController().onButtonLongClicked(R.id.action_repeat, getPlayer().getButtonState(R.id.action_repeat));
+                }));
+        dialog.appendSingleButton(UiOptionItem.from(
+                getContext().getString(R.string.hunys_pip), option -> {
+                    dialog.closeDialog();
+                    getMainController().onButtonClicked(R.id.action_pip, getPlayer().getButtonState(R.id.action_pip));
+                }));
+        dialog.appendSingleButton(UiOptionItem.from(
+                hunysTitle(R.string.hunys_audio_only, getContext().getString(isHunysAudioOnly() ? R.string.hunys_on : R.string.hunys_off)), option -> {
+                    dialog.closeDialog();
+                    toggleHunysAudioOnly();
+                }));
+        dialog.appendSingleButton(UiOptionItem.from(
+                getContext().getString(R.string.hunys_search), option -> {
+                    dialog.closeDialog();
+                    getMainController().onButtonClicked(R.id.action_search, getPlayer().getButtonState(R.id.action_search));
+                }));
+        dialog.appendSingleButton(UiOptionItem.from(
+                getContext().getString(R.string.hunys_stats), option -> {
+                    dialog.closeDialog();
+                    getMainController().onButtonClicked(R.id.action_video_stats, getPlayer().getButtonState(R.id.action_video_stats));
+                }));
+
+        dialog.showDialog(getContext().getString(R.string.hunys_player_settings));
+    }
+
+    private String hunysTitle(int titleRes, String value) {
+        String title = getContext().getString(titleRes);
+        return value == null || value.isEmpty() ? title : title + "  ·  " + value;
+    }
+
+    private String hunysQualityValue() {
+        FormatItem current = getPlayer() != null ? getPlayer().getVideoFormat() : null;
+
+        if (current == null || isHunysAudioOnly()) {
+            return null;
+        }
+
+        int height = Math.min(current.getWidth(), current.getHeight());
+
+        if (height <= 0) {
+            return null;
+        }
+
+        return height + "p" + (current.getFrameRate() > 30 ? Math.round(current.getFrameRate()) : "");
+    }
+
+    private void showHunysQuality() {
+        if (getPlayer() == null) {
+            return;
+        }
+
+        AppDialogPresenter dialog = AppDialogPresenter.instance(getContext());
+        List<FormatItem> videoFormats = getPlayer().getVideoFormats();
+        dialog.appendCategory(OptionCategory.from(
+                VIDEO_FORMATS_ID,
+                OptionCategory.TYPE_RADIO_LIST,
+                getContext().getString(R.string.hunys_quality),
+                UiOptionItem.from(videoFormats, option -> {
+                    selectFormatOption(option);
+                    dialog.closeDialog();
+                }, getContext().getString(R.string.hunys_audio_only))));
+        dialog.showDialog(getContext().getString(R.string.hunys_quality));
+    }
+
+    private String hunysAudioLanguageValue() {
+        String language = getPlayerData().getAudioLanguage();
+
+        if (language == null || language.isEmpty()) {
+            return getContext().getString(R.string.hunys_audio_original);
+        }
+
+        return capitalize(new Locale(language).getDisplayLanguage());
+    }
+
+    /**
+     * Arată doar limbile pe care le are clipul; dacă are una singură, arată lista completă SmartTube.<br/>
+     * Shows only the languages the video has; with a single one, shows the full SmartTube list.
+     */
+    private void showHunysAudioLanguage() {
+        if (getPlayer() == null) {
+            return;
+        }
+
+        AppDialogPresenter dialog = AppDialogPresenter.instance(getContext());
+        Set<String> codes = new LinkedHashSet<>();
+        List<FormatItem> audioFormats = getPlayer().getAudioFormats();
+
+        if (audioFormats != null) {
+            for (FormatItem format : audioFormats) {
+                String code = normalizeLanguage(format.getLanguage());
+                if (code != null) {
+                    codes.add(code);
+                }
+            }
+        }
+
+        if (codes.size() < 2) {
+            dialog.appendCategory(AppDialogUtil.createAudioLanguageCategory(getContext(), () -> getPlayer().restartEngine()));
+            dialog.showDialog(getContext().getString(R.string.hunys_audio_language));
+            return;
+        }
+
+        String current = getPlayerData().getAudioLanguage();
+        List<OptionItem> options = new ArrayList<>();
+
+        options.add(UiOptionItem.from(getContext().getString(R.string.hunys_audio_original), option -> {
+            getPlayerData().setAudioLanguage("");
+            getPlayer().restartEngine();
+            dialog.closeDialog();
+        }, current == null || current.isEmpty()));
+
+        for (String code : codes) {
+            options.add(UiOptionItem.from(capitalize(new Locale(code).getDisplayLanguage()), option -> {
+                getPlayerData().setAudioLanguage(code);
+                getPlayer().restartEngine();
+                dialog.closeDialog();
+            }, code.equals(current)));
+        }
+
+        dialog.appendRadioCategory(getContext().getString(R.string.hunys_audio_language), options);
+        dialog.showDialog(getContext().getString(R.string.hunys_audio_language));
+    }
+
+    private static String normalizeLanguage(String language) {
+        if (language == null || language.isEmpty() || "und".equals(language)) {
+            return null;
+        }
+
+        String code = language.toLowerCase(Locale.US);
+        int cut = code.indexOf('-');
+        if (cut < 0) {
+            cut = code.indexOf('.');
+        }
+        if (cut < 0) {
+            cut = code.indexOf('_');
+        }
+
+        return cut > 0 ? code.substring(0, cut) : code;
+    }
+
+    private static String capitalize(String text) {
+        if (text == null || text.isEmpty()) {
+            return text;
+        }
+
+        return text.substring(0, 1).toUpperCase() + text.substring(1);
+    }
+
+    private static String formatSpeed(float speed) {
+        String text = String.format(Locale.US, "%.2f", speed); // 1.00, 1.25, 1.50
+        if (text.endsWith("0")) {
+            text = text.substring(0, text.length() - 1); // 1.0, 1.5
+        }
+        return text + "x";
+    }
+
+    private boolean isHunysAudioOnly() {
+        return getPlayer() != null && FormatItem.NO_VIDEO.equals(getPlayer().getVideoFormat());
+    }
+
+    /**
+     * Doar sunet = fără pistă video (economisește date). Se păstrează până îl oprești.<br/>
+     * Audio only = no video track (saves data). Kept until you turn it off.
+     */
+    private void toggleHunysAudioOnly() {
+        if (getPlayer() == null) {
+            return;
+        }
+
+        FormatItem format = isHunysAudioOnly() ? getPlayerData().getDefaultVideoFormat() : FormatItem.NO_VIDEO;
+        getPlayer().setFormat(format);
+        persistFormat(format);
+
+        if (!getPlayer().containsMedia()) {
+            getPlayer().reloadPlayback();
+        }
     }
 
     private void addQualityCategories() {

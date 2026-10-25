@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SmartTube Hunys: butoane noi în player / new player buttons -->
+<resources>
+    <item name="action_player_settings" type="id" />
+    <item name="action_hunys_spacer" type="id" />
+</resources>
