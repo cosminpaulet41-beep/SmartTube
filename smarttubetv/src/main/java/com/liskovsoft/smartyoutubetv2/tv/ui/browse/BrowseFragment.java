@@ -35,6 +35,7 @@ import com.liskovsoft.smartyoutubetv2.common.misc.CrashRestorer;
 import com.liskovsoft.smartyoutubetv2.common.utils.Utils;
 import com.liskovsoft.smartyoutubetv2.tv.R;
 import com.liskovsoft.smartyoutubetv2.tv.presenter.IconHeaderItemPresenter;
+import com.liskovsoft.smartyoutubetv2.tv.hunys.HunysUi;
 import com.liskovsoft.smartyoutubetv2.tv.ui.browse.dialog.ErrorDialogFragment;
 import com.liskovsoft.smartyoutubetv2.tv.ui.mod.leanback.headers.ExtendedHeadersSupportFragment;
 import com.liskovsoft.smartyoutubetv2.tv.ui.mod.leanback.misc.ProgressBarManager;
@@ -59,6 +60,8 @@ public class BrowseFragment extends BrowseSupportFragment implements BrowseView 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        // Hunys mod: bară laterală strânsă cu iconițe / collapsed icon rail
+        HunysUi.installRail(getContext() != null ? getContext() : getActivity());
         super.onCreate(null);
 
         if (getContext() == null) {

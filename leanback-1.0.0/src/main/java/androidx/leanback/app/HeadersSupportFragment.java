@@ -181,12 +181,17 @@ public class HeadersSupportFragment extends BaseRowSupportFragment {
         updateListViewVisibility();
     }
 
+    /**
+     * SmartTube Hunys mod: iconițele rămân vizibile în bara strânsă / icons stay visible in the collapsed rail
+     */
+    public static boolean sHunysKeepChildrenVisible = false;
+
     private void updateListViewVisibility() {
         final VerticalGridView listView = getVerticalGridView();
         if (listView != null) {
             getView().setVisibility(mHeadersGone ? View.GONE : View.VISIBLE);
             if (!mHeadersGone) {
-                if (mHeadersEnabled) {
+                if (mHeadersEnabled || sHunysKeepChildrenVisible) {
                     listView.setChildrenVisibility(View.VISIBLE);
                 } else {
                     listView.setChildrenVisibility(View.INVISIBLE);

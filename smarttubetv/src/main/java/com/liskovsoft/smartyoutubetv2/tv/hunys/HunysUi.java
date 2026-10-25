@@ -7,14 +7,19 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.InsetDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
+import androidx.leanback.app.BrowseSupportFragment;
+import androidx.leanback.app.HeadersSupportFragment;
 import androidx.leanback.widget.VerticalGridView;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.MemoryCategory;
@@ -32,6 +37,13 @@ import com.liskovsoft.smartyoutubetv2.tv.R;
 public final class HunysUi {
     private static final int TEXT_NORMAL = 0xE6FFFFFF;
     private static boolean sMemoryCategorySet;
+    private static boolean sRail;
+    // Bara strânsă: panou de 48dp, la 6dp de margine / collapsed rail: 48dp panel, 6dp from the edge
+    private static final int RAIL_PANEL_DP = 48;
+    private static final int RAIL_GAP_DP = 6;
+    private static final int PANEL_MARGIN_DP = 10;
+    private static final BrowseSupportFragment.HunysHeadersListener RAIL_LISTENER =
+            (headersView, shown) -> setSidebarRail(headersView, !shown);
 
     private HunysUi() {
     }
@@ -193,6 +205,191 @@ public final class HunysUi {
         if (Build.VERSION.SDK_INT >= 21) {
             grid.setClipToOutline(true);
         }
+    }
+
+    /**
+     * Pornește bara strânsă cu iconițe. Se apelează înainte de crearea ecranului principal.<br/>
+     * Enables the collapsed icon rail. Call before the browse screen is created.
+     */
+    public static void installRail(Context context) {
+        if (!isHunys(context)) {
+            return;
+        }
+
+        int headersWidth = context.getResources().getDimensionPixelSize(R.dimen.lb_browse_headers_width);
+        int paddingEnd = context.getResources().getDimensionPixelSize(R.dimen.lb_browse_header_padding_end);
+        int panelLeft = headersWidth - paddingEnd - dp(context, RAIL_PANEL_DP);
+        // Partea vizibilă începe cu RAIL_GAP_DP înainte de panou / visible part starts RAIL_GAP_DP before the panel
+        BrowseSupportFragment.sHunysRailWidth = headersWidth - panelLeft + dp(context, RAIL_GAP_DP);
+        BrowseSupportFragment.sHunysRailContentMargin = dp(context, 30);
+        HeadersSupportFragment.sHunysKeepChildrenVisible = true;
+        BrowseSupportFragment.sHunysHeadersListener = RAIL_LISTENER;
+    }
+
+    public static boolean isRail() {
+        return sRail;
+    }
+
+    /**
+     * Comută între bara lată (cu texte) și bara strânsă (doar iconițe).<br/>
+     * Switches between the wide sidebar (with labels) and the collapsed rail (icons only).
+     */
+    public static void setSidebarRail(View root, boolean rail) {
+        if (root == null || !isHunys(root.getContext())) {
+            return;
+        }
+
+        sRail = rail;
+        Context context = root.getContext();
+        View list = root.findViewById(R.id.browse_headers);
+
+        if (!(list instanceof VerticalGridView)) {
+            return;
+        }
+
+        VerticalGridView grid = (VerticalGridView) list;
+        ViewGroup.LayoutParams params = grid.getLayoutParams();
+
+        if (params instanceof RelativeLayout.LayoutParams) {
+            RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) params;
+            int headersWidth = context.getResources().getDimensionPixelSize(R.dimen.lb_browse_headers_width);
+            int paddingEnd = context.getResources().getDimensionPixelSize(R.dimen.lb_browse_header_padding_end);
+            lp.leftMargin = rail ? headersWidth - paddingEnd - dp(context, RAIL_PANEL_DP) : dp(context, PANEL_MARGIN_DP);
+            grid.setLayoutParams(lp);
+        }
+
+        int side = dp(context, rail ? 7 : 8);
+        grid.setPadding(side, dp(context, 14), side, dp(context, 14));
+
+        if (rail) {
+            // Iconițele din bara strânsă nu primesc focus; ← deschide bara / rail icons aren't focusable; ← opens the bar
+            grid.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+        }
+
+        for (int i = 0; i < grid.getChildCount(); i++) {
+            View wrapper = grid.getChildAt(i);
+            View item = wrapper instanceof ViewGroup && ((ViewGroup) wrapper).getChildCount() > 0
+                    ? ((ViewGroup) wrapper).getChildAt(0) : wrapper;
+            applyRailToItem(item, rail);
+        }
+
+        grid.requestLayout();
+    }
+
+    /**
+     * Element din bară: doar iconița, centrată, sau iconiță + text.<br/>
+     * Sidebar item: centered icon only, or icon + label.
+     */
+    public static void applyRailToItem(View item, boolean rail) {
+        if (item == null) {
+            return;
+        }
+
+        Context context = item.getContext();
+        TextView label = item.findViewById(R.id.header_label);
+
+        if (label == null) {
+            return;
+        }
+
+        label.setVisibility(rail ? View.GONE : View.VISIBLE);
+        item.setMinimumWidth(dp(context, rail ? RAIL_PANEL_DP - 14 : 156));
+        item.setPadding(dp(context, rail ? 8 : 11), item.getPaddingTop(), dp(context, rail ? 8 : 10), item.getPaddingBottom());
+    }
+
+    /**
+     * Meniuri: elementul cu focus devine o pastilă albă cu text închis (ca în machetă).<br/>
+     * Menus: the focused item becomes a white pill with dark text (like the mockup).
+     */
+    public static void stylePreferenceList(RecyclerView list) {
+        if (list == null || !isHunys(list.getContext())) {
+            return;
+        }
+
+        list.addOnChildAttachStateChangeListener(new RecyclerView.OnChildAttachStateChangeListener() {
+            @Override
+            public void onChildViewAttachedToWindow(@androidx.annotation.NonNull View view) {
+                stylePreferenceItem(view);
+            }
+
+            @Override
+            public void onChildViewDetachedFromWindow(@androidx.annotation.NonNull View view) {
+                // NOP
+            }
+        });
+
+        for (int i = 0; i < list.getChildCount(); i++) {
+            stylePreferenceItem(list.getChildAt(i));
+        }
+    }
+
+    private static void stylePreferenceItem(View item) {
+        View target = item.isFocusable() ? item : findFocusable(item);
+
+        if (target == null || target.getTag(R.id.action_hunys_spacer) != null) {
+            return;
+        }
+
+        target.setTag(R.id.action_hunys_spacer, Boolean.TRUE); // deja stilizat / already styled
+        Context context = target.getContext();
+
+        GradientDrawable pill = new GradientDrawable();
+        pill.setColor(Color.WHITE);
+        pill.setCornerRadius(dp(context, 14));
+        StateListDrawable states = new StateListDrawable();
+        states.addState(new int[] {android.R.attr.state_focused}, new InsetDrawable(pill, dp(context, 6), dp(context, 2), dp(context, 6), dp(context, 2)));
+        states.addState(new int[] {}, new ColorDrawable(Color.TRANSPARENT));
+        // InsetDrawable are padding propriu; păstrăm padding-ul original / InsetDrawable has its own padding; keep the original
+        int left = target.getPaddingLeft();
+        int top = target.getPaddingTop();
+        int right = target.getPaddingRight();
+        int bottom = target.getPaddingBottom();
+        target.setBackground(states);
+        target.setPadding(left, top, right, bottom);
+
+        styleTexts(target);
+    }
+
+    private static void styleTexts(View view) {
+        if (view instanceof TextView) {
+            TextView text = (TextView) view;
+            int normal = text.getCurrentTextColor();
+            // Titlul închis, descrierea gri / dark title, grey description
+            int focused = text.getId() == android.R.id.summary ? 0xFF555555 : 0xFF111111;
+            text.setDuplicateParentStateEnabled(true);
+            text.setTextColor(new ColorStateList(new int[][] {{android.R.attr.state_focused}, {}}, new int[] {focused, normal}));
+        } else if (view instanceof ViewGroup) {
+            ViewGroup group = (ViewGroup) view;
+            for (int i = 0; i < group.getChildCount(); i++) {
+                View child = group.getChildAt(i);
+                if (child instanceof ViewGroup) {
+                    // copiii primesc starea de focus de la părinte / children get the focus state from the parent
+                    ((ViewGroup) child).setDuplicateParentStateEnabled(true);
+                }
+                styleTexts(child);
+            }
+        }
+    }
+
+    private static View findFocusable(View view) {
+        if (!(view instanceof ViewGroup)) {
+            return null;
+        }
+
+        ViewGroup group = (ViewGroup) view;
+
+        for (int i = 0; i < group.getChildCount(); i++) {
+            View child = group.getChildAt(i);
+            if (child.isFocusable()) {
+                return child;
+            }
+            View found = findFocusable(child);
+            if (found != null) {
+                return found;
+            }
+        }
+
+        return null;
     }
 
     /**

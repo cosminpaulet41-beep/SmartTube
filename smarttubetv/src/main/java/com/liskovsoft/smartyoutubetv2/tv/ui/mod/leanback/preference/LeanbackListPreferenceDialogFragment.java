@@ -160,6 +160,8 @@ public class LeanbackListPreferenceDialogFragment extends LeanbackPreferenceDial
         verticalGridView.setWindowAlignment(VerticalGridView.WINDOW_ALIGN_BOTH_EDGE);
         verticalGridView.setFocusScrollStrategy(VerticalGridView.FOCUS_SCROLL_ALIGNED);
         verticalGridView.setAdapter(onCreateAdapter());
+        // Hunys mod: pastilă albă pe elementul cu focus / white pill on the focused item
+        com.liskovsoft.smartyoutubetv2.tv.hunys.HunysUi.stylePreferenceList(verticalGridView);
         verticalGridView.requestFocus();
 
         final CharSequence title = mDialogTitle;

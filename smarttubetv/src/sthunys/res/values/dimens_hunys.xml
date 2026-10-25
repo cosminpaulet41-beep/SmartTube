@@ -4,4 +4,7 @@
     <dimen name="lb_browse_headers_width">190dp</dimen>
     <dimen name="lb_browse_rows_margin_start">205dp</dimen>
     <dimen name="lb_settings_pane_width">290dp</dimen>
+    <!-- Sugestiile se văd puțin sub butoanele playerului (implicit 28dp) -->
+    <!-- Suggestions peek below the player buttons (default 28dp) -->
+    <dimen name="lb_playback_controls_padding_bottom">110dp</dimen>
 </resources>

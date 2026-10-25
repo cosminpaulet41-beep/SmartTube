@@ -1446,12 +1446,30 @@ public class BrowseSupportFragment extends BaseSupportFragment {
         }
     }
 
+    // ---- SmartTube Hunys mod (Hunys with Claude AI): bară laterală strânsă / collapsed icon rail
+    // Valorile 0/null păstrează comportamentul original. 0/null keep the original behavior.
+
+    /** Cât din bara laterală rămâne vizibil când e strânsă (px) / visible rail width when collapsed (px) */
+    public static int sHunysRailWidth = 0;
+    /** Marginea rândurilor când bara e strânsă (px) / rows margin when collapsed (px) */
+    public static int sHunysRailContentMargin = 0;
+
+    public interface HunysHeadersListener {
+        void onHeadersShown(View headersView, boolean shown);
+    }
+
+    public static HunysHeadersListener sHunysHeadersListener;
+
     private void setHeadersOnScreen(boolean onScreen) {
         MarginLayoutParams lp;
         View containerList;
         containerList = mHeadersSupportFragment.getView();
         lp = (MarginLayoutParams) containerList.getLayoutParams();
-        lp.setMarginStart(onScreen ? 0 : -mContainerListMarginStart);
+        int hiddenMargin = -mContainerListMarginStart;
+        if (sHunysRailWidth > 0) {
+            hiddenMargin = sHunysRailWidth - getResources().getDimensionPixelSize(R.dimen.lb_browse_headers_width);
+        }
+        lp.setMarginStart(onScreen ? 0 : hiddenMargin);
         containerList.setLayoutParams(lp);
     }
 
@@ -1460,11 +1478,15 @@ public class BrowseSupportFragment extends BaseSupportFragment {
         mHeadersSupportFragment.setHeadersEnabled(show);
         setHeadersOnScreen(show);
         expandMainFragment(!show);
+
+        if (sHunysHeadersListener != null && mHeadersSupportFragment.getView() != null) {
+            sHunysHeadersListener.onHeadersShown(mHeadersSupportFragment.getView(), show);
+        }
     }
 
     private void expandMainFragment(boolean expand) {
         MarginLayoutParams params = (MarginLayoutParams) mScaleFrameLayout.getLayoutParams();
-        params.setMarginStart(!expand ? mContainerListMarginStart : 0);
+        params.setMarginStart(!expand ? mContainerListMarginStart : sHunysRailContentMargin);
         mScaleFrameLayout.setLayoutParams(params);
         mMainFragmentAdapter.setExpand(expand);
 

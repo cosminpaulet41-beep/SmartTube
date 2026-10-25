@@ -24,6 +24,7 @@ import com.liskovsoft.smartyoutubetv2.common.app.views.AppDialogView;
 import com.liskovsoft.smartyoutubetv2.common.misc.MotherActivity;
 import com.liskovsoft.smartyoutubetv2.common.utils.Utils;
 import com.liskovsoft.smartyoutubetv2.tv.R;
+import com.liskovsoft.smartyoutubetv2.tv.hunys.HunysUi;
 import com.liskovsoft.smartyoutubetv2.tv.ui.dialogs.other.ChatPreference;
 import com.liskovsoft.smartyoutubetv2.tv.ui.dialogs.other.ChatPreferenceDialogFragment;
 import com.liskovsoft.smartyoutubetv2.tv.ui.dialogs.other.CommentsPreference;
@@ -317,6 +318,9 @@ public class AppDialogFragment extends LeanbackSettingsFragment implements AppDi
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
             View view = super.onCreateView(inflater, container, savedInstanceState);
+
+            // Hunys mod: pastilă albă pe elementul cu focus / white pill on the focused item
+            HunysUi.stylePreferenceList(getListView());
 
             if (mIsTransparent && view != null) {
                 // Enable transparent shadow outline on parent (R.id.settings_preference_fragment_container)

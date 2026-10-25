@@ -107,6 +107,10 @@ public class IconHeaderItemPresenter extends RowHeaderPresenter {
         if (label != null) {
             label.setText(headerItem.getName());
         }
+
+        if (mIsHunys) {
+            HunysUi.applyRailToItem(rootView, HunysUi.isRail()); // bara strânsă / collapsed rail
+        }
     }
 
     @Override
