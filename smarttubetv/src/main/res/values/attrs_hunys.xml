@@ -4,4 +4,6 @@
     <attr name="hunysSidebarTop" format="color|reference" />
     <attr name="hunysPill" format="color|reference" />
     <attr name="hunysInk" format="color|reference" />
+    <attr name="hunysPanel" format="color|reference" />
+    <attr name="hunysAccent" format="color|reference" />
 </resources>

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.AttributeSet;
+import android.view.KeyEvent;
 import android.widget.ImageView.ScaleType;
 import android.widget.TextView;
 import androidx.leanback.widget.ImageCardView;
@@ -17,6 +18,7 @@ public class ComplexImageCardView extends ImageCardView {
     private Handler mHandler;
     private boolean mIsCardTextAutoScrollEnabled;
     private boolean mIsBadgeEnabled;
+    private int mHunysConsumedKey = -1;
 
     public ComplexImageCardView(Context context) {
         super(context);
@@ -100,6 +102,55 @@ public class ComplexImageCardView extends ImageCardView {
         }
 
         enableVideoPreview(selected);
+    }
+
+    /**
+     * Hunys mod: în timpul previzualizării, ↓ duce la butonul de sunet, OK pornește/oprește sunetul.<br/>
+     * Hunys mod: during preview, ↓ moves to the sound button, OK toggles the sound.
+     */
+    @Override
+    public boolean dispatchKeyEvent(KeyEvent event) {
+        int code = event.getKeyCode();
+
+        if (event.getAction() == KeyEvent.ACTION_UP && code == mHunysConsumedKey) {
+            mHunysConsumedKey = -1;
+            if (isOkKey(code) && mComplexImageView.isHunysSoundFocused()) {
+                mComplexImageView.toggleHunysMute();
+            }
+            return true;
+        }
+
+        if (event.getAction() == KeyEvent.ACTION_DOWN && mComplexImageView != null && mComplexImageView.isHunysPreviewActive()) {
+            boolean soundFocused = mComplexImageView.isHunysSoundFocused();
+
+            if (code == KeyEvent.KEYCODE_DPAD_DOWN && !soundFocused) {
+                mComplexImageView.setHunysSoundFocused(true);
+                mHunysConsumedKey = code;
+                return true;
+            }
+
+            if (soundFocused) {
+                if (code == KeyEvent.KEYCODE_DPAD_UP) {
+                    mComplexImageView.setHunysSoundFocused(false);
+                    mHunysConsumedKey = code;
+                    return true;
+                }
+
+                if (isOkKey(code)) {
+                    mHunysConsumedKey = code; // toggle on key up, ignore long press
+                    return true;
+                }
+
+                // ↓ din nou, ← sau →: pleacă de pe card / ↓ again, ← or →: leave the card
+                mComplexImageView.setHunysSoundFocused(false);
+            }
+        }
+
+        return super.dispatchKeyEvent(event);
+    }
+
+    private static boolean isOkKey(int code) {
+        return code == KeyEvent.KEYCODE_DPAD_CENTER || code == KeyEvent.KEYCODE_ENTER || code == KeyEvent.KEYCODE_NUMPAD_ENTER;
     }
 
     @Override

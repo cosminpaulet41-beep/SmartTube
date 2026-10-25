@@ -1,5 +1,7 @@
 package com.liskovsoft.smartyoutubetv2.common.app.models.playback.controllers;
 
+import com.liskovsoft.smartyoutubetv2.common.hunys.HunysData;
+import com.liskovsoft.smartyoutubetv2.common.hunys.HunysLoudness;
 import com.liskovsoft.mediaserviceinterfaces.data.MediaItemMetadata;
 import com.liskovsoft.sharedutils.helpers.Helpers;
 import com.liskovsoft.sharedutils.mylogger.Log;
@@ -660,7 +662,12 @@ public class VideoStateController extends BasePlayerController {
 
         float newVolume = getPlayerData().getPlayerVolume();
 
-        if (getPlayerTweaksData().isPlayerAutoVolumeEnabled()) {
+        if (HunysData.isHunysBuild(getContext())) {
+            // Hunys mod: volum egalizat după tăria reală a clipului / loudness normalization by the video's real loudness
+            if (HunysData.instance(getContext()).isLoudnessEnabled()) {
+                newVolume *= HunysLoudness.gainFor(getVideo().hunysLoudnessDb);
+            }
+        } else if (getPlayerTweaksData().isPlayerAutoVolumeEnabled()) {
             //newVolume *= getVideo().volume;
             //newVolume = getVideo().volume;
             if (newVolume < 1f) {

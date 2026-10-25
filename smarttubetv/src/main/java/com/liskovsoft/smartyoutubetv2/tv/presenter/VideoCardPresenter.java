@@ -22,6 +22,7 @@ import com.liskovsoft.sharedutils.helpers.Helpers;
 import com.liskovsoft.sharedutils.mylogger.Log;
 import com.liskovsoft.smartyoutubetv2.common.app.models.data.Video;
 import com.liskovsoft.smartyoutubetv2.common.prefs.MainUIData;
+import com.liskovsoft.smartyoutubetv2.common.hunys.HunysData;
 import com.liskovsoft.smartyoutubetv2.common.utils.ClickbaitRemover;
 import com.liskovsoft.smartyoutubetv2.tv.R;
 import com.liskovsoft.smartyoutubetv2.tv.presenter.base.LongClickPresenter;
@@ -203,6 +204,15 @@ public class VideoCardPresenter extends LongClickPresenter {
     }
 
     protected int getCardPreviewType(Context context) {
+        if (HunysData.isHunysBuild(context)) {
+            // Hunys mod: previzualizare cu sunet, oprită în modul ușor / preview with sound, off in light mode
+            HunysData hunysData = HunysData.instance(context);
+            if (hunysData.getPreviewSeconds() <= 0 || hunysData.isLightModeEnabled()) {
+                return MainUIData.CARD_PREVIEW_DISABLED;
+            }
+            return hunysData.isPreviewMuted() ? MainUIData.CARD_PREVIEW_MUTED : MainUIData.CARD_PREVIEW_FULL;
+        }
+
         return MainUIData.instance(context).getCardPreviewType();
     }
 

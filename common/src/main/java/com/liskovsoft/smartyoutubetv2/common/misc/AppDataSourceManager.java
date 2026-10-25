@@ -12,6 +12,8 @@ import com.liskovsoft.smartyoutubetv2.common.app.presenters.settings.BackupSetti
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.settings.SponsorBlockSettingsPresenter;
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.settings.DeArrowSettingsPresenter;
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.settings.GeneralSettingsPresenter;
+import com.liskovsoft.smartyoutubetv2.common.app.presenters.settings.HunysSettingsPresenter;
+import com.liskovsoft.smartyoutubetv2.common.hunys.HunysData;
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.settings.LanguageSettingsPresenter;
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.settings.MainUISettingsPresenter;
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.settings.PlayerSettingsPresenter;
@@ -41,6 +43,11 @@ public class AppDataSourceManager {
     public List<SettingsItem> getSettingItems(Context context) {
         List<SettingsItem> settingItems = new ArrayList<>();
 
+        if (HunysData.isHunysBuild(context)) {
+            // Hunys mod: setările modului, primele în listă / mod settings, first in the list
+            settingItems.add(new SettingsItem(
+                    context.getString(R.string.hunys_settings_title), () -> HunysSettingsPresenter.instance(context).show(), R.drawable.settings_hunys));
+        }
         settingItems.add(new SettingsItem(
                 context.getString(R.string.settings_accounts), () -> AccountSettingsPresenter.instance(context).show(), R.drawable.settings_account));
         settingItems.add(new SettingsItem(

@@ -22,6 +22,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.liskovsoft.sharedutils.mylogger.Log;
 import com.liskovsoft.smartyoutubetv2.tv.R;
+import com.liskovsoft.smartyoutubetv2.tv.hunys.HunysUi;
 import com.liskovsoft.smartyoutubetv2.tv.util.ViewUtil;
 
 public class IconHeaderItemPresenter extends RowHeaderPresenter {
@@ -30,6 +31,7 @@ public class IconHeaderItemPresenter extends RowHeaderPresenter {
     private final int mResId;
     private final String mIconUrl;
     private Drawable mDefaultIcon;
+    private boolean mIsHunys;
 
     public IconHeaderItemPresenter(int resId, String iconUrl) {
         mResId = resId;
@@ -44,7 +46,28 @@ public class IconHeaderItemPresenter extends RowHeaderPresenter {
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mDefaultIcon = new ColorDrawable(ContextCompat.getColor(viewGroup.getContext(), R.color.lb_grey));
 
-        View view = inflater.inflate(R.layout.icon_header_item, null);
+        mIsHunys = HunysUi.isHunys(viewGroup.getContext());
+
+        View view;
+
+        if (mIsHunys) {
+            // Hunys mod: pastilă la focus, iconițe rotunjite / pill on focus, rounded icons
+            mUnselectedAlpha = Math.max(mUnselectedAlpha, 0.85f);
+            view = inflater.inflate(R.layout.hunys_header_item, viewGroup, false);
+            view.setBackground(HunysUi.focusPill(viewGroup.getContext(), 11));
+            view.setMinimumWidth(HunysUi.dp(viewGroup.getContext(), 156)); // pastila pe toată lățimea / full-width pill
+            TextView label = view.findViewById(R.id.header_label);
+            if (label != null) {
+                label.setTextColor(HunysUi.focusInk(viewGroup.getContext()));
+            }
+            ImageView icon = view.findViewById(R.id.header_icon);
+            if (icon != null && android.os.Build.VERSION.SDK_INT >= 21) {
+                icon.setImageTintList(HunysUi.focusInk(viewGroup.getContext()));
+            }
+        } else {
+            view = inflater.inflate(R.layout.icon_header_item, null);
+        }
+
         view.setAlpha(mUnselectedAlpha); // Initialize icons to be at half-opacity.
 
         return new ViewHolder(view);
@@ -74,7 +97,8 @@ public class IconHeaderItemPresenter extends RowHeaderPresenter {
 
                 //ViewUtil.makeMonochrome(iconView);
             } else {
-                Drawable icon = mResId > 0 ? ContextCompat.getDrawable(rootView.getContext(), mResId) : mDefaultIcon;
+                int resId = mIsHunys ? HunysUi.mapSectionIcon(rootView.getContext(), mResId) : mResId;
+                Drawable icon = resId > 0 ? ContextCompat.getDrawable(rootView.getContext(), resId) : mDefaultIcon;
                 iconView.setImageDrawable(icon);
             }
         }

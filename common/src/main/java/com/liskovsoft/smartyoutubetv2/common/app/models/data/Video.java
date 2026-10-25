@@ -94,6 +94,8 @@ public final class Video {
     public String dislikeCount;
     public String subscriberCount;
     public float volume = 1.0f;
+    /** Hunys mod: tăria sunetului raportată de YouTube / loudness reported by YouTube (NaN = unknown) */
+    public float hunysLoudnessDb = Float.NaN;
     public boolean deArrowProcessed;
     public boolean isLiveEnd;
     public boolean isShuffled;
@@ -795,6 +797,7 @@ public final class Video {
         }
 
         volume = formatInfo.getVolumeLevel();
+        hunysLoudnessDb = com.liskovsoft.smartyoutubetv2.common.hunys.HunysLoudness.readLoudnessDb(formatInfo);
         isUnplayable = formatInfo.isUnplayable();
     }
 

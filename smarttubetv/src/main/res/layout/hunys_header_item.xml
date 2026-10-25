@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SmartTube Hunys: element din bara laterală (pastilă la focus) / sidebar item (pill on focus) -->
+<androidx.leanback.widget.NonOverlappingLinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="34dp"
+    android:paddingStart="11dp"
+    android:paddingEnd="10dp"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/header_icon"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:duplicateParentState="true"
+        android:contentDescription="@string/header_icon" />
+
+    <com.liskovsoft.smartyoutubetv2.tv.ui.widgets.marqueetextviewcompat.HeaderMarqueeTextViewCompat
+        android:id="@+id/header_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="11dp"
+        android:duplicateParentState="true"
+        android:singleLine="true"
+        android:maxWidth="120dp"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:ellipsize="marquee"
+        android:scrollHorizontally="true"
+        android:textSize="13sp"
+        android:textStyle="normal"
+        android:fontFamily="sans-serif-medium"
+        android:includeFontPadding="false" />
+</androidx.leanback.widget.NonOverlappingLinearLayout>

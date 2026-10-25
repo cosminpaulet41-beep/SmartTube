@@ -32,6 +32,8 @@ import com.liskovsoft.smartyoutubetv2.common.misc.MediaServiceManager.AccountCha
 import com.liskovsoft.smartyoutubetv2.common.prefs.common.DataChangeBase.OnDataChange;
 import com.liskovsoft.smartyoutubetv2.common.prefs.GeneralData;
 import com.liskovsoft.smartyoutubetv2.common.prefs.MainUIData;
+import com.liskovsoft.smartyoutubetv2.common.hunys.HunysData;
+import com.liskovsoft.smartyoutubetv2.common.app.presenters.settings.HunysSettingsPresenter;
 import com.liskovsoft.smartyoutubetv2.common.utils.Utils;
 import com.liskovsoft.smartyoutubetv2.tv.R;
 import com.liskovsoft.smartyoutubetv2.tv.ui.mod.leanback.playerglue.tooltips.TooltipCompatHandler;
@@ -54,6 +56,7 @@ import static androidx.leanback.widget.TitleViewAdapter.SEARCH_VIEW_VISIBLE;
 public class NavigateTitleView extends TitleView implements OnDataChange, AccountChangeListener {
     private LongClickSearchOrbView mAccountView;
     private SearchOrbView mLanguageView;
+    private SearchOrbView mHunysDimView;
     private SearchOrbView mExitPip;
     private TextView mPipTitle;
     private int mSearchVisibility = View.INVISIBLE;
@@ -160,6 +163,10 @@ public class NavigateTitleView extends TitleView implements OnDataChange, Accoun
             mLanguageView.setVisibility(mSearchVisibility);
         }
 
+        if (mHunysDimView != null && HunysData.isHunysBuild(getContext())) {
+            mHunysDimView.setVisibility(mSearchVisibility);
+        }
+
         if (mExitPip != null && (PlaybackPresenter.instance(getContext()).isRunningInBackground() || mSearchVisibility != View.VISIBLE)) {
             mExitPip.setVisibility(mSearchVisibility);
             mPipTitle.setVisibility(mSearchVisibility);
@@ -202,6 +209,13 @@ public class NavigateTitleView extends TitleView implements OnDataChange, Accoun
         });
         TooltipCompatHandler.setTooltipText(mAccountView, getContext().getString(R.string.settings_accounts));
 
+        // Hunys mod: luna deschide întunecarea ecranului / the moon opens screen dimming
+        mHunysDimView = findViewById(R.id.hunys_dim_orb);
+        if (mHunysDimView != null && HunysData.isHunysBuild(getContext())) {
+            mHunysDimView.setOnOrbClickedListener(v -> HunysSettingsPresenter.instance(getContext()).showDimming());
+            TooltipCompatHandler.setTooltipText(mHunysDimView, getContext().getString(R.string.hunys_dimming));
+        }
+
         mLanguageView = findViewById(R.id.language_orb);
         mLanguageView.setOnOrbClickedListener(v -> LanguageSettingsPresenter.instance(getContext()).show());
         TooltipCompatHandler.setTooltipText(mLanguageView, getContext().getString(R.string.settings_language_country));
@@ -234,6 +248,9 @@ public class NavigateTitleView extends TitleView implements OnDataChange, Accoun
         mSearchOrbView.setVisibility(mIsSearchOrbEnabled ? View.VISIBLE : View.GONE);
         mAccountView.setVisibility(mIsAccountViewEnabled ? View.VISIBLE : View.GONE);
         mLanguageView.setVisibility(mIsLanguageViewEnabled ? View.VISIBLE : View.GONE);
+        if (mHunysDimView != null) {
+            mHunysDimView.setVisibility(HunysData.isHunysBuild(getContext()) ? View.VISIBLE : View.GONE);
+        }
         mGlobalClock.setVisibility(mIsGlobalClockEnabled ? View.VISIBLE : View.GONE);
         mGlobalDate.setVisibility(mIsGlobalClockEnabled ? View.VISIBLE : View.GONE);
 

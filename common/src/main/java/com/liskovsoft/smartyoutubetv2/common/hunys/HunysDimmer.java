@@ -50,6 +50,7 @@ public class HunysDimmer {
         removeOverlay();
         mActivity = new WeakReference<>(activity);
         mData.addListener(mDataListener);
+        HunysTraffic.sample(activity);
         update();
         mHandler.removeCallbacks(mTick);
         mHandler.postDelayed(mTick, TICK_MS);
@@ -125,6 +126,10 @@ public class HunysDimmer {
     }
 
     private void tick() {
+        Activity activity = mActivity != null ? mActivity.get() : null;
+        if (activity != null) {
+            HunysTraffic.sample(activity);
+        }
         update();
         mHandler.postDelayed(mTick, TICK_MS);
     }

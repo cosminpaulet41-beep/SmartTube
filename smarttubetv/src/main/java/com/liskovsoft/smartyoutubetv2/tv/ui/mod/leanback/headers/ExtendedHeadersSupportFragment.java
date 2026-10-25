@@ -1,6 +1,10 @@
 package com.liskovsoft.smartyoutubetv2.tv.ui.mod.leanback.headers;
 
+import android.os.Bundle;
 import android.view.KeyEvent;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import com.liskovsoft.smartyoutubetv2.tv.hunys.HunysUi;
 import android.view.View;
 import android.view.View.OnLayoutChangeListener;
 import androidx.leanback.app.HeadersSupportFragment;
@@ -25,6 +29,14 @@ public class ExtendedHeadersSupportFragment extends HeadersSupportFragment {
 
     public ExtendedHeadersSupportFragment() {
         Helpers.setField(this, "mAdapterListener", mCustomAdapterListener);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        // Hunys mod: bară laterală plutitoare, rotunjită / floating rounded sidebar
+        HunysUi.styleSidebar(view);
     }
 
     public void setOnHeaderLongPressedListener(OnHeaderLongPressedListener listener) {

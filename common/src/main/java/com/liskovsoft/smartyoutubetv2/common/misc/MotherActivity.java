@@ -26,6 +26,7 @@ import com.liskovsoft.smartyoutubetv2.common.app.views.ViewManager;
 import com.liskovsoft.smartyoutubetv2.common.hunys.HunysData;
 import com.liskovsoft.smartyoutubetv2.common.hunys.HunysFonts;
 import com.liskovsoft.smartyoutubetv2.common.hunys.HunysDimmer;
+import com.liskovsoft.smartyoutubetv2.common.hunys.HunysSubtitles;
 import com.liskovsoft.smartyoutubetv2.common.prefs.GeneralData;
 import com.liskovsoft.smartyoutubetv2.common.prefs.MainUIData;
 import com.liskovsoft.smartyoutubetv2.common.prefs.PlayerData;
@@ -77,6 +78,9 @@ public class MotherActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
 
         Log.d(TAG, "Starting %s...", this.getClass().getSimpleName());
+
+        // Hunys mod: subtitrări mai vizibile la prima pornire / more visible subtitles on first start
+        HunysSubtitles.applyDefaultsOnce(this);
 
         mIsOculusQuestFixEnabled = PlayerTweaksData.instance(this).isOculusQuestFixEnabled();
         mIsFullscreenModeEnabled = GeneralData.instance(this).isFullscreenModeEnabled();
@@ -237,11 +241,14 @@ public class MotherActivity extends FragmentActivity {
         // Stop managing the screensaver so a paused activity cannot keep the display awake.
         mScreensaverManager.suspend();
 
-        HunysDimmer.instance(this).detach(this);
+        // Hunys mod: stratul de întunecare rămâne și sub dialoguri (fără flash luminos).
+        // Hunys mod: the dimming layer stays under dialogs too (no bright flash). Removed in onDestroy.
     }
 
     @Override
     protected void onDestroy() {
+        HunysDimmer.instance(this).detach(this);
+
         if (mScreensaverManager != null) {
             mScreensaverManager.cleanup();
         }
