@@ -3,4 +3,5 @@
 <resources>
     <item name="action_player_settings" type="id" />
     <item name="action_hunys_spacer" type="id" />
+    <item name="action_hunys_dim" type="id" />
 </resources>

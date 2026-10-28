@@ -45,6 +45,9 @@ public class HQDialogController extends BasePlayerController {
             onHighQualityClicked();
         } else if (buttonId == R.id.action_player_settings) {
             onHunysSettingsClicked();
+        } else if (buttonId == R.id.action_hunys_dim) {
+            // Hunys mod: modul de noapte din player / night mode from the player
+            com.liskovsoft.smartyoutubetv2.common.app.presenters.settings.HunysSettingsPresenter.instance(getContext()).showDimming();
         }
     }
 

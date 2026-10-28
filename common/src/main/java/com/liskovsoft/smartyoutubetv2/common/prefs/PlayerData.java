@@ -721,10 +721,14 @@ public class PlayerData extends DataChangeBase implements PlayerConstants, Profi
     }
 
     public FormatItem getDefaultVideoFormat() {
-        // Hunys mod: implicit 1080p (60 cadre doar dacă clipul le are), niciodată peste 1080p
-        // Hunys mod: default 1080p (60 fps only if the video has it), never above 1080p
+        // Hunys mod: pornește la calitatea aleasă în Setări Hunys (implicit 720p), 60 cadre doar dacă clipul le are
+        // Hunys mod: starts at the quality chosen in Hunys settings (default 720p), 60 fps only if the video has it
         if (HunysData.isHunysBuild(mHunysContext)) {
-            return DeviceHelpers.isVP9ResolutionSupported(1080) ? FormatItem.VIDEO_FHD_VP9_60 : FormatItem.VIDEO_FHD_AVC_60;
+            int height = HunysData.instance(mHunysContext).getStartQuality();
+            int width = height >= 1080 ? 1920 : height >= 720 ? 1280 : 854;
+            height = height >= 1080 ? 1080 : height >= 720 ? 720 : 480;
+            String codec = DeviceHelpers.isVP9ResolutionSupported(height) ? "vp9" : "avc";
+            return ExoFormatItem.fromVideoSpec(width + "," + height + ",60," + codec, false);
         }
 
         FormatItem formatItem = mDefaultVideoFormats.get(Build.MODEL);

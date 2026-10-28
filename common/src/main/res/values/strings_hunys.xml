@@ -66,4 +66,5 @@
     <string name="hunys_auto">Auto</string>
     <string name="hunys_chapters_hint">← → choose a chapter     OK jump to it     ↓ back to the bar</string>
     <string name="hunys_now">NOW</string>
+    <string name="hunys_start_quality">Start quality</string>
 </resources>

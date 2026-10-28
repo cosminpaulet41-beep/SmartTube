@@ -32,6 +32,9 @@ public class HunysData {
     private static final String K_DATA_LIMIT_MB = "data_limit_mb";
     private static final String K_DATA_WARN = "data_warn";
     private static final String K_DEFAULTS_APPLIED = "defaults_applied_v1";
+    private static final String K_START_QUALITY = "start_quality";
+    private static final String K_MENU_ORDER_APPLIED = "menu_order_v1";
+    public static final int START_QUALITY_DEFAULT = 720;
 
     @SuppressLint("StaticFieldLeak")
     private static HunysData sInstance;
@@ -80,6 +83,27 @@ public class HunysData {
 
     public void setDefaultsApplied() {
         mPrefs.edit().putBoolean(K_DEFAULTS_APPLIED, true).apply();
+    }
+
+    // ---- Calitate la pornire / start quality (480, 720, 1080)
+
+    public int getStartQuality() {
+        return mPrefs.getInt(K_START_QUALITY, START_QUALITY_DEFAULT);
+    }
+
+    public void setStartQuality(int height) {
+        mPrefs.edit().putInt(K_START_QUALITY, height).apply();
+        notifyChanged();
+    }
+
+    // ---- Meniul de pe clip: „Nu mă interesează” primele / video menu: "Not interested" first
+
+    public boolean isMenuOrderApplied() {
+        return mPrefs.getBoolean(K_MENU_ORDER_APPLIED, false);
+    }
+
+    public void setMenuOrderApplied() {
+        mPrefs.edit().putBoolean(K_MENU_ORDER_APPLIED, true).apply();
     }
 
     // ---- Text / scris

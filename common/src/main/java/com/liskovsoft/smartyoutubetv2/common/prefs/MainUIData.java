@@ -518,6 +518,7 @@ public class MainUIData extends DataChangeBase implements ProfileChangeListener 
         mIsUnlocalizedTitlesEnabled = Helpers.parseBoolean(split, 22, false);
         mUiTweaks = Helpers.parseLong(split, 23, UI_TWEAK_DEFAULT);
 
+        boolean hunysPersist = false;
         int idx = -1;
         for (Long menuItem : MENU_ITEM_DEFAULT_ORDER) {
             idx++;
@@ -535,6 +536,18 @@ public class MainUIData extends DataChangeBase implements ProfileChangeListener 
             }
         }
 
+        // Hunys mod: „Nu mă interesează” și „Nu recomanda canalul” primele în meniu (o singură dată, poți schimba ordinea după)
+        // Hunys mod: "Not interested" and "Don't recommend channel" first in the menu (once, you can reorder later)
+        if (HunysData.isHunysBuild(mContext) && !HunysData.instance(mContext).isMenuOrderApplied()) {
+            mMenuItemsOrdered.remove(MENU_ITEM_NOT_RECOMMEND_CHANNEL);
+            mMenuItemsOrdered.add(0, MENU_ITEM_NOT_RECOMMEND_CHANNEL);
+            mMenuItemsOrdered.remove(MENU_ITEM_NOT_INTERESTED);
+            mMenuItemsOrdered.add(0, MENU_ITEM_NOT_INTERESTED);
+            mMenuItems |= MENU_ITEM_NOT_INTERESTED | MENU_ITEM_NOT_RECOMMEND_CHANNEL;
+            HunysData.instance(mContext).setMenuOrderApplied();
+            hunysPersist = true;
+        }
+
         for (ContextMenuProvider provider : new ContextMenuManager(mContext).getProviders()) {
             if (!mMenuItemsOrdered.contains(provider.getId())) {
                 mMenuItemsOrdered.add(provider.getId());
@@ -546,6 +559,10 @@ public class MainUIData extends DataChangeBase implements ProfileChangeListener 
         }
         
         updateDefaultValues();
+
+        if (hunysPersist) {
+            persistNow(); // salvează noua ordine / save the new order
+        }
     }
 
     public void persistNow() {

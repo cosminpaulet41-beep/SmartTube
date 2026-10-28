@@ -74,6 +74,13 @@ public class EventsOverridePlaybackFragment extends SurfacePlaybackFragment {
                 if (keyAction == KeyEvent.ACTION_DOWN) {
                     tickle();
                 }
+
+                // Hunys mod: prima apăsare ← → doar arată bara; a doua derulează 10 secunde
+                // Hunys mod: the first left/right press only shows the bar; the second one seeks 10 seconds
+                if (controlsHidden && (keyCode == KeyEvent.KEYCODE_DPAD_LEFT || keyCode == KeyEvent.KEYCODE_DPAD_RIGHT)
+                        && com.liskovsoft.smartyoutubetv2.common.hunys.HunysData.isHunysBuild(getContext())) {
+                    consumeEvent = true;
+                }
                 break;
             case KeyEvent.KEYCODE_BACK:
             case KeyEvent.KEYCODE_ESCAPE:

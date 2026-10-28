@@ -23,6 +23,7 @@ import com.liskovsoft.smartyoutubetv2.common.app.presenters.ChannelPresenter;
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.ChannelUploadsPresenter;
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.PlaybackPresenter;
 import com.liskovsoft.smartyoutubetv2.common.hunys.HunysData;
+import com.liskovsoft.smartyoutubetv2.common.prefs.PlayerData;
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.SearchPresenter;
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.SplashPresenter;
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.base.BasePresenter;
@@ -179,6 +180,13 @@ public class ViewManager {
             lastActivity = mActivityStack.peek();
         } else {
             lastActivity = mRootActivity;
+        }
+
+        // Hunys mod: la fiecare deschidere, calitatea revine la cea de pornire (implicit 720p)
+        // Hunys mod: on every launch, the quality goes back to the start quality (default 720p)
+        if (HunysData.isHunysBuild(mContext) && !PlaybackPresenter.instance(mContext).isRunningInBackground()) {
+            PlayerData playerData = PlayerData.instance(mContext);
+            playerData.setFormat(playerData.getDefaultVideoFormat());
         }
 
         // Hunys mod: la deschidere pornește mereu pe Acasă (fără ecranul negru care reîncarcă ultimul clip).

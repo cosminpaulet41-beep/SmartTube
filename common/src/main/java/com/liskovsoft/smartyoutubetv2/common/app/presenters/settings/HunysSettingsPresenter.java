@@ -8,6 +8,7 @@ import com.liskovsoft.smartyoutubetv2.common.app.models.playback.ui.UiOptionItem
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.AppDialogPresenter;
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.base.BasePresenter;
 import com.liskovsoft.smartyoutubetv2.common.hunys.HunysData;
+import com.liskovsoft.smartyoutubetv2.common.prefs.PlayerData;
 import com.liskovsoft.smartyoutubetv2.common.hunys.HunysDimmer;
 import com.liskovsoft.smartyoutubetv2.common.hunys.HunysSubtitles;
 import com.liskovsoft.smartyoutubetv2.common.hunys.HunysTraffic;
@@ -40,6 +41,7 @@ public class HunysSettingsPresenter extends BasePresenter<Void> {
         appendDimmingButton(settingsPresenter);
         appendLoudnessSwitch(settingsPresenter);
         appendDataCounterButton(settingsPresenter);
+        appendStartQualityCategory(settingsPresenter);
         appendPreviewCategory(settingsPresenter);
         appendTextSizeCategory(settingsPresenter);
         appendSubtitlesButton(settingsPresenter);
@@ -156,6 +158,25 @@ public class HunysSettingsPresenter extends BasePresenter<Void> {
         }));
 
         presenter.showDialog(getContext().getString(R.string.hunys_data_counter));
+    }
+
+    /**
+     * Calitatea cu care pornește fiecare clip după deschiderea aplicației (implicit 720p).<br/>
+     * The quality every video starts with after opening the app (default 720p).
+     */
+    private void appendStartQualityCategory(AppDialogPresenter settingsPresenter) {
+        List<OptionItem> options = new ArrayList<>();
+        int current = mData.getStartQuality();
+
+        for (int height : new int[] {480, 720, 1080}) {
+            options.add(UiOptionItem.from(height + "p", option -> {
+                mData.setStartQuality(height);
+                PlayerData playerData = PlayerData.instance(getContext());
+                playerData.setFormat(playerData.getDefaultVideoFormat());
+            }, current == height));
+        }
+
+        settingsPresenter.appendRadioCategory(getContext().getString(R.string.hunys_start_quality), options);
     }
 
     private void appendPreviewCategory(AppDialogPresenter settingsPresenter) {

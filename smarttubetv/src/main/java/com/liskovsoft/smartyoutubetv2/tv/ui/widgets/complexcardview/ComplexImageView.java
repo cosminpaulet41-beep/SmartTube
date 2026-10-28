@@ -202,7 +202,8 @@ public class ComplexImageView extends RelativeLayout {
         mPreviewPlayer.openVideo(getVideo());
 
         if (isHunys) {
-            showHunysSound(true);
+            // Butonul de sunet de pe card a fost scos: telecomanda are deja buton de oprit sonorul
+            // The card sound button was removed: the remote already has a mute button
 
             int seconds = HunysData.instance(getContext()).getPreviewSeconds();
 

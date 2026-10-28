@@ -20,6 +20,7 @@ import androidx.leanback.widget.PlaybackControlsRow;
 
 import com.liskovsoft.smartyoutubetv2.common.app.models.data.Video;
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.PlaybackPresenter;
+import com.liskovsoft.smartyoutubetv2.common.hunys.HunysDimmer;
 import com.liskovsoft.smartyoutubetv2.tv.R;
 
 /**
@@ -137,6 +138,12 @@ public final class HunysControls {
             iconRes = on ? R.drawable.hunys_ic_dislike_filled : R.drawable.hunys_ic_dislike;
         } else if (id == R.id.action_player_settings) {
             iconRes = R.drawable.hunys_ic_settings;
+        } else if (id == R.id.action_hunys_dim) {
+            iconRes = R.drawable.hunys_ic_moon;
+            if (HunysDimmer.instance(context).getEffectiveLevel() > 0) {
+                // luna colorată când ecranul e întunecat / colored moon when the screen is dimmed
+                tint = new ColorStateList(new int[][] {{android.R.attr.state_focused}, {}}, new int[] {DARK, HunysUi.accent(context)});
+            }
         } else if (id == R.id.action_chat) {
             iconRes = R.drawable.hunys_ic_comments;
         } else if (id == R.id.action_playlist_add) {

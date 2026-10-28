@@ -36,6 +36,7 @@ import com.liskovsoft.smartyoutubetv2.tv.ui.playback.actions.ContentBlockAction;
 import com.liskovsoft.smartyoutubetv2.tv.ui.playback.actions.FlipAction;
 import com.liskovsoft.smartyoutubetv2.tv.ui.playback.actions.HighQualityAction;
 import com.liskovsoft.smartyoutubetv2.tv.ui.playback.actions.HunysSettingsAction;
+import com.liskovsoft.smartyoutubetv2.tv.ui.playback.actions.HunysDimAction;
 import com.liskovsoft.smartyoutubetv2.tv.ui.playback.actions.HunysSpacerAction;
 import com.liskovsoft.smartyoutubetv2.tv.hunys.HunysUi;
 import com.liskovsoft.smartyoutubetv2.tv.ui.playback.actions.RotateAction;
@@ -140,6 +141,7 @@ public class VideoPlayerGlue extends MaxControlsVideoPlayerGlue<PlayerAdapter> i
         putAction(new FlipAction(context));
         putAction(new SoundOffAction(context));
         putAction(new HunysSettingsAction(context));
+        putAction(new HunysDimAction(context));
 
         mIsHunys = HunysUi.isHunys(context);
     }
@@ -225,6 +227,7 @@ public class VideoPlayerGlue extends MaxControlsVideoPlayerGlue<PlayerAdapter> i
             adapter.add(mHunysSpacer);
             adapter.add(mActions.get(R.id.action_thumbs_up));
             adapter.add(mActions.get(R.id.action_thumbs_down));
+            adapter.add(mActions.get(R.id.action_hunys_dim)); // modul de noapte / night mode
             adapter.add(mActions.get(R.id.action_player_settings));
             adapter.add(mActions.get(R.id.action_chat));
             adapter.add(mActions.get(R.id.action_playlist_add));
