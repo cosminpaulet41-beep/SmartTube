@@ -67,5 +67,5 @@
     <string name="hunys_chapters_hint">← → alegi reperul     OK sari la el     ↓ înapoi la bară</string>
     <string name="hunys_now">ACUM</string>
     <string name="hunys_start_quality">Calitate la pornire</string>
-    <string name="hunys_dim_hint">← → nivel     OK gata     ↓ întunecare automată</string>
+    <string name="hunys_dim_hint">↑↓ alegi   ← → schimbi   OK gata</string>
 </resources>

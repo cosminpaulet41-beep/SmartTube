@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- SmartTube Hunys: panoul mic de întunecare (fără lățime minimă) / small dimming panel (no minimum width) -->
+<resources>
+    <style name="HunysDimPanel" parent="@android:style/Theme.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowMinWidthMajor">0%</item>
+        <item name="android:windowMinWidthMinor">0%</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowIsFloating">true</item>
+    </style>
+</resources>

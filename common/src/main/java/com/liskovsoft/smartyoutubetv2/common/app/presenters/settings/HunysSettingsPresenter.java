@@ -57,9 +57,9 @@ public class HunysSettingsPresenter extends BasePresenter<Void> {
      * The dimming dialog, also opened from the moon button.
      */
     public void showDimming() {
-        // Hunys mod: bara cu ← → direct; ↓ din bară deschide întunecarea automată
-        // Hunys mod: the left/right bar straight away; down in the bar opens automatic dimming
-        if (!HunysDimSlider.show(getContext(), this::showDimmingSettings)) {
+        // Hunys mod: panoul mic cu bara de nivel și întunecarea automată
+        // Hunys mod: the small panel with the level bar and automatic dimming
+        if (!HunysDimSlider.show(getContext())) {
             showDimmingSettings();
         }
     }
@@ -75,7 +75,12 @@ public class HunysSettingsPresenter extends BasePresenter<Void> {
 
     private void appendDimmingButton(AppDialogPresenter settingsPresenter) {
         settingsPresenter.appendSingleButton(UiOptionItem.from(getContext().getString(R.string.hunys_dimming),
-                option -> showDimmingSettings()));
+                option -> {
+                    // Închide setările și deschide panoul mic peste ecranul de dedesubt
+                    // Close settings and open the small panel over the screen below
+                    AppDialogPresenter.instance(getContext()).closeDialog();
+                    new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(this::showDimming, 450);
+                }));
     }
 
     private void appendDimmingCategories(AppDialogPresenter presenter) {
