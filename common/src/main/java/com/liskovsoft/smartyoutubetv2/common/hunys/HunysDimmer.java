@@ -81,6 +81,12 @@ public class HunysDimmer {
         update();
     }
 
+    /** Ecranul curent al aplicației (pentru bara de întunecare) / the app's current screen (for the dimming bar) */
+    public Activity getCurrentActivity() {
+        Activity activity = mActivity != null ? mActivity.get() : null;
+        return activity != null && !activity.isFinishing() ? activity : null;
+    }
+
     public int getEffectiveLevel() {
         if (isAutoIntervalNow() && System.currentTimeMillis() >= mData.getDimManualUntil()) {
             return mData.getAutoDimLevel();

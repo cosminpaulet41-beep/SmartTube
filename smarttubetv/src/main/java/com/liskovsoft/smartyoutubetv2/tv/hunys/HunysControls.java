@@ -67,9 +67,10 @@ public final class HunysControls {
             boolean showPlay = index == PlaybackControlsRow.PlayPauseAction.INDEX_PLAY;
             root.setPadding(dp(context, 7), 0, dp(context, 7), 0);
             circle(button, dp(context, 46));
-            button.setBackground(states(oval(context, Color.WHITE, 0, 0), oval(context, Color.WHITE, dp(context, 3), HunysUi.pill(context))));
+            // Se aprinde doar când e selectat, ca ⏮ și ⏭ / lights up only when focused, like prev and next
+            button.setBackground(states(oval(context, GLASS, dp(context, 1), 0x1AFFFFFF), oval(context, Color.WHITE, 0, 0)));
             setIcon(icon, ContextCompat.getDrawable(context, showPlay ? R.drawable.hunys_ic_play_filled : R.drawable.hunys_ic_pause_filled),
-                    dp(context, 20), ColorStateList.valueOf(DARK));
+                    dp(context, 20), whiteToDark());
             if (showPlay) {
                 icon.setPadding(dp(context, 2), 0, 0, 0); // triunghiul arată centrat / visually centered triangle
             }

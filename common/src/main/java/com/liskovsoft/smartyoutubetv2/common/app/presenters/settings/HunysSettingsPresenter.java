@@ -10,6 +10,7 @@ import com.liskovsoft.smartyoutubetv2.common.app.presenters.base.BasePresenter;
 import com.liskovsoft.smartyoutubetv2.common.hunys.HunysData;
 import com.liskovsoft.smartyoutubetv2.common.prefs.PlayerData;
 import com.liskovsoft.smartyoutubetv2.common.hunys.HunysDimmer;
+import com.liskovsoft.smartyoutubetv2.common.hunys.HunysDimSlider;
 import com.liskovsoft.smartyoutubetv2.common.hunys.HunysSubtitles;
 import com.liskovsoft.smartyoutubetv2.common.hunys.HunysTraffic;
 import com.liskovsoft.sharedutils.helpers.MessageHelpers;
@@ -56,6 +57,17 @@ public class HunysSettingsPresenter extends BasePresenter<Void> {
      * The dimming dialog, also opened from the moon button.
      */
     public void showDimming() {
+        // Hunys mod: bara cu ← → direct; ↓ din bară deschide întunecarea automată
+        // Hunys mod: the left/right bar straight away; down in the bar opens automatic dimming
+        if (!HunysDimSlider.show(getContext(), this::showDimmingSettings)) {
+            showDimmingSettings();
+        }
+    }
+
+    /**
+     * Toate setările de întunecare (nivel, automat, ore, nivel noaptea) / all dimming settings (level, automatic, hours, night level)
+     */
+    public void showDimmingSettings() {
         AppDialogPresenter presenter = AppDialogPresenter.instance(getContext());
         appendDimmingCategories(presenter);
         presenter.showDialog(getContext().getString(R.string.hunys_dimming));
@@ -63,7 +75,7 @@ public class HunysSettingsPresenter extends BasePresenter<Void> {
 
     private void appendDimmingButton(AppDialogPresenter settingsPresenter) {
         settingsPresenter.appendSingleButton(UiOptionItem.from(getContext().getString(R.string.hunys_dimming),
-                option -> showDimming()));
+                option -> showDimmingSettings()));
     }
 
     private void appendDimmingCategories(AppDialogPresenter presenter) {
