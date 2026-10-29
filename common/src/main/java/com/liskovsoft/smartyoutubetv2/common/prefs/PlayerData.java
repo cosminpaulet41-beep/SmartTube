@@ -875,6 +875,17 @@ public class PlayerData extends DataChangeBase implements PlayerConstants, Profi
         if (mSubtitleStyleIndex >= mSubtitleStyles.size()) {
             mSubtitleStyleIndex = yellowOnSemiBgSubIdx;
         }
+
+        // Hunys mod (o singură dată, se pot schimba din setările playerului / once, changeable in player settings):
+        // derularea cu ← → se aplică doar după OK, iar butoanele nu-și mai arată denumirea
+        // seeking with left/right only applies after OK, and buttons no longer show their names
+        if (HunysData.isHunysBuild(mHunysContext) && !HunysData.instance(mHunysContext).isPlayerDefaultsApplied()) {
+            mIsSeekConfirmPlayEnabled = true;
+            mIsSeekConfirmPauseEnabled = false;
+            mIsTooltipsEnabled = false;
+            HunysData.instance(mHunysContext).setPlayerDefaultsApplied();
+            persistNow();
+        }
     }
 
     public void persistNow() {

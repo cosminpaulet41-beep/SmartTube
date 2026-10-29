@@ -34,6 +34,7 @@ public class HunysData {
     private static final String K_DEFAULTS_APPLIED = "defaults_applied_v1";
     private static final String K_START_QUALITY = "start_quality";
     private static final String K_MENU_ORDER_APPLIED = "menu_order_v1";
+    private static final String K_PLAYER_DEFAULTS_APPLIED = "player_defaults_v1";
     public static final int START_QUALITY_DEFAULT = 720;
 
     @SuppressLint("StaticFieldLeak")
@@ -104,6 +105,17 @@ public class HunysData {
 
     public void setMenuOrderApplied() {
         mPrefs.edit().putBoolean(K_MENU_ORDER_APPLIED, true).apply();
+    }
+
+    // ---- Player: derulare cu confirmare, fără denumiri la butoane (o singură dată)
+    // ---- Player: seek with confirmation, no button labels (once)
+
+    public boolean isPlayerDefaultsApplied() {
+        return mPrefs.getBoolean(K_PLAYER_DEFAULTS_APPLIED, false);
+    }
+
+    public void setPlayerDefaultsApplied() {
+        mPrefs.edit().putBoolean(K_PLAYER_DEFAULTS_APPLIED, true).apply();
     }
 
     // ---- Text / scris
