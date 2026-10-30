@@ -30,6 +30,7 @@ import java.util.UUID;
 public class ExoPlayerInitializer {
     private final int mMaxBufferBytes;
     private final PlayerData mPlayerData;
+    private final boolean mIsHunys;
     private final PlayerTweaksData mPlayerTweaksData;
     private VolumeBooster mVolumeBooster;
     private float mVolumeBoost;
@@ -38,6 +39,7 @@ public class ExoPlayerInitializer {
 
     public ExoPlayerInitializer(Context context) {
         mPlayerData = PlayerData.instance(context);
+        mIsHunys = com.liskovsoft.smartyoutubetv2.common.hunys.HunysData.isHunysBuild(context);
         mPlayerTweaksData = PlayerTweaksData.instance(context);
 
         long deviceRam = DeviceHelpers.getDeviceRam(context);
@@ -137,6 +139,12 @@ public class ExoPlayerInitializer {
                 //bufferForPlaybackMs = 1_000;
                 //bufferForPlaybackAfterRebufferMs = 1_000;
                 break;
+        }
+
+        if (mIsHunys) {
+            // Hunys mod: pornește după 1 s de clip descărcat (nu 2,5 s) / starts after 1 s of downloaded video (not 2.5 s)
+            bufferForPlaybackMs = 1_000;
+            bufferForPlaybackAfterRebufferMs = 2_500;
         }
 
         baseBuilder

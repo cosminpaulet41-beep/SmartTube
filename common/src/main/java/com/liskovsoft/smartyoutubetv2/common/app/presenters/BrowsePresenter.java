@@ -1226,11 +1226,40 @@ public class BrowsePresenter extends BasePresenter<BrowseView> implements Sectio
             return;
         }
 
-        Video video = lastState.video;
+        // Copie curată: fără legătura spre rândul vechi, cu titlu și poză chiar dacă istoricul local are doar ID-ul.
+        // Clean copy: no link to the old row, with a title and picture even if the local history only has the ID.
+        Video source = lastState.video;
+        Video video = new Video();
+        video.videoId = source.videoId;
+        video.channelId = source.channelId;
+        video.title = !TextUtils.isEmpty(source.getTitleFull()) ? source.getTitleFull() : null;
+        video.secondTitle = source.getSecondTitleFull();
+        video.cardImageUrl = !TextUtils.isEmpty(source.cardImageUrl) ? source.cardImageUrl
+                : "https://i.ytimg.com/vi/" + source.videoId + "/hqdefault.jpg";
         video.percentWatched = (int) (lastState.positionMs * 100 / lastState.durationMs);
+
+        if (video.videoId == null) {
+            return;
+        }
+
         VideoGroup continueGroup = VideoGroup.from(Collections.singletonList(video), section, groupIndex.incrementAndGet());
         continueGroup.setTitle(getContext().getString(R.string.hunys_continue_watching));
-        getView().updateSection(continueGroup);
+
+        if (!TextUtils.isEmpty(video.title)) {
+            getView().updateSection(continueGroup);
+            return;
+        }
+
+        // Fără titlu salvat: îl cerem de la YouTube, apoi arătăm rândul / no saved title: ask YouTube, then show the row
+        MediaServiceManager.instance().loadMetadata(video, metadata -> {
+            if (metadata != null) {
+                video.title = metadata.getTitle();
+                video.secondTitle = metadata.getSecondTitle();
+            }
+            if (getView() != null && !TextUtils.isEmpty(video.title)) {
+                getView().updateSection(continueGroup);
+            }
+        });
     }
 
     private void appendLocalHistory(VideoGroup videoGroup) {
