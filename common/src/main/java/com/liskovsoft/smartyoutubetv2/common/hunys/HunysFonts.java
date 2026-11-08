@@ -69,6 +69,28 @@ public final class HunysFonts {
         }
     }
 
+    /**
+     * Pune fontul Inter cu grosimea dată (400, 500, 600, 700).<br/>
+     * Applies the Inter font with the given weight (400, 500, 600, 700).
+     */
+    public static void applyWeight(TextView view, int weight) {
+        if (view == null || Build.VERSION.SDK_INT < 29 || !HunysData.isHunysBuild(view.getContext())) {
+            return;
+        }
+
+        load(view.getContext());
+
+        if (sLoadFailed) {
+            return;
+        }
+
+        Typeface target = weight >= 700 ? sBold : weight >= 600 ? sSemiBold : weight >= 500 ? sMedium : sRegular;
+
+        if (target != null) {
+            view.setTypeface(target);
+        }
+    }
+
     public static void apply(TextView view) {
         if (view == null) {
             return;

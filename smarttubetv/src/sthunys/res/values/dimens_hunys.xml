@@ -13,11 +13,11 @@
     <dimen name="lb_basic_card_info_padding_top">5dp</dimen>
     <dimen name="lb_basic_card_info_padding_bottom">6dp</dimen>
     <dimen name="lb_basic_card_info_padding_horizontal">9dp</dimen>
-    <!-- Titlul din player ca în machetă: 24 px aldin, rândul cu canalul și data 14 px -->
-    <!-- Player title as in the mockup: 24 px bold, channel and date line 14 px -->
-    <dimen name="lb_details_description_title_text_size">22sp</dimen>
-    <dimen name="lb_details_description_title_resized_text_size">22sp</dimen>
+    <!-- Titlul din player: aldin, cu 20% mai mic decât în machetă (~19 px); rândul cu canalul și data 14 px -->
+    <!-- Player title: bold, 20% smaller than the mockup (~19 px); channel and date line 14 px -->
+    <dimen name="lb_details_description_title_text_size">17.5sp</dimen>
+    <dimen name="lb_details_description_title_resized_text_size">17.5sp</dimen>
     <dimen name="lb_details_description_subtitle_text_size">13sp</dimen>
-    <dimen name="lb_details_description_title_line_spacing">30dp</dimen>
-    <dimen name="lb_details_description_under_title_baseline_margin">26dp</dimen>
+    <dimen name="lb_details_description_title_line_spacing">24dp</dimen>
+    <dimen name="lb_details_description_under_title_baseline_margin">24dp</dimen>
 </resources>

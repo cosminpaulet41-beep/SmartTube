@@ -151,10 +151,48 @@ public class MarqueeTextViewCompat extends TextView {
         // When executing the parent constructor, if AttributeSet contains textSize,
         // setTextSize will be called first, and mTextView is not initialized yet
         if (mTextView != null) {
-            mTextView.setTextSize(size);
+            // Hunys mod: aceeași unitate, altfel textul derulant are altă mărime / same unit, else the scrolling text gets another size
+            mTextView.setTextSize(unit, size);
             if (!isLayoutRequested()) {
                 requestLayout();
             }
+        }
+    }
+
+    /**
+     * Hunys mod: textul care se derulează folosește același font ca textul care stă pe loc,
+     * ca literele să nu se îngusteze și să nu sară când pornește derularea.<br/>
+     * Hunys mod: the scrolling text uses the same font as the still text,
+     * so letters don't get narrower or jump when scrolling starts.
+     */
+    @Override
+    public void setTypeface(@Nullable android.graphics.Typeface tf) {
+        super.setTypeface(tf);
+        if (mTextView != null) {
+            mTextView.setTypeface(tf);
+            if (!isLayoutRequested()) {
+                requestLayout();
+            }
+        }
+    }
+
+    @Override
+    public void setTypeface(@Nullable android.graphics.Typeface tf, int style) {
+        super.setTypeface(tf, style);
+        if (mTextView != null) {
+            mTextView.setTypeface(tf, style);
+            if (!isLayoutRequested()) {
+                requestLayout();
+            }
+        }
+    }
+
+    @RequiresApi(21)
+    @Override
+    public void setLetterSpacing(float letterSpacing) {
+        super.setLetterSpacing(letterSpacing);
+        if (mTextView != null) {
+            mTextView.setLetterSpacing(letterSpacing);
         }
     }
 

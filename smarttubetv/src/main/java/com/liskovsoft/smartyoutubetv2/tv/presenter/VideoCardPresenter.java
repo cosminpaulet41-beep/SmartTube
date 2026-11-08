@@ -23,6 +23,7 @@ import com.liskovsoft.sharedutils.mylogger.Log;
 import com.liskovsoft.smartyoutubetv2.common.app.models.data.Video;
 import com.liskovsoft.smartyoutubetv2.common.prefs.MainUIData;
 import com.liskovsoft.smartyoutubetv2.common.hunys.HunysData;
+import com.liskovsoft.smartyoutubetv2.common.hunys.HunysFonts;
 import com.liskovsoft.smartyoutubetv2.tv.hunys.HunysUi;
 import com.liskovsoft.smartyoutubetv2.common.utils.ClickbaitRemover;
 import com.liskovsoft.smartyoutubetv2.tv.R;
@@ -99,6 +100,11 @@ public class VideoCardPresenter extends LongClickPresenter {
         //    cardView.setForeground(ContextCompat.getDrawable(context, R.drawable.lb_card_outline));
         //}
         updateCardBackgroundColor(cardView, false);
+        if (mIsHunys) {
+            // Hunys mod: titlul semi-aldin, rândul cu canalul puțin mai gros / semibold title, slightly bolder channel line
+            HunysFonts.applyWeight(cardView.findViewById(R.id.title_text), 600);
+            HunysFonts.applyWeight(cardView.findViewById(R.id.content_text), 500);
+        }
         return new ViewHolder(cardView);
     }
 

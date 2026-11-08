@@ -863,6 +863,12 @@ public class PlaybackFragment extends SeekModePlaybackFragment implements Playba
             result = TextUtils.concat( result, " ", Video.TERTIARY_TEXT_DELIM, " ", Utils.color(getContext().getString(R.string.badge_live), ContextCompat.getColor(getContext(), R.color.red)));
         }
 
+        // Hunys mod: doar canal, vizualizări și dată; fără like-uri, dislike-uri și abonați
+        // Hunys mod: only channel, views and date; no likes, dislikes or subscribers
+        if (getContext() != null && com.liskovsoft.smartyoutubetv2.tv.hunys.HunysUi.isHunys(getContext())) {
+            return result;
+        }
+
         if (getContext() != null && video.likeCount != null) {
             result = TextUtils.concat(result, " ", Video.TERTIARY_TEXT_DELIM, " ", video.likeCount, Helpers.NON_BREAKING_SPACE, Helpers.THUMB_UP); // color of thumb cannot be changed
         }

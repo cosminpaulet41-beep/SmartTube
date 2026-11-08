@@ -1134,6 +1134,29 @@ public class BrowsePresenter extends BasePresenter<BrowseView> implements Sectio
         }
     }
 
+    /**
+     * Hunys mod: Înapoi dintr-o secțiune a barei laterale (alta decât Acasă) duce pe Acasă.
+     * Doar de pe Acasă, Înapoi cere apăsare dublă pentru ieșire.<br/>
+     * Hunys mod: Back from a sidebar section (other than Home) goes to Home.
+     * Only on Home does Back ask for a double press to exit.
+     *
+     * @return true dacă s-a mutat pe Acasă / true if it moved to Home
+     */
+    public boolean hunysGoHomeOnBack() {
+        if (!HunysData.isHunysBuild(getContext()) || getView() == null || mCurrentSection == null || isHomeSection()) {
+            return false;
+        }
+
+        int homeIndex = findSectionIndex(MediaGroup.TYPE_HOME);
+
+        if (homeIndex == -1) {
+            return false; // Acasă e ascunsă / Home is hidden
+        }
+
+        getView().selectSection(homeIndex, true);
+        return true;
+    }
+
     public boolean inForeground() {
         return getViewManager().getTopView() == BrowseView.class;
     }
