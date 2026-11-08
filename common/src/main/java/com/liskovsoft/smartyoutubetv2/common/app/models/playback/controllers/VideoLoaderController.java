@@ -478,6 +478,17 @@ public class VideoLoaderController extends BasePlayerController {
             return;
         }
 
+        // Hunys mod: la final ecranul rămâne cum e (bara și butoanele), fără salt la sugestii,
+        // și nu întrerupe derularea începută / at the end the screen stays as is (bar and buttons),
+        // no jump to suggestions, and an ongoing seek is not interrupted
+        if (com.liskovsoft.smartyoutubetv2.common.hunys.HunysData.isHunysBuild(getContext())) {
+            getPlayer().setPlayWhenReady(false);
+            if (!getPlayer().isOverlayShown()) {
+                getPlayer().showOverlay(true);
+            }
+            return;
+        }
+
         getPlayer().setPositionMs(getPlayer().getDurationMs());
         getPlayer().setPlayWhenReady(false);
         getPlayer().showSuggestions(true);
