@@ -59,8 +59,8 @@ public class ComplexImageCardView extends ImageCardView {
         if (enable) {
             Runnable enableMarquee = () -> ViewUtil.enableMarquee(view);
 
-            // Hunys mod: încă jumătate de secundă până pornește derularea / half a second more before scrolling starts
-            mHandler.postDelayed(enableMarquee, com.liskovsoft.smartyoutubetv2.common.hunys.HunysData.isHunysBuild(getContext()) ? 1_500 : 1_000);
+            // Hunys mod: derularea textului pornește după 2,5 s / text scrolling starts after 2.5 s
+            mHandler.postDelayed(enableMarquee, com.liskovsoft.smartyoutubetv2.common.hunys.HunysData.isHunysBuild(getContext()) ? 2_500 : 1_000);
 
             view.setTag(enableMarquee);
         } else {

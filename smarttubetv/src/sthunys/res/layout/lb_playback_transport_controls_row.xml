@@ -52,29 +52,32 @@
                 android:gravity="bottom" />
 
             <!-- Calitatea în dreapta sus, fără dată și oră / quality top right, no date and time -->
-            <RelativeLayout android:id="@+id/additional_info"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="top"
-                            android:layout_marginStart="16dp"
-                            android:layoutDirection="ltr"
-                            android:focusable="false" >
+            <!-- LinearLayout, nu RelativeLayout: RelativeLayout cu wrap_content și copil aliniat la capăt
+                 ocupă toată lățimea liberă și lasă titlul cu lățime 0 (de aceea nu apărea titlul). -->
+            <!-- LinearLayout, not RelativeLayout: a wrap_content RelativeLayout with an end-aligned child
+                 takes all free width and leaves the title 0 px wide (that is why the title was missing). -->
+            <LinearLayout android:id="@+id/additional_info"
+                          android:layout_width="wrap_content"
+                          android:layout_height="wrap_content"
+                          android:layout_gravity="top"
+                          android:layout_marginStart="16dp"
+                          android:orientation="vertical"
+                          android:gravity="end"
+                          android:layoutDirection="ltr"
+                          android:focusable="false" >
                 <TextView
                     android:id="@+id/quality_info"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
                     android:alpha="0.7"
                     style="?attr/playbackControlsTimeStyle" />
                 <com.liskovsoft.smartyoutubetv2.tv.ui.widgets.time.DateTimeView
                     android:id="@+id/date_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_below="@+id/quality_info"
                     android:visibility="gone"
                     style="?attr/playbackControlsTimeStyle" />
-            </RelativeLayout>
+            </LinearLayout>
         </LinearLayout>
         <LinearLayout
             android:id="@+id/thumbs_row_wrapper"
