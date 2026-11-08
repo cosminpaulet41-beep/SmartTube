@@ -35,6 +35,7 @@ public class HunysData {
     private static final String K_START_QUALITY = "start_quality";
     private static final String K_MENU_ORDER_APPLIED = "menu_order_v1";
     private static final String K_PLAYER_DEFAULTS_APPLIED = "player_defaults_v1";
+    private static final String K_AUTOPLAY_DEFAULT_APPLIED = "autoplay_default_v1";
     public static final int START_QUALITY_DEFAULT = 720;
 
     @SuppressLint("StaticFieldLeak")
@@ -116,6 +117,16 @@ public class HunysData {
 
     public void setPlayerDefaultsApplied() {
         mPrefs.edit().putBoolean(K_PLAYER_DEFAULTS_APPLIED, true).apply();
+    }
+
+    // ---- Redare automată oprită la început (o singură dată) / autoplay off at first (once)
+
+    public boolean isAutoplayDefaultApplied() {
+        return mPrefs.getBoolean(K_AUTOPLAY_DEFAULT_APPLIED, false);
+    }
+
+    public void setAutoplayDefaultApplied() {
+        mPrefs.edit().putBoolean(K_AUTOPLAY_DEFAULT_APPLIED, true).apply();
     }
 
     // ---- Text / scris

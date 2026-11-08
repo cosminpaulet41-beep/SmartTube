@@ -886,6 +886,13 @@ public class PlayerData extends DataChangeBase implements PlayerConstants, Profi
             HunysData.instance(mHunysContext).setPlayerDefaultsApplied();
             persistNow();
         }
+
+        // Hunys mod: redarea automată pornește oprită (o singură dată) / autoplay starts off (once)
+        if (HunysData.isHunysBuild(mHunysContext) && !HunysData.instance(mHunysContext).isAutoplayDefaultApplied()) {
+            mPlaybackMode = PlayerConstants.PLAYBACK_MODE_PAUSE;
+            HunysData.instance(mHunysContext).setAutoplayDefaultApplied();
+            persistNow();
+        }
     }
 
     public void persistNow() {

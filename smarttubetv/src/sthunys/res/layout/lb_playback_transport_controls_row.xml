@@ -15,18 +15,22 @@
     android:clipToPadding="false"
     android:paddingBottom="@dimen/lb_playback_transport_control_row_padding_bottom" >
 
+    <!-- Titlul, canalul și data stau sus în stânga; zona ocupă tot spațiul rămas deasupra barei -->
+    <!-- Title, channel and date sit at the top left; this area fills all the space left above the bar -->
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/hunys_player_top_shade" >
         <LinearLayout
             android:id="@+id/controls_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
+            android:layout_gravity="top"
             android:clipToPadding="false"
             android:paddingStart="?attr/browsePaddingStart"
             android:paddingEnd="?attr/browsePaddingEnd"
-            android:layout_marginBottom="@dimen/lb_playback_transport_control_info_margin_bottom"
+            android:layout_marginTop="22dp"
             android:orientation="horizontal" >
 
             <ImageView

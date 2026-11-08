@@ -68,4 +68,6 @@
     <string name="hunys_now">NOW</string>
     <string name="hunys_start_quality">Start quality</string>
     <string name="hunys_dim_hint">↑↓ choose   ← → change   OK done</string>
+    <string name="hunys_autoplay">Autoplay</string>
+    <string name="hunys_autoplay_desc">Starts the next video when this one ends</string>
 </resources>

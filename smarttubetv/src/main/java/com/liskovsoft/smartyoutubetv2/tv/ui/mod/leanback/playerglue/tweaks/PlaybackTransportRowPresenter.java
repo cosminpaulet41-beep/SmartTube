@@ -563,6 +563,12 @@ public class PlaybackTransportRowPresenter extends PlaybackRowPresenter {
                 mDescriptionDock.addView(mDescriptionViewHolder.view);
             }
             if (HunysChapterPanel.isAvailable(rootView)) {
+                // Hunys mod: rândul umple ecranul până la spațiul de jos, ca titlul să stea sus în stânga
+                // Hunys mod: the row fills the screen down to the bottom gap, so the title sits at the top left
+                int screenHeight = rootView.getResources().getDisplayMetrics().heightPixels;
+                int bottomGap = rootView.getResources().getDimensionPixelSize(R.dimen.lb_playback_controls_padding_bottom);
+                rootView.setMinimumHeight(Math.max(0, screenHeight - bottomGap));
+
                 // Hunys mod: rândul de repere deasupra barei / chapter row above the bar
                 mHunysChapters = new HunysChapterPanel(rootView, mProgressBar);
                 ((PlaybackTransportRowView) rootView.findViewById(R.id.transport_row))

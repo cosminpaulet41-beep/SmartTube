@@ -68,4 +68,6 @@
     <string name="hunys_now">ACUM</string>
     <string name="hunys_start_quality">Calitate la pornire</string>
     <string name="hunys_dim_hint">↑↓ alegi   ← → schimbi   OK gata</string>
+    <string name="hunys_autoplay">Redare automată</string>
+    <string name="hunys_autoplay_desc">Pornește singur următorul clip după ce se termină</string>
 </resources>

@@ -8,6 +8,7 @@ import com.liskovsoft.smartyoutubetv2.common.app.models.playback.ui.UiOptionItem
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.AppDialogPresenter;
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.base.BasePresenter;
 import com.liskovsoft.smartyoutubetv2.common.hunys.HunysData;
+import com.liskovsoft.smartyoutubetv2.common.hunys.HunysAutoplay;
 import com.liskovsoft.smartyoutubetv2.common.prefs.PlayerData;
 import com.liskovsoft.smartyoutubetv2.common.hunys.HunysDimmer;
 import com.liskovsoft.smartyoutubetv2.common.hunys.HunysDimSlider;
@@ -43,6 +44,7 @@ public class HunysSettingsPresenter extends BasePresenter<Void> {
         appendLoudnessSwitch(settingsPresenter);
         appendDataCounterButton(settingsPresenter);
         appendStartQualityCategory(settingsPresenter);
+        appendAutoplaySwitch(settingsPresenter);
         appendPreviewCategory(settingsPresenter);
         appendTextSizeCategory(settingsPresenter);
         appendSubtitlesButton(settingsPresenter);
@@ -194,6 +196,13 @@ public class HunysSettingsPresenter extends BasePresenter<Void> {
         }
 
         settingsPresenter.appendRadioCategory(getContext().getString(R.string.hunys_start_quality), options);
+    }
+
+    private void appendAutoplaySwitch(AppDialogPresenter settingsPresenter) {
+        PlayerData playerData = PlayerData.instance(getContext());
+        settingsPresenter.appendSingleSwitch(UiOptionItem.from(getContext().getString(R.string.hunys_autoplay),
+                getContext().getString(R.string.hunys_autoplay_desc),
+                option -> HunysAutoplay.set(playerData, option.isSelected()), HunysAutoplay.isOn(playerData)));
     }
 
     private void appendPreviewCategory(AppDialogPresenter settingsPresenter) {

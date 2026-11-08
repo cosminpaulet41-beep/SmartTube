@@ -96,6 +96,11 @@ public class HQDialogController extends BasePlayerController {
                 getContext().getString(R.string.hunys_repeat), option -> {
                     getMainController().onButtonLongClicked(R.id.action_repeat, getPlayer().getButtonState(R.id.action_repeat));
                 }));
+        dialog.appendSingleSwitch(UiOptionItem.from(
+                getContext().getString(R.string.hunys_autoplay), option -> {
+                    com.liskovsoft.smartyoutubetv2.common.hunys.HunysAutoplay.set(getPlayerData(), option.isSelected());
+                    getPlayer().setButtonState(R.id.action_repeat, getPlayerData().getPlaybackMode());
+                }, com.liskovsoft.smartyoutubetv2.common.hunys.HunysAutoplay.isOn(getPlayerData())));
         dialog.appendSingleButton(UiOptionItem.from(
                 getContext().getString(R.string.hunys_pip), option -> {
                     dialog.closeDialog();
