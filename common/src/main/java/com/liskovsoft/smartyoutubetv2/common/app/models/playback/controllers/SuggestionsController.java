@@ -521,6 +521,12 @@ public class SuggestionsController extends BasePlayerController {
             return;
         }
 
+        // Hunys mod: fără rândul „Chapters” sub player; reperele se deschid doar cu ↑ de pe bara video
+        // Hunys mod: no "Chapters" row under the player; chapters open only with up from the progress bar
+        if (com.liskovsoft.smartyoutubetv2.common.hunys.HunysData.isHunysBuild(getContext())) {
+            return;
+        }
+
         VideoGroup videoGroup = VideoGroup.fromChapters(mChapters, getContext().getString(R.string.chapters));
 
         getPlayer().updateSuggestions(videoGroup);
