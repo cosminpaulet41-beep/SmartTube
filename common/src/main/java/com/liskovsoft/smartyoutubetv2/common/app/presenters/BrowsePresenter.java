@@ -488,7 +488,76 @@ public class BrowsePresenter extends BasePresenter<BrowseView> implements Sectio
 
         VideoGroup group = item.getGroup();
 
+        // Hunys mod: rândurile de pe Acasă care se termină cu butonul „mai mult” primesc clipurile lui direct în rând
+        // Hunys mod: Home rows that end with the "more" button get its videos right in the row
+        if (hunysExpandContinuationTile(item, group)) {
+            return;
+        }
+
         continueGroup(group);
+    }
+
+    private final java.util.Set<String> mHunysExpandedTiles = new java.util.HashSet<>();
+
+    /**
+     * Hunys mod: YouTube a început să termine rândurile de pe Acasă cu un buton „mai mult” (fără poză),
+     * în loc să lase rândul să se încarce mai departe. Când ajungi spre capătul rândului, încărcăm
+     * clipurile din spatele butonului și le adăugăm în același rând, apoi scoatem butonul.<br/>
+     * Hunys mod: YouTube now ends Home rows with a "more" button (no picture) instead of letting the row
+     * load further. When you reach the end of the row, we load the videos behind the button, add them
+     * to the same row and remove the button.
+     *
+     * @return true dacă s-a ocupat de capătul rândului / true if it handled the end of the row
+     */
+    private boolean hunysExpandContinuationTile(Video last, VideoGroup group) {
+        if (!HunysData.isHunysBuild(getContext()) || getView() == null || group == null || last == null
+                || !last.isContinuation() || last.channelId == null) {
+            return false;
+        }
+
+        MediaGroup mediaGroup = group.getMediaGroup();
+
+        if (mediaGroup != null && mediaGroup.getNextPageKey() != null) {
+            return false; // rândul se poate continua normal / the row can continue normally
+        }
+
+        String key = group.getId() + "|" + last.channelId;
+
+        if (mHunysExpandedTiles.contains(key)) {
+            return true; // deja în lucru / already in progress
+        }
+
+        mHunysExpandedTiles.add(key);
+
+        Disposable expandAction = getContentService().getChannelObserve(last.channelId)
+                .subscribe(
+                        mediaGroups -> {
+                            if (getView() == null || mediaGroups == null) {
+                                return;
+                            }
+
+                            for (MediaGroup more : mediaGroups) {
+                                if (more == null || more.getMediaItems() == null || more.getMediaItems().isEmpty()) {
+                                    continue;
+                                }
+
+                                removeItem(last); // butonul gol nu mai e nevoie / the empty button is no longer needed
+
+                                VideoGroup videoGroup = VideoGroup.from(group, more);
+                                getView().updateSection(videoGroup);
+                                mBrowseProcessor.process(videoGroup);
+                                break; // doar primul rând de clipuri / only the first row of videos
+                            }
+                        },
+                        error -> {
+                            Log.e(TAG, "hunysExpandContinuationTile error: %s", error.getMessage());
+                            mHunysExpandedTiles.remove(key); // butonul rămâne, se poate apăsa / the button stays and can be pressed
+                        }
+                );
+
+        mActions.add(expandAction);
+
+        return true;
     }
 
     @Override
@@ -927,6 +996,7 @@ public class BrowsePresenter extends BasePresenter<BrowseView> implements Sectio
 
     private void disposeActions() {
         RxHelper.disposeActions(mActions);
+        mHunysExpandedTiles.clear(); // Hunys mod: secțiunea se reîncarcă / the section reloads
         Utils.removeCallbacks(mRefreshSection);
         mLastUpdateTimeMs = -1;
         mBrowseProcessor.dispose();
