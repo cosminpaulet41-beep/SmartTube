@@ -75,6 +75,13 @@ public class EventsOverridePlaybackFragment extends SurfacePlaybackFragment {
                     tickle();
                 }
 
+                // Hunys mod: în sugestii, ↑ ↓ păstrează coloana (nu mai sare la primul clip din rând)
+                // Hunys mod: in suggestions, up/down keep the column (no jump to the first video of the row)
+                if (keyAction == KeyEvent.ACTION_DOWN && (keyCode == KeyEvent.KEYCODE_DPAD_DOWN || keyCode == KeyEvent.KEYCODE_DPAD_UP)
+                        && com.liskovsoft.smartyoutubetv2.common.hunys.HunysData.isHunysBuild(getContext())) {
+                    onHunysVerticalKey(keyCode);
+                }
+
                 // Hunys mod: prima apăsare ← → doar arată bara; a doua derulează 10 secunde
                 // Hunys mod: the first left/right press only shows the bar; the second one seeks 10 seconds
                 if (controlsHidden && (keyCode == KeyEvent.KEYCODE_DPAD_LEFT || keyCode == KeyEvent.KEYCODE_DPAD_RIGHT)
@@ -106,6 +113,13 @@ public class EventsOverridePlaybackFragment extends SurfacePlaybackFragment {
                 }
         }
         return consumeEvent;
+    }
+
+    /**
+     * Hunys mod: apelat înainte ca selecția să treacă la rândul de sus/jos.<br/>
+     * Hunys mod: called before the selection moves to the row above/below.
+     */
+    protected void onHunysVerticalKey(int keyCode) {
     }
 
     private View.OnKeyListener getInputEventHandler() {

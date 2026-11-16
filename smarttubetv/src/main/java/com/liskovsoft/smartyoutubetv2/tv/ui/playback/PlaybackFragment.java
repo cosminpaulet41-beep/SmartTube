@@ -1498,6 +1498,50 @@ public class PlaybackFragment extends SeekModePlaybackFragment implements Playba
         return result;
     }
 
+    /**
+     * Hunys mod: la ↑ ↓ între rândurile de sugestii, rândul nou se deschide pe aceeași coloană,
+     * nu pe primul clip.<br/>
+     * Hunys mod: on up/down between suggestion rows, the new row opens on the same column,
+     * not on the first video.
+     */
+    @Override
+    protected void onHunysVerticalKey(int keyCode) {
+        if (mRowsSupportFragment == null || mRowsSupportFragment.getVerticalGridView() == null || mRowsAdapter == null) {
+            return;
+        }
+
+        int current = mRowsSupportFragment.getVerticalGridView().getSelectedPosition();
+        int target = keyCode == KeyEvent.KEYCODE_DPAD_DOWN ? current + 1 : current - 1;
+
+        if (current < 0 || target < 0 || target >= mRowsAdapter.size()) {
+            return;
+        }
+
+        ViewHolder from = mRowsSupportFragment.getRowViewHolder(current);
+        ViewHolder to = mRowsSupportFragment.getRowViewHolder(target);
+
+        // Doar între rânduri de clipuri / only between video rows
+        if (!(from instanceof ListRowPresenter.ViewHolder) || !(to instanceof ListRowPresenter.ViewHolder)) {
+            return;
+        }
+
+        androidx.leanback.widget.HorizontalGridView fromGrid = ((ListRowPresenter.ViewHolder) from).getGridView();
+        androidx.leanback.widget.HorizontalGridView toGrid = ((ListRowPresenter.ViewHolder) to).getGridView();
+
+        if (fromGrid == null || toGrid == null || !fromGrid.hasFocus() || toGrid.getAdapter() == null) {
+            return;
+        }
+
+        int column = fromGrid.getSelectedPosition();
+        int count = toGrid.getAdapter().getItemCount();
+
+        if (column < 0 || count <= 0) {
+            return;
+        }
+
+        toGrid.setSelectedPosition(Math.min(column, count - 1));
+    }
+
     @Override
     public void focusSuggestedItem(int index) {
         if (mRowsSupportFragment != null) {

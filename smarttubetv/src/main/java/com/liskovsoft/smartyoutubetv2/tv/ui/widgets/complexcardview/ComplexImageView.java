@@ -16,6 +16,9 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.liskovsoft.smartyoutubetv2.common.app.models.data.Video;
+import com.liskovsoft.smartyoutubetv2.common.app.presenters.PlaybackPresenter;
+import com.liskovsoft.smartyoutubetv2.common.app.views.PlaybackView;
+import com.liskovsoft.smartyoutubetv2.common.app.views.ViewManager;
 import com.liskovsoft.smartyoutubetv2.common.hunys.HunysData;
 import com.liskovsoft.smartyoutubetv2.common.utils.Utils;
 import com.liskovsoft.smartyoutubetv2.tv.R;
@@ -153,28 +156,77 @@ public class ComplexImageView extends RelativeLayout {
             return;
         }
 
-        if (mIsPreviewUrlEnabled) {
-            if (getVideo().previewUrl == null)
-                return;
-
-            if (mPreviewImage == null) {
-                mPreviewImage = new ImageView(getContext());
-                mPreviewImage.setScaleType(ScaleType.CENTER_CROP);
-                mPreviewImage.setAdjustViewBounds(true);
-                mPreviewContainer.addView(mPreviewImage, new FrameLayout.LayoutParams(mPreviewWidth, mPreviewHeight));
-                mPreviewContainer.setVisibility(View.VISIBLE);
+        // Hunys mod: în player, la sugestii, arătăm previzualizarea animată de la YouTube (fără sunet),
+        // fără să pornim un al doilea player lângă clipul principal.
+        // Hunys mod: in the player's suggestions, show YouTube's animated preview (no sound)
+        // without starting a second player next to the main video.
+        if (!mIsPreviewUrlEnabled && getVideo().previewUrl != null && isHunysFullPlayerActive()) {
+            mHunysMovingThumb = true;
+            if (mHunysShowMovingThumb == null) {
+                mHunysShowMovingThumb = this::showPreviewImage;
             }
+            Utils.removeCallbacks(mHunysShowMovingThumb);
+            Utils.postDelayed(mHunysShowMovingThumb, HUNYS_MOVING_THUMB_DELAY_MS);
+            return;
+        }
 
-            Glide.with(getContext().getApplicationContext()) // FIX: "You cannot start a load for a destroyed activity"
-                    .load(getVideo().previewUrl)
-                    .apply(ViewUtil.glideOptions())
-                    .into(mPreviewImage);
+        if (mIsPreviewUrlEnabled) {
+            showPreviewImage();
         } else if (getVideo().videoId != null) {
             if (mCreateAndStartPlayer == null) {
                 mCreateAndStartPlayer = this::createAndStartPlayer;
             }
 
             Utils.postDelayed(mCreateAndStartPlayer, PLAYER_START_DELAY_MS);
+        }
+    }
+
+    private boolean mHunysMovingThumb;
+    private Runnable mHunysShowMovingThumb;
+    private static final long HUNYS_MOVING_THUMB_DELAY_MS = 1_000;
+
+    /**
+     * Hunys mod: playerul mare e deschis (aici previzualizarea video normală e sărită).<br/>
+     * Hunys mod: the full player is open (the normal video preview is skipped here).
+     */
+    private boolean isHunysFullPlayerActive() {
+        if (!HunysData.isHunysBuild(getContext())) {
+            return false;
+        }
+
+        PlaybackPresenter presenter = PlaybackPresenter.instance(getContext());
+        PlaybackView view = presenter.getView();
+
+        return view != null && !(view instanceof EmbedPlayerView)
+                && (presenter.isEngineInitialized() || ViewManager.instance(getContext()).getTopView() == PlaybackView.class);
+    }
+
+    private void showPreviewImage() {
+        if (getVideo() == null || getVideo().previewUrl == null) {
+            return;
+        }
+
+        if (mPreviewImage == null) {
+            mPreviewImage = new ImageView(getContext());
+            mPreviewImage.setScaleType(ScaleType.CENTER_CROP);
+            mPreviewImage.setAdjustViewBounds(true);
+            mPreviewContainer.addView(mPreviewImage, new FrameLayout.LayoutParams(mPreviewWidth, mPreviewHeight));
+            mPreviewContainer.setVisibility(View.VISIBLE);
+        }
+
+        Glide.with(getContext().getApplicationContext()) // FIX: "You cannot start a load for a destroyed activity"
+                .load(getVideo().previewUrl)
+                .apply(ViewUtil.glideOptions())
+                .into(mPreviewImage);
+    }
+
+    private void clearPreviewImage() {
+        if (mPreviewImage != null) {
+            mPreviewContainer.removeView(mPreviewImage);
+            mPreviewContainer.setVisibility(View.GONE);
+            mPreviewImage.setImageDrawable(null);
+            Glide.with(getContext().getApplicationContext()).clear(mPreviewImage);
+            mPreviewImage = null;
         }
     }
 
@@ -298,6 +350,16 @@ public class ComplexImageView extends RelativeLayout {
         }
         showHunysSound(false);
 
+        // Hunys mod: oprește previzualizarea animată din player / stop the animated preview in the player
+        if (mHunysMovingThumb) {
+            mHunysMovingThumb = false;
+            if (mHunysShowMovingThumb != null) {
+                Utils.removeCallbacks(mHunysShowMovingThumb);
+            }
+            clearPreviewImage();
+            return;
+        }
+
         if (getVideo() == null) {
             return;
         }
@@ -306,13 +368,7 @@ public class ComplexImageView extends RelativeLayout {
             if (getVideo().previewUrl == null)
                 return;
 
-            if (mPreviewImage != null) {
-                mPreviewContainer.removeView(mPreviewImage);
-                mPreviewContainer.setVisibility(View.GONE);
-                mPreviewImage.setImageDrawable(null);
-                Glide.with(getContext().getApplicationContext()).clear(mPreviewImage);
-                mPreviewImage = null;
-            }
+            clearPreviewImage();
         } else if (getVideo().videoId != null) {
             Utils.removeCallbacks(mCreateAndStartPlayer);
 

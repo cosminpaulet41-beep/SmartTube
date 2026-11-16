@@ -343,7 +343,7 @@ public class VideoMenuPresenter extends BaseMenuPresenter {
             return;
         }
 
-        if ((!mVideo.belongsToHome() && !mVideo.belongsToShorts()) || !mIsNotInterestedButtonEnabled) {
+        if ((!mVideo.belongsToHome() && !mVideo.belongsToShorts() && !isHunysSuggestion()) || !mIsNotInterestedButtonEnabled) {
             return;
         }
 
@@ -365,6 +365,14 @@ public class VideoMenuPresenter extends BaseMenuPresenter {
                                 );
                     }
                 }));
+    }
+
+    /**
+     * Hunys mod: „Nu sunt interesat” și „Nu recomanda canalul” și pentru sugestiile din player.<br/>
+     * Hunys mod: "Not interested" and "Don't recommend channel" for the player suggestions too.
+     */
+    private boolean isHunysSuggestion() {
+        return com.liskovsoft.smartyoutubetv2.common.hunys.HunysData.isHunysBuild(getContext()) && mVideo.belongsToSuggestions();
     }
 
     private void markAsNotInterested(String feedbackToken) {
@@ -405,7 +413,7 @@ public class VideoMenuPresenter extends BaseMenuPresenter {
             return;
         }
 
-        if ((!mVideo.belongsToHome() && !mVideo.belongsToShorts()) || !mIsNotRecommendChannelEnabled) {
+        if ((!mVideo.belongsToHome() && !mVideo.belongsToShorts() && !isHunysSuggestion()) || !mIsNotRecommendChannelEnabled) {
             return;
         }
 
