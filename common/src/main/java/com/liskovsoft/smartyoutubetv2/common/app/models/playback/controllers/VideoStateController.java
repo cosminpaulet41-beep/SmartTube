@@ -2,6 +2,7 @@ package com.liskovsoft.smartyoutubetv2.common.app.models.playback.controllers;
 
 import com.liskovsoft.smartyoutubetv2.common.hunys.HunysData;
 import com.liskovsoft.smartyoutubetv2.common.hunys.HunysLoudness;
+import com.liskovsoft.smartyoutubetv2.common.hunys.HunysStableVolume;
 import com.liskovsoft.mediaserviceinterfaces.data.MediaItemMetadata;
 import com.liskovsoft.sharedutils.helpers.Helpers;
 import com.liskovsoft.sharedutils.mylogger.Log;
@@ -658,8 +659,10 @@ public class VideoStateController extends BasePlayerController {
         float newVolume = getPlayerData().getPlayerVolume();
 
         if (HunysData.isHunysBuild(getContext())) {
-            // Hunys mod: volum egalizat după tăria reală a clipului / loudness normalization by the video's real loudness
-            if (HunysData.instance(getContext()).isLoudnessEnabled()) {
+            // Hunys mod: volum stabil după tăria reală a clipului / stable volume by the video's real loudness
+            // prin efect: clipurile încete pot fi și ridicate / through the effect: quiet videos can be raised too
+            HunysStableVolume.setClipLoudness(getContext(), getVideo().hunysLoudnessDb);
+            if (HunysStableVolume.isOn(getContext()) && !HunysStableVolume.canLevelWithEffect()) {
                 newVolume *= HunysLoudness.gainFor(getVideo().hunysLoudnessDb);
             }
         } else if (getPlayerTweaksData().isPlayerAutoVolumeEnabled()) {

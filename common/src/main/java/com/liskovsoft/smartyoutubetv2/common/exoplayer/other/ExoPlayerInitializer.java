@@ -33,6 +33,7 @@ public class ExoPlayerInitializer {
     private final boolean mIsHunys;
     private final PlayerTweaksData mPlayerTweaksData;
     private VolumeBooster mVolumeBooster;
+    private com.liskovsoft.smartyoutubetv2.common.hunys.HunysStableVolume mHunysStableVolume;
     private float mVolumeBoost;
     private SimpleExoPlayer mPlayer;
     private static AudioAttributes sAudioAttributes;
@@ -78,6 +79,12 @@ public class ExoPlayerInitializer {
         setupAudioFocus(player);
 
         setupVolumeBoost(player);
+
+        if (mIsHunys) {
+            // Hunys mod: volum stabil (compresor) / stable volume (compressor)
+            mHunysStableVolume = new com.liskovsoft.smartyoutubetv2.common.hunys.HunysStableVolume(context, player);
+            player.addAudioListener(mHunysStableVolume);
+        }
 
         mPlayer = player;
 
@@ -205,6 +212,14 @@ public class ExoPlayerInitializer {
 
         if (mPlayer != null && mVolumeBooster != null) {
             mPlayer.removeAudioListener(mVolumeBooster);
+        }
+
+        if (mHunysStableVolume != null) {
+            if (mPlayer != null) {
+                mPlayer.removeAudioListener(mHunysStableVolume);
+            }
+            mHunysStableVolume.release();
+            mHunysStableVolume = null;
         }
 
         mVolumeBooster = null;

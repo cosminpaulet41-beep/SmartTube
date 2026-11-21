@@ -20,8 +20,9 @@
     <string name="hunys_text_size_large">Large</string>
     <string name="hunys_text_size_xlarge">Extra large</string>
     <string name="hunys_restart_needed">Restart the app to see the change</string>
-    <string name="hunys_loudness">Loudness normalization</string>
-    <string name="hunys_loudness_desc">All videos play at about the same volume</string>
+    <string name="hunys_stable_volume">Stable volume</string>
+    <string name="hunys_stable_volume_normal">Normal</string>
+    <string name="hunys_stable_volume_strong">Strong</string>
     <string name="hunys_preview">Home preview</string>
     <string name="hunys_preview_length">Preview length</string>
     <string name="hunys_preview_sound">Start preview with sound</string>

@@ -20,8 +20,9 @@
     <string name="hunys_text_size_large">Mare</string>
     <string name="hunys_text_size_xlarge">Foarte mare</string>
     <string name="hunys_restart_needed">Repornește aplicația ca să vezi schimbarea</string>
-    <string name="hunys_loudness">Volum egalizat</string>
-    <string name="hunys_loudness_desc">Toate clipurile se aud cam la fel de tare</string>
+    <string name="hunys_stable_volume">Volum stabil</string>
+    <string name="hunys_stable_volume_normal">Normal</string>
+    <string name="hunys_stable_volume_strong">Puternic</string>
     <string name="hunys_preview">Previzualizare pe Acasă</string>
     <string name="hunys_preview_length">Durata previzualizării</string>
     <string name="hunys_preview_sound">Previzualizare cu sunet</string>

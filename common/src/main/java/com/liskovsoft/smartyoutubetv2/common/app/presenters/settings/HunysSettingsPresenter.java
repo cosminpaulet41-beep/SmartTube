@@ -12,6 +12,7 @@ import com.liskovsoft.smartyoutubetv2.common.hunys.HunysAutoplay;
 import com.liskovsoft.smartyoutubetv2.common.prefs.PlayerData;
 import com.liskovsoft.smartyoutubetv2.common.hunys.HunysDimmer;
 import com.liskovsoft.smartyoutubetv2.common.hunys.HunysDimSlider;
+import com.liskovsoft.smartyoutubetv2.common.hunys.HunysStableVolume;
 import com.liskovsoft.smartyoutubetv2.common.hunys.HunysSubtitles;
 import com.liskovsoft.smartyoutubetv2.common.hunys.HunysTraffic;
 import com.liskovsoft.sharedutils.helpers.MessageHelpers;
@@ -41,7 +42,7 @@ public class HunysSettingsPresenter extends BasePresenter<Void> {
         AppDialogPresenter settingsPresenter = AppDialogPresenter.instance(getContext());
 
         appendDimmingButton(settingsPresenter);
-        appendLoudnessSwitch(settingsPresenter);
+        appendStableVolumeCategory(settingsPresenter);
         appendDataCounterButton(settingsPresenter);
         appendStartQualityCategory(settingsPresenter);
         appendAutoplaySwitch(settingsPresenter);
@@ -137,10 +138,22 @@ public class HunysSettingsPresenter extends BasePresenter<Void> {
         return level == 0 ? getContext().getString(R.string.hunys_off) : level + "%";
     }
 
-    private void appendLoudnessSwitch(AppDialogPresenter settingsPresenter) {
-        settingsPresenter.appendSingleSwitch(UiOptionItem.from(getContext().getString(R.string.hunys_loudness),
-                getContext().getString(R.string.hunys_loudness_desc),
-                option -> mData.setLoudnessEnabled(option.isSelected()), mData.isLoudnessEnabled()));
+    private void appendStableVolumeCategory(AppDialogPresenter settingsPresenter) {
+        // Volum stabil: Oprit / Normal / Puternic (înlocuiește „Volum egalizat”)
+        // Stable volume: Off / Normal / Strong (replaces "Loudness normalization")
+        List<OptionItem> options = new ArrayList<>();
+        int current = mData.getStableVolumeLevel();
+        int[] titles = {R.string.hunys_off, R.string.hunys_stable_volume_normal, R.string.hunys_stable_volume_strong};
+
+        for (int level = HunysStableVolume.OFF; level <= HunysStableVolume.STRONG; level++) {
+            final int value = level;
+            options.add(UiOptionItem.from(getContext().getString(titles[level]), option -> {
+                mData.setStableVolumeLevel(value);
+                HunysStableVolume.onLevelChanged();
+            }, current == value));
+        }
+
+        settingsPresenter.appendRadioCategory(getContext().getString(R.string.hunys_stable_volume), options);
     }
 
     private void appendDataCounterButton(AppDialogPresenter settingsPresenter) {

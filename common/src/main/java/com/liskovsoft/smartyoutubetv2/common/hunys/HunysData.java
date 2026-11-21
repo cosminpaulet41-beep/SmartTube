@@ -26,6 +26,7 @@ public class HunysData {
     private static final String K_AUTO_DIM_LEVEL = "auto_dim_level";
     private static final String K_DIM_MANUAL_UNTIL = "dim_manual_until";
     private static final String K_LOUDNESS = "loudness";
+    private static final String K_STABLE_VOLUME = "stable_volume";
     private static final String K_PREVIEW_SECONDS = "preview_seconds";
     private static final String K_PREVIEW_MUTED = "preview_muted";
     private static final String K_LIGHT_MODE = "light_mode";
@@ -211,14 +212,19 @@ public class HunysData {
         return ((minutes % day) + day) % day;
     }
 
-    // ---- Volum egalizat / loudness normalization
+    // ---- Volum stabil / stable volume (0 oprit/off, 1 normal, 2 puternic/strong)
 
-    public boolean isLoudnessEnabled() {
-        return mPrefs.getBoolean(K_LOUDNESS, true);
+    public int getStableVolumeLevel() {
+        if (mPrefs.contains(K_STABLE_VOLUME)) {
+            return Math.max(0, Math.min(2, mPrefs.getInt(K_STABLE_VOLUME, 1)));
+        }
+
+        // vechea setare „Volum egalizat” / the old "Loudness normalization" setting
+        return mPrefs.getBoolean(K_LOUDNESS, true) ? 1 : 0;
     }
 
-    public void setLoudnessEnabled(boolean enabled) {
-        mPrefs.edit().putBoolean(K_LOUDNESS, enabled).apply();
+    public void setStableVolumeLevel(int level) {
+        mPrefs.edit().putInt(K_STABLE_VOLUME, Math.max(0, Math.min(2, level))).apply();
         notifyChanged();
     }
 
