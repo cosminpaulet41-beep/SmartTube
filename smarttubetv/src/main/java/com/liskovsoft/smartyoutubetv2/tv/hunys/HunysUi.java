@@ -464,6 +464,10 @@ public final class HunysUi {
     }
 
     private static void layoutTitleOrbs(View title, boolean rail, boolean animate) {
+        layoutTitleOrbs(title, rail, animate, 0);
+    }
+
+    private static void layoutTitleOrbs(View title, boolean rail, boolean animate, int attempt) {
         if (title == null || !isHunys(title.getContext())) {
             return;
         }
@@ -476,8 +480,10 @@ public final class HunysUi {
         }
 
         if (container.getWidth() == 0) {
-            // încă nu e așezat / not laid out yet
-            container.post(() -> layoutTitleOrbs(title, sRail, false));
+            // încă nu e așezat: mai încercăm de câteva ori / not laid out yet: retry a few times
+            if (attempt < 20) {
+                container.postDelayed(() -> layoutTitleOrbs(title, sRail, false, attempt + 1), 100);
+            }
             return;
         }
 
