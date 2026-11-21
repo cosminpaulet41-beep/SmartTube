@@ -184,6 +184,13 @@ public class ComplexImageCardView extends ImageCardView {
         mComplexImageView.setMute(muted);
     }
 
+    /**
+     * Hunys mod: Shorts mari (pornesc după 1 s, cu sunet, în buclă) / big Shorts (start after 1 s, with sound, looping)
+     */
+    public void setHunysBigShort(boolean bigShort) {
+        mComplexImageView.setHunysBigShort(bigShort);
+    }
+
     public void setTitleLinesNum(int lines) {
         TextView titleView = findViewById(R.id.title_text);
 

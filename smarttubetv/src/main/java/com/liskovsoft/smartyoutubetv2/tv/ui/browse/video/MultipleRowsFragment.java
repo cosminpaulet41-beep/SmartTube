@@ -6,6 +6,9 @@ import androidx.annotation.Nullable;
 import androidx.leanback.app.RowsSupportFragment;
 import androidx.leanback.widget.ArrayObjectAdapter;
 import androidx.leanback.widget.ClassPresenterSelector;
+import androidx.leanback.widget.FocusHighlight;
+import androidx.leanback.widget.ItemAlignmentFacet;
+import androidx.leanback.widget.ObjectAdapter;
 import androidx.leanback.widget.HeaderItem;
 import androidx.leanback.widget.ListRow;
 import androidx.leanback.widget.ListRowPresenter;
@@ -26,6 +29,9 @@ import com.liskovsoft.smartyoutubetv2.tv.adapter.VideoGroupObjectAdapter;
 import com.liskovsoft.smartyoutubetv2.tv.presenter.ChannelHeaderPresenter;
 import com.liskovsoft.smartyoutubetv2.tv.presenter.ChannelHeaderPresenter.ChannelHeaderCallback;
 import com.liskovsoft.smartyoutubetv2.tv.presenter.ShortsCardPresenter;
+import com.liskovsoft.smartyoutubetv2.tv.presenter.HunysBigShortsCardPresenter;
+import com.liskovsoft.smartyoutubetv2.tv.hunys.HunysUi;
+import com.liskovsoft.smartyoutubetv2.tv.R;
 import com.liskovsoft.smartyoutubetv2.tv.presenter.VideoCardPresenter;
 import com.liskovsoft.smartyoutubetv2.tv.presenter.CustomListRowPresenter;
 import com.liskovsoft.smartyoutubetv2.tv.presenter.base.OnItemLongPressedListener;
@@ -50,6 +56,9 @@ public abstract class MultipleRowsFragment extends RowsSupportFragment implement
     private VideoGroupPresenter mMainPresenter;
     private VideoCardPresenter mCardPresenter;
     private ShortsCardPresenter mShortsPresenter;
+    // Hunys mod: Shorts mari / big Shorts
+    private HunysBigShortsCardPresenter mHunysBigShortsPresenter;
+    private ListRowPresenter mHunysShortsRowPresenter;
     private int mSelectedRowIndex = -1;
     private ChannelHeaderCallback mChannelHeaderCallback;
 
@@ -60,6 +69,9 @@ public abstract class MultipleRowsFragment extends RowsSupportFragment implement
         mMainPresenter = getMainPresenter();
         mCardPresenter = new VideoCardPresenter();
         mShortsPresenter = new ShortsCardPresenter();
+        if (useHunysBigShorts()) {
+            mHunysBigShortsPresenter = new HunysBigShortsCardPresenter();
+        }
         mBackgroundManager = ((LeanbackActivity) getActivity()).getBackgroundManager();
 
         setupAdapter();
@@ -97,6 +109,21 @@ public abstract class MultipleRowsFragment extends RowsSupportFragment implement
             presenterSelector.addClassPresenter(ListRow.class, mRowPresenter);
             presenterSelector.addClassPresenter(ChannelHeaderCallback.class, new ChannelHeaderPresenter());
 
+            if (useHunysBigShorts()) {
+                // Rândul cu Shorts mari urcă sus (doar titlul „Shorts” deasupra), fără mărire la focus
+                // The big Shorts row moves to the top (only the "Shorts" title above), no zoom on focus
+                mHunysShortsRowPresenter = new ListRowPresenter(FocusHighlight.ZOOM_FACTOR_NONE, false);
+                mHunysShortsRowPresenter.setSelectEffectEnabled(false);
+                ItemAlignmentFacet.ItemAlignmentDef def = new ItemAlignmentFacet.ItemAlignmentDef();
+                int alignTop = getResources().getDimensionPixelSize(R.dimen.lb_browse_rows_margin_top);
+                def.setItemAlignmentOffset(alignTop - HunysUi.dp(getContext(), 4));
+                def.setItemAlignmentOffsetPercent(0);
+                ItemAlignmentFacet facet = new ItemAlignmentFacet();
+                facet.setAlignmentDefs(new ItemAlignmentFacet.ItemAlignmentDef[] {def});
+                mHunysShortsRowPresenter.setFacet(ItemAlignmentFacet.class, facet);
+                presenterSelector.addClassPresenter(HunysShortsRow.class, mHunysShortsRowPresenter);
+            }
+
             mRowsAdapter = new ArrayObjectAdapter(presenterSelector);
             setAdapter(mRowsAdapter);
         }
@@ -107,6 +134,39 @@ public abstract class MultipleRowsFragment extends RowsSupportFragment implement
         setOnItemViewSelectedListener(new ItemViewSelectedListener());
         mCardPresenter.setOnItemViewLongPressedListener(new ItemViewLongPressedListener());
         mShortsPresenter.setOnItemViewLongPressedListener(new ItemViewLongPressedListener());
+        if (mHunysBigShortsPresenter != null) {
+            mHunysBigShortsPresenter.setOnItemViewLongPressedListener(new ItemViewLongPressedListener());
+        }
+    }
+
+    /**
+     * Hunys mod: rândurile de Shorts devin mari (Acasă și fila Shorts) / Shorts rows become big (Home and the Shorts tab)
+     */
+    protected boolean useHunysBigShorts() {
+        return false;
+    }
+
+    /**
+     * Hunys mod: toate rândurile sunt Shorts (fila Shorts) / every row is Shorts (the Shorts tab)
+     */
+    protected boolean isHunysShortsOnly() {
+        return false;
+    }
+
+    @Override
+    protected boolean hunysHideTitle(int position) {
+        // Shorts mari: doar titlul „Shorts” sus, fără butoanele de sus / big Shorts: only the "Shorts" title on top, no top buttons
+        return mRowsAdapter != null && position >= 0 && position < mRowsAdapter.size()
+                && mRowsAdapter.get(position) instanceof HunysShortsRow;
+    }
+
+    /**
+     * Rândul cu Shorts mari (alt aspect) / the big Shorts row (different look)
+     */
+    public static class HunysShortsRow extends ListRow {
+        public HunysShortsRow(HeaderItem header, ObjectAdapter adapter) {
+            super(header, adapter);
+        }
     }
 
     @Override
@@ -253,11 +313,18 @@ public abstract class MultipleRowsFragment extends RowsSupportFragment implement
             HeaderItem rowHeader = new HeaderItem(group.getTitle());
             int videoGroupId = group.getId(); // Create unique int from category.
 
-            VideoGroupObjectAdapter videoGroupAdapter = new VideoGroupObjectAdapter(group, group.isShorts() ? mShortsPresenter : mCardPresenter);
+            boolean bigShorts = mHunysBigShortsPresenter != null && (group.isShorts() || isHunysShortsOnly());
+
+            if (bigShorts && (group.getTitle() == null || group.getTitle().trim().isEmpty())) {
+                rowHeader = new HeaderItem(getContext() != null ? getContext().getString(R.string.header_shorts) : "Shorts");
+            }
+
+            VideoGroupObjectAdapter videoGroupAdapter = new VideoGroupObjectAdapter(group,
+                    bigShorts ? mHunysBigShortsPresenter : group.isShorts() ? mShortsPresenter : mCardPresenter);
 
             mVideoGroupAdapters.put(videoGroupId, videoGroupAdapter);
 
-            ListRow row = new ListRow(rowHeader, videoGroupAdapter);
+            ListRow row = bigShorts ? new HunysShortsRow(rowHeader, videoGroupAdapter) : new ListRow(rowHeader, videoGroupAdapter);
 
             if (group.getPosition() == -1 || group.getPosition() > mRowsAdapter.size()) {
                 mRowsAdapter.add(row);

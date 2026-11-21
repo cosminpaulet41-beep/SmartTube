@@ -255,8 +255,16 @@ public class RowsSupportFragment extends BaseRowSupportFragment implements
         // When RowsSupportFragment is embedded inside a page fragment, we want to show
         // the title view only when we're on the first row or there is no data.
         if (mMainFragmentAdapter != null) {
-            mMainFragmentAdapter.getFragmentHost().showTitleView(position <= 0);
+            mMainFragmentAdapter.getFragmentHost().showTitleView(position <= 0 && !hunysHideTitle(position));
         }
+    }
+
+    /**
+     * SmartTube Hunys mod: rândul ales ocupă tot ecranul (ex: Shorts mari), deci titlul de sus se ascunde.<br/>
+     * SmartTube Hunys mod: the selected row fills the screen (e.g. big Shorts), so the top title hides.
+     */
+    protected boolean hunysHideTitle(int position) {
+        return false;
     }
 
     /**

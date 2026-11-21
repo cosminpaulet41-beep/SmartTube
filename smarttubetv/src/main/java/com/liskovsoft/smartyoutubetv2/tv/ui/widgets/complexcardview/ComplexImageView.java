@@ -46,6 +46,10 @@ public class ComplexImageView extends RelativeLayout {
     private ImageView mHunysSound;
     private boolean mHunysSoundFocused;
     private Runnable mHunysStopPreview;
+    // Hunys mod: Shorts mari: pornesc după 1 s, cu sunet, tot clipul, în buclă
+    // Hunys mod: big Shorts: start after 1 s, with sound, the whole video, looping
+    private boolean mHunysBigShort;
+    private static final long HUNYS_BIG_SHORT_DELAY_MS = 1_000;
 
     public ComplexImageView(Context context) {
         super(context);
@@ -151,6 +155,10 @@ public class ComplexImageView extends RelativeLayout {
         mMute = mute;
     }
 
+    public void setHunysBigShort(boolean bigShort) {
+        mHunysBigShort = bigShort;
+    }
+
     public void startPlayback() {
         if (getVideo() == null) {
             return;
@@ -177,7 +185,8 @@ public class ComplexImageView extends RelativeLayout {
                 mCreateAndStartPlayer = this::createAndStartPlayer;
             }
 
-            Utils.postDelayed(mCreateAndStartPlayer, PLAYER_START_DELAY_MS);
+            Utils.removeCallbacks(mCreateAndStartPlayer);
+            Utils.postDelayed(mCreateAndStartPlayer, mHunysBigShort ? HUNYS_BIG_SHORT_DELAY_MS : PLAYER_START_DELAY_MS);
         }
     }
 
@@ -238,7 +247,7 @@ public class ComplexImageView extends RelativeLayout {
         boolean isHunys = HunysData.isHunysBuild(getContext());
 
         if (isHunys) {
-            mMute = HunysData.instance(getContext()).isPreviewMuted();
+            mMute = !mHunysBigShort && HunysData.instance(getContext()).isPreviewMuted();
         }
 
         if (mPreviewPlayer == null) {
@@ -259,7 +268,8 @@ public class ComplexImageView extends RelativeLayout {
 
             int seconds = HunysData.instance(getContext()).getPreviewSeconds();
 
-            if (seconds > 0) {
+            // Shorts mari: tot clipul, în buclă (fără oprire după x secunde) / big Shorts: the whole video, looping (no stop)
+            if (seconds > 0 && !mHunysBigShort) {
                 if (mHunysStopPreview == null) {
                     mHunysStopPreview = () -> stopPlayback(false);
                 }

@@ -163,6 +163,8 @@ public class BrowseFragment extends BrowseSupportFragment implements BrowseView 
                     mBrowsePresenter.onSectionFocused(getSelectedHeaderId());
                 }
         );
+        // Hunys mod: fila Shorts cu Shorts mari într-un rând / the Shorts tab with big Shorts in one row
+        mSectionFragmentFactory.setHunysShortsRow(HunysUi.isHunys(getContext()));
 
         getMainFragmentRegistry().registerFragment(PageRow.class, mSectionFragmentFactory);
     }

@@ -21,6 +21,12 @@ public class VideoRowsFragment extends MultipleRowsFragment {
     }
 
     @Override
+    protected boolean useHunysBigShorts() {
+        // Hunys mod: Shorts mari pe Acasă / big Shorts on Home
+        return com.liskovsoft.smartyoutubetv2.tv.hunys.HunysUi.isHunys(getContext());
+    }
+
+    @Override
     public void setExpand(boolean expand) {
         // force expand by default
         super.setExpand(true);

@@ -406,7 +406,9 @@ public class VideoLoaderController extends BasePlayerController {
         }
 
         if (isEmbedPlayer()) {
-            playbackMode = PlayerConstants.PLAYBACK_MODE_CLOSE;
+            // Hunys mod: Shorts-urile care rulează în card se reiau de la capăt / Shorts playing in a card start over
+            playbackMode = video.isShorts && com.liskovsoft.smartyoutubetv2.common.hunys.HunysData.isHunysBuild(getContext())
+                    ? PlayerConstants.PLAYBACK_MODE_ONE : PlayerConstants.PLAYBACK_MODE_CLOSE;
         }
 
         switch (playbackMode) {

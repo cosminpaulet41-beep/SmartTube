@@ -18,12 +18,14 @@ import com.liskovsoft.smartyoutubetv2.tv.ui.browse.interfaces.VideoSection;
 import com.liskovsoft.smartyoutubetv2.tv.ui.browse.settings.SettingsGridFragment;
 import com.liskovsoft.smartyoutubetv2.tv.ui.browse.video.MultiVideoGridFragment;
 import com.liskovsoft.smartyoutubetv2.tv.ui.browse.video.ShortsGridFragment;
+import com.liskovsoft.smartyoutubetv2.tv.ui.browse.video.HunysShortsRowsFragment;
 import com.liskovsoft.smartyoutubetv2.tv.ui.browse.video.VideoGridFragment;
 import com.liskovsoft.smartyoutubetv2.tv.ui.browse.video.VideoRowsFragment;
 
 public class BrowseSectionFragmentFactory extends BrowseSupportFragment.FragmentFactory<Fragment> {
     private static final String TAG = BrowseSectionFragmentFactory.class.getSimpleName();
     private final OnSectionSelectedListener mSectionSelectedListener;
+    private boolean mHunysShortsRow;
     private Fragment mCurrentFragment;
     private int mFragmentType = BrowseSection.TYPE_GRID;
     private int mSelectedItemIndex = -1;
@@ -40,6 +42,13 @@ public class BrowseSectionFragmentFactory extends BrowseSupportFragment.Fragment
 
     public BrowseSectionFragmentFactory(OnSectionSelectedListener sectionSelectedListener) {
         mSectionSelectedListener = sectionSelectedListener;
+    }
+
+    /**
+     * Hunys mod: fila Shorts ca un rând de Shorts mari / the Shorts tab as a row of big Shorts
+     */
+    public void setHunysShortsRow(boolean enabled) {
+        mHunysShortsRow = enabled;
     }
 
     /**
@@ -68,7 +77,8 @@ public class BrowseSectionFragmentFactory extends BrowseSupportFragment.Fragment
                 fragment = new VideoGridFragment();
                 break;
             case BrowseSection.TYPE_SHORTS_GRID:
-                fragment = new ShortsGridFragment();
+                // Hunys mod: Shorts mari într-un rând / big Shorts in one row
+                fragment = mHunysShortsRow ? new HunysShortsRowsFragment() : new ShortsGridFragment();
                 break;
             case BrowseSection.TYPE_SETTINGS_GRID:
                 fragment = new SettingsGridFragment();
