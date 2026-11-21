@@ -35,6 +35,10 @@ public final class HunysDimSlider {
     private static final int ROW_START = 2;
     private static final int ROW_END = 3;
     private static final int ROW_NIGHT = 4;
+    private static final int ROW_IDLE = 5;
+    private static final int ROW_IDLE_AFTER = 6;
+    private static final int ROW_IDLE_LEVEL = 7;
+    private static final int ROW_COUNT = 8;
     private static Dialog sDialog;
 
     private HunysDimSlider() {
@@ -79,8 +83,8 @@ public final class HunysDimSlider {
         private final HunysData mData;
         private final HunysDimmer mDimmer;
         private final int mAccent;
-        private final View[] mRows = new View[5];
-        private final TextView[] mValues = new TextView[5];
+        private final View[] mRows = new View[ROW_COUNT];
+        private final TextView[] mValues = new TextView[ROW_COUNT];
         private final GradientDrawable[] mTicks = new GradientDrawable[STEPS];
         private TextView mLevelValue;
         private int mSelected = ROW_LEVEL;
@@ -149,6 +153,19 @@ public final class HunysDimSlider {
             addValueRow(root, ROW_END, R.string.hunys_auto_dim_end);
             addValueRow(root, ROW_NIGHT, R.string.hunys_auto_dim_level);
 
+            // Fără apăsări / no key presses
+            View separator2 = new View(activity);
+            separator2.setBackgroundColor(0x1AFFFFFF);
+            root.addView(separator2, sepParams2());
+            TextView idleHeader = text(activity.getString(R.string.hunys_idle_dim).toUpperCase(activity.getResources().getConfiguration().locale),
+                    9.5f, true, mAccent);
+            idleHeader.setLetterSpacing(0.06f);
+            idleHeader.setPadding(dp(8), dp(4), dp(8), dp(4));
+            root.addView(idleHeader);
+            addValueRow(root, ROW_IDLE, R.string.hunys_idle_dim_on);
+            addValueRow(root, ROW_IDLE_AFTER, R.string.hunys_idle_dim_after);
+            addValueRow(root, ROW_IDLE_LEVEL, R.string.hunys_idle_dim_level);
+
             TextView hint = text(activity.getString(R.string.hunys_dim_hint), 9.5f, false, 0x8CFFFFFF);
             hint.setPadding(dp(8), dp(6), dp(8), dp(2));
             root.addView(hint);
@@ -181,6 +198,12 @@ public final class HunysDimSlider {
             render();
         }
 
+        private LinearLayout.LayoutParams sepParams2() {
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(1));
+            params.setMargins(dp(8), dp(4), dp(8), dp(6));
+            return params;
+        }
+
         private void addValueRow(LinearLayout root, int row, int titleRes) {
             LinearLayout line = new LinearLayout(mActivity);
             line.setOrientation(LinearLayout.HORIZONTAL);
@@ -196,6 +219,11 @@ public final class HunysDimSlider {
         }
 
         private boolean onKey(int keyCode, KeyEvent event) {
+            // Apăsările din panou contează și ele / presses inside the panel count too
+            if (HunysDimmer.onKeyEvent(mActivity, event)) {
+                return true;
+            }
+
             if (event.getAction() != KeyEvent.ACTION_DOWN) {
                 return keyCode != KeyEvent.KEYCODE_BACK && keyCode != KeyEvent.KEYCODE_ESCAPE;
             }
@@ -216,7 +244,7 @@ public final class HunysDimSlider {
                 case KeyEvent.KEYCODE_DPAD_CENTER:
                 case KeyEvent.KEYCODE_ENTER:
                 case KeyEvent.KEYCODE_NUMPAD_ENTER:
-                    if (mSelected == ROW_AUTO) {
+                    if (mSelected == ROW_AUTO || mSelected == ROW_IDLE) {
                         change(1); // OK pornește/oprește / OK toggles
                     } else {
                         dialog.dismiss();
@@ -228,9 +256,30 @@ public final class HunysDimSlider {
         }
 
         private void move(int direction) {
-            int last = mData.isAutoDimEnabled() ? ROW_NIGHT : ROW_AUTO;
-            mSelected = Math.max(ROW_LEVEL, Math.min(last, mSelected + direction));
+            int next = mSelected + direction;
+
+            // Sare peste rândurile ascunse / skips hidden rows
+            while (next >= ROW_LEVEL && next < ROW_COUNT && !isRowVisible(next)) {
+                next += direction;
+            }
+
+            if (next >= ROW_LEVEL && next < ROW_COUNT) {
+                mSelected = next;
+            }
+
             render();
+        }
+
+        private boolean isRowVisible(int row) {
+            if (row >= ROW_START && row <= ROW_NIGHT) {
+                return mData.isAutoDimEnabled();
+            }
+
+            if (row == ROW_IDLE_AFTER || row == ROW_IDLE_LEVEL) {
+                return mData.isIdleDimEnabled();
+            }
+
+            return true;
         }
 
         private void change(int direction) {
@@ -257,6 +306,23 @@ public final class HunysDimSlider {
                     mData.setAutoDimLevel(night);
                     mLevel = mDimmer.getEffectiveLevel();
                     break;
+                case ROW_IDLE:
+                    mData.setIdleDimEnabled(!mData.isIdleDimEnabled());
+                    break;
+                case ROW_IDLE_AFTER:
+                    int[] minutes = HunysData.IDLE_DIM_MINUTES;
+                    int index = 0;
+                    for (int i = 0; i < minutes.length; i++) {
+                        if (minutes[i] == mData.getIdleDimMinutes()) {
+                            index = i;
+                        }
+                    }
+                    index = Math.max(0, Math.min(minutes.length - 1, index + direction));
+                    mData.setIdleDimMinutes(minutes[index]);
+                    break;
+                case ROW_IDLE_LEVEL:
+                    mData.setIdleDimLevel(mData.getIdleDimLevel() + direction * 10);
+                    break;
             }
 
             render();
@@ -277,13 +343,20 @@ public final class HunysDimSlider {
             mValues[ROW_END].setText("‹ " + time(mData.getAutoDimEndMin()) + " ›");
             mValues[ROW_NIGHT].setText("‹ " + levelText(mData.getAutoDimLevel()) + " ›");
 
-            // Orele apar doar când întunecarea automată e pornită / hours show only when automatic dimming is on
-            for (int row = ROW_START; row <= ROW_NIGHT; row++) {
-                mRows[row].setVisibility(auto ? View.VISIBLE : View.GONE);
+            boolean idle = mData.isIdleDimEnabled();
+            mValues[ROW_IDLE].setText(mActivity.getString(idle ? R.string.hunys_yes : R.string.hunys_no));
+            mValues[ROW_IDLE].setTextColor(idle ? mAccent : 0x99FFFFFF);
+            mValues[ROW_IDLE_AFTER].setText("‹ " + minutesText(mData.getIdleDimMinutes()) + " ›");
+            mValues[ROW_IDLE_LEVEL].setText("‹ " + mData.getIdleDimLevel() + "% ›");
+
+            // Orele apar doar când întunecarea automată e pornită (la fel „După” și nivelul pentru fără apăsări)
+            // Hours show only when automatic dimming is on (same for "After" and the level of no key presses)
+            for (int row = 0; row < ROW_COUNT; row++) {
+                mRows[row].setVisibility(isRowVisible(row) ? View.VISIBLE : View.GONE);
             }
 
-            if (!auto && mSelected > ROW_AUTO) {
-                mSelected = ROW_AUTO;
+            if (!isRowVisible(mSelected)) {
+                mSelected = mSelected <= ROW_NIGHT ? ROW_AUTO : ROW_IDLE;
             }
 
             for (int row = 0; row < mRows.length; row++) {
@@ -296,6 +369,15 @@ public final class HunysDimSlider {
                     mRows[row].setBackground(null);
                 }
             }
+        }
+
+        private String minutesText(int minutes) {
+            if (minutes < 60) {
+                return mActivity.getString(R.string.hunys_minutes, minutes);
+            }
+
+            return minutes == 60 ? mActivity.getString(R.string.hunys_hour_one)
+                    : mActivity.getString(R.string.hunys_hours, minutes / 60);
         }
 
         private String levelText(int level) {

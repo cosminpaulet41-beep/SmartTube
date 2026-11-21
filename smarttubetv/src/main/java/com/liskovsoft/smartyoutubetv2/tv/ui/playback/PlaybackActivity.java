@@ -57,6 +57,11 @@ public class PlaybackActivity extends LeanbackActivity {
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
+        // Hunys mod: prima apăsare după „fără apăsări” doar reaprinde ecranul / first press after idle dimming only wakes the screen
+        if (com.liskovsoft.smartyoutubetv2.common.hunys.HunysDimmer.onKeyEvent(this, event)) {
+            return true;
+        }
+
         if (mPlaybackFragment != null) {
             mPlaybackFragment.onDispatchKeyEvent(event);
         }

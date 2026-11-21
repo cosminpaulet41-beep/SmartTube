@@ -144,6 +144,11 @@ public class MotherActivity extends FragmentActivity {
             return true;
         }
 
+        // Hunys mod: prima apăsare după „fără apăsări” doar reaprinde ecranul / first press after idle dimming only wakes the screen
+        if (HunysDimmer.onKeyEvent(this, event)) {
+            return true;
+        }
+
         if (event.getAction() == KeyEvent.ACTION_DOWN) {
             boolean isKeepScreenOff = mScreensaverManager.isScreenOff() && Helpers.equalsAny(event.getKeyCode(),
                     new int[]{KeyEvent.KEYCODE_DPAD_LEFT, KeyEvent.KEYCODE_DPAD_RIGHT, KeyEvent.KEYCODE_VOLUME_UP, KeyEvent.KEYCODE_VOLUME_DOWN});

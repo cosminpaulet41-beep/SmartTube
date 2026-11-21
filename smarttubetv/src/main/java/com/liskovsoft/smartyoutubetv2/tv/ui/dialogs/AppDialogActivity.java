@@ -56,6 +56,11 @@ public class AppDialogActivity extends MotherActivity {
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent event) {
+        // Hunys mod: prima apăsare după „fără apăsări” doar reaprinde ecranul / first press after idle dimming only wakes the screen
+        if (com.liskovsoft.smartyoutubetv2.common.hunys.HunysDimmer.onKeyEvent(this, event)) {
+            return true;
+        }
+
         //if (KeyHelpers.isConfirmKey(event.getKeyCode()) && !event.isLongPress()) {
         //    return true;
         //}

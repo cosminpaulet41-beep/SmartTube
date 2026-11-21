@@ -73,6 +73,15 @@
     <string name="hunys_now">NOW</string>
     <string name="hunys_start_quality">Start quality</string>
     <string name="hunys_dim_hint">↑↓ choose   ← → change   OK done</string>
+    <string name="hunys_idle_dim">No key presses</string>
+    <string name="hunys_idle_dim_on">Enabled</string>
+    <string name="hunys_idle_dim_after">After</string>
+    <string name="hunys_idle_dim_level">Dimming</string>
+    <string name="hunys_idle_dim_wake">Press any button</string>
+    <string name="hunys_yes">Yes</string>
+    <string name="hunys_no">No</string>
+    <string name="hunys_hour_one">1 hour</string>
+    <string name="hunys_hours">%d hours</string>
     <string name="hunys_autoplay">Autoplay</string>
     <string name="hunys_autoplay_desc">Starts the next video when this one ends</string>
 </resources>

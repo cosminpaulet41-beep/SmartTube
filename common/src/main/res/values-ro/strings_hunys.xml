@@ -73,6 +73,15 @@
     <string name="hunys_now">ACUM</string>
     <string name="hunys_start_quality">Calitate la pornire</string>
     <string name="hunys_dim_hint">↑↓ alegi   ← → schimbi   OK gata</string>
+    <string name="hunys_idle_dim">Fără apăsări</string>
+    <string name="hunys_idle_dim_on">Pornită</string>
+    <string name="hunys_idle_dim_after">După</string>
+    <string name="hunys_idle_dim_level">Întunecare</string>
+    <string name="hunys_idle_dim_wake">Apasă orice buton</string>
+    <string name="hunys_yes">Da</string>
+    <string name="hunys_no">Nu</string>
+    <string name="hunys_hour_one">1 oră</string>
+    <string name="hunys_hours">%d ore</string>
     <string name="hunys_autoplay">Redare automată</string>
     <string name="hunys_autoplay_desc">Pornește singur următorul clip după ce se termină</string>
 </resources>

@@ -25,6 +25,10 @@ public class HunysData {
     private static final String K_AUTO_DIM_END = "auto_dim_end";
     private static final String K_AUTO_DIM_LEVEL = "auto_dim_level";
     private static final String K_DIM_MANUAL_UNTIL = "dim_manual_until";
+    private static final String K_IDLE_DIM = "idle_dim";
+    private static final String K_IDLE_DIM_MIN = "idle_dim_min";
+    private static final String K_IDLE_DIM_LEVEL = "idle_dim_level";
+    public static final int[] IDLE_DIM_MINUTES = {5, 10, 15, 30, 60, 120};
     private static final String K_LOUDNESS = "loudness";
     private static final String K_STABLE_VOLUME = "stable_volume";
     private static final String K_PREVIEW_SECONDS = "preview_seconds";
@@ -210,6 +214,38 @@ public class HunysData {
     private static int normalizeMinutes(int minutes) {
         int day = 24 * 60;
         return ((minutes % day) + day) % day;
+    }
+
+    // ---- Întunecare fără apăsări / idle dimming (no key presses)
+
+    public boolean isIdleDimEnabled() {
+        return mPrefs.getBoolean(K_IDLE_DIM, false);
+    }
+
+    public void setIdleDimEnabled(boolean enabled) {
+        mPrefs.edit().putBoolean(K_IDLE_DIM, enabled).apply();
+        notifyChanged();
+    }
+
+    public int getIdleDimMinutes() {
+        return mPrefs.getInt(K_IDLE_DIM_MIN, 30);
+    }
+
+    public void setIdleDimMinutes(int minutes) {
+        mPrefs.edit().putInt(K_IDLE_DIM_MIN, minutes).apply();
+        notifyChanged();
+    }
+
+    /**
+     * 10-100% (100% = ecran negru / black screen)
+     */
+    public int getIdleDimLevel() {
+        return Math.max(10, Math.min(100, mPrefs.getInt(K_IDLE_DIM_LEVEL, 90)));
+    }
+
+    public void setIdleDimLevel(int level) {
+        mPrefs.edit().putInt(K_IDLE_DIM_LEVEL, Math.max(10, Math.min(100, level))).apply();
+        notifyChanged();
     }
 
     // ---- Volum stabil / stable volume (0 oprit/off, 1 normal, 2 puternic/strong)

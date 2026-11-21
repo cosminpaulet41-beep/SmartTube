@@ -201,6 +201,11 @@ public final class HunysDataPanel {
         }
 
         private boolean onKey(int keyCode, KeyEvent event) {
+            // Apăsările din panou contează și ele / presses inside the panel count too
+            if (HunysDimmer.onKeyEvent(mActivity, event)) {
+                return true;
+            }
+
             if (keyCode == KeyEvent.KEYCODE_BACK || keyCode == KeyEvent.KEYCODE_ESCAPE) {
                 if (event.getAction() == KeyEvent.ACTION_UP) {
                     dialog.dismiss();
