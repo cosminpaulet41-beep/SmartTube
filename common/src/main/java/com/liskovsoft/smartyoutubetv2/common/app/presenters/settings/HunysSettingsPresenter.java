@@ -8,6 +8,7 @@ import com.liskovsoft.smartyoutubetv2.common.app.models.playback.ui.UiOptionItem
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.AppDialogPresenter;
 import com.liskovsoft.smartyoutubetv2.common.app.presenters.base.BasePresenter;
 import com.liskovsoft.smartyoutubetv2.common.hunys.HunysData;
+import com.liskovsoft.smartyoutubetv2.common.hunys.HunysDataPanel;
 import com.liskovsoft.smartyoutubetv2.common.hunys.HunysAutoplay;
 import com.liskovsoft.smartyoutubetv2.common.prefs.PlayerData;
 import com.liskovsoft.smartyoutubetv2.common.hunys.HunysDimmer;
@@ -160,7 +161,16 @@ public class HunysSettingsPresenter extends BasePresenter<Void> {
         HunysTraffic.sample(getContext());
         String title = getContext().getString(R.string.hunys_data_counter) + " · "
                 + getContext().getString(R.string.hunys_data_month, HunysTraffic.format(HunysTraffic.getMonthBytes(getContext())));
-        settingsPresenter.appendSingleButton(UiOptionItem.from(title, option -> showDataCounter()));
+        settingsPresenter.appendSingleButton(UiOptionItem.from(title, option -> {
+            // Închide setările și deschide panoul cu grafic; Înapoi revine la setări
+            // Close settings and open the chart panel; Back returns to settings
+            AppDialogPresenter.instance(getContext()).closeDialog();
+            new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> {
+                if (!HunysDataPanel.show(getContext(), () -> instance(getContext()).show())) {
+                    showDataCounter();
+                }
+            }, 450);
+        }));
     }
 
     private void showDataCounter() {

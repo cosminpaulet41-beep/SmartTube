@@ -45,6 +45,10 @@
     <string name="hunys_data_warn">Warn me at the limit</string>
     <string name="hunys_data_reset">Reset counter</string>
     <string name="hunys_data_warning">You used %1$s of %2$s this month</string>
+    <string name="hunys_data_average">Monthly average: %s</string>
+    <string name="hunys_data_hint">← → choose the day   ↓ settings</string>
+    <string name="hunys_data_reset_confirm">Press OK again to reset</string>
+    <string name="hunys_today">Today</string>
     <string name="hunys_light_mode">Light mode</string>
     <string name="hunys_light_mode_desc">Uses less memory and data: smaller pictures, no previews</string>
     <string name="hunys_subtitles">More visible subtitles</string>

@@ -39,12 +39,16 @@
     <string name="hunys_auto_dim_now">Întunecarea de noapte e activă acum</string>
     <string name="hunys_data_counter">Contor date</string>
     <string name="hunys_data_today">Azi: %s</string>
-    <string name="hunys_data_month">Luna aceasta: %s</string>
+    <string name="hunys_data_month">Luna asta: %s</string>
     <string name="hunys_data_limit">Limită lunară</string>
     <string name="hunys_data_no_limit">Fără limită</string>
     <string name="hunys_data_warn">Avertizează-mă la limită</string>
     <string name="hunys_data_reset">Resetează contorul</string>
     <string name="hunys_data_warning">Ai folosit %1$s din %2$s luna aceasta</string>
+    <string name="hunys_data_average">Media lunară: %s</string>
+    <string name="hunys_data_hint">← → alegi ziua   ↓ setările</string>
+    <string name="hunys_data_reset_confirm">Apasă OK din nou ca să resetezi</string>
+    <string name="hunys_today">Azi</string>
     <string name="hunys_light_mode">Mod ușor</string>
     <string name="hunys_light_mode_desc">Folosește mai puțină memorie și date: imagini mai mici, fără previzualizări</string>
     <string name="hunys_subtitles">Subtitrări mai vizibile</string>

@@ -91,6 +91,20 @@ public final class HunysFonts {
         }
     }
 
+    /**
+     * Fontul Inter pentru desen pe Canvas (null dacă nu se poate) / Inter for Canvas drawing (null if unavailable)
+     */
+    @Nullable
+    public static Typeface typeface(Context context, int weight) {
+        load(context);
+
+        if (sLoadFailed) {
+            return null;
+        }
+
+        return weight >= 700 ? sBold : weight >= 600 ? sSemiBold : weight >= 500 ? sMedium : sRegular;
+    }
+
     public static void apply(TextView view) {
         if (view == null) {
             return;
