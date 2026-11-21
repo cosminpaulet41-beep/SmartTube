@@ -186,6 +186,11 @@ public class HeadersSupportFragment extends BaseRowSupportFragment {
      */
     public static boolean sHunysKeepChildrenVisible = false;
 
+    /**
+     * SmartTube Hunys mod: iconițele stau pe loc (lista nu se derulează când încape) / icons stay in place (list doesn't scroll when it fits)
+     */
+    public static boolean sHunysFixedList = false;
+
     private void updateListViewVisibility() {
         final VerticalGridView listView = getVerticalGridView();
         if (listView != null) {

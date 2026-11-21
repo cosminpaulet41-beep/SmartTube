@@ -9,6 +9,8 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.InsetDrawable;
 import android.graphics.drawable.StateListDrawable;
+import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.util.TypedValue;
 import android.view.View;
@@ -18,8 +20,12 @@ import android.widget.TextView;
 
 import androidx.leanback.app.BrowseSupportFragment;
 import androidx.leanback.app.HeadersSupportFragment;
+import androidx.leanback.widget.OnChildViewHolderSelectedListener;
+import androidx.leanback.widget.SearchOrbView;
 import androidx.leanback.widget.VerticalGridView;
 import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.List;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.MemoryCategory;
@@ -42,6 +48,20 @@ public final class HunysUi {
     private static final int RAIL_PANEL_DP = 48;
     private static final int RAIL_GAP_DP = 6;
     private static final int PANEL_MARGIN_DP = 10;
+    // Lista începe sub butoanele de sus, la fel în ambele stări (iconițele nu sar)
+    // The list starts below the top buttons, the same in both states (icons don't jump)
+    private static final int LIST_TOP_DP = 82;
+    // Bara deschisă: cât e acum (172dp) sau mai îngustă, după cel mai lung cuvânt
+    // Open sidebar: as now (172dp) or narrower, after the longest word
+    private static final int PANEL_MAX_DP = 172;
+    private static final int PANEL_MIN_DP = 152;
+    private static final int CONTENT_GAP_DP = 23;
+    // Butoanele de sus (căutare, cont, lună): cercuri de ~35dp / top buttons (search, account, moon): ~35dp circles
+    private static final float ORB_SCALE = 0.68f;
+    private static final int ORBS_LEFT_OPEN_DP = 23;
+    private static final int ORBS_LEFT_RAIL_DP = 60;
+    private static final int ORB_GAP_DP = 8;
+    private static int sPanelWidthPx;
     private static final BrowseSupportFragment.HunysHeadersListener RAIL_LISTENER =
             (headersView, shown) -> setSidebarRail(headersView, !shown);
 
@@ -192,19 +212,80 @@ public final class HunysUi {
         ViewGroup.LayoutParams params = grid.getLayoutParams();
         if (params instanceof RelativeLayout.LayoutParams) {
             RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) params;
-            lp.width = ViewGroup.LayoutParams.MATCH_PARENT;
+            lp.width = sRail ? ViewGroup.LayoutParams.MATCH_PARENT : openPanelWidth();
             lp.leftMargin = dp(context, 10);
             lp.topMargin = dp(context, 10);
             lp.bottomMargin = dp(context, 10);
             grid.setLayoutParams(lp);
         }
 
-        grid.setPadding(dp(context, 8), dp(context, 14), dp(context, 8), dp(context, 14));
+        grid.setPadding(dp(context, 8), dp(context, LIST_TOP_DP), dp(context, 8), dp(context, 14));
         grid.setVerticalSpacing(dp(context, 3));
 
         if (Build.VERSION.SDK_INT >= 21) {
             grid.setClipToOutline(true);
         }
+
+        // Cercul albastru transparent pe secțiunea curentă, în bara strânsă
+        // Translucent blue circle on the current section, in the collapsed rail
+        grid.addOnChildViewHolderSelectedListener(new OnChildViewHolderSelectedListener() {
+            @Override
+            public void onChildViewHolderSelected(RecyclerView parent, RecyclerView.ViewHolder child, int position, int subposition) {
+                updateRailSelection(grid);
+            }
+        });
+        grid.addOnChildAttachStateChangeListener(new RecyclerView.OnChildAttachStateChangeListener() {
+            @Override
+            public void onChildViewAttachedToWindow(@androidx.annotation.NonNull View view) {
+                updateRailSelection(grid);
+            }
+
+            @Override
+            public void onChildViewDetachedFromWindow(@androidx.annotation.NonNull View view) {
+                // NOP
+            }
+        });
+    }
+
+    private static int openPanelWidth() {
+        return sPanelWidthPx > 0 ? sPanelWidthPx : ViewGroup.LayoutParams.MATCH_PARENT;
+    }
+
+    /**
+     * Lățimea barei deschise după cel mai lung nume de secțiune (în limba aplicației).<br/>
+     * The open sidebar width after the longest section name (in the app language).
+     * @return true dacă s-a schimbat / true if it changed
+     */
+    public static boolean updatePanelWidth(Context context, List<CharSequence> labels) {
+        if (context == null || !isHunys(context) || labels == null || labels.isEmpty()) {
+            return false;
+        }
+
+        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        paint.setTextSize(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 13, context.getResources().getDisplayMetrics()));
+        Typeface inter = com.liskovsoft.smartyoutubetv2.common.hunys.HunysFonts.typeface(context, 500);
+        paint.setTypeface(inter != null ? inter : Typeface.create("sans-serif-medium", Typeface.NORMAL));
+
+        float maxText = 0;
+        for (CharSequence label : labels) {
+            if (label != null) {
+                maxText = Math.max(maxText, paint.measureText(label.toString()));
+            }
+        }
+        maxText = Math.min(maxText, dp(context, 120)); // ca maxWidth din layout / like maxWidth in the layout
+
+        // spațiu bară 8 + element 11 + iconiță 18 + 11 + text + 10 + 8 + puțin aer
+        // panel 8 + item 11 + icon 18 + 11 + text + 10 + 8 + a bit of air
+        int width = Math.round(maxText) + dp(context, 72);
+        width = Math.max(dp(context, PANEL_MIN_DP), Math.min(dp(context, PANEL_MAX_DP), width));
+
+        if (width == sPanelWidthPx) {
+            return false;
+        }
+
+        sPanelWidthPx = width;
+        BrowseSupportFragment.sHunysExpandedContentMargin = dp(context, PANEL_MARGIN_DP) + width + dp(context, CONTENT_GAP_DP);
+        return true;
     }
 
     /**
@@ -223,6 +304,7 @@ public final class HunysUi {
         BrowseSupportFragment.sHunysRailWidth = headersWidth - panelLeft + dp(context, RAIL_GAP_DP);
         BrowseSupportFragment.sHunysRailContentMargin = dp(context, 30);
         HeadersSupportFragment.sHunysKeepChildrenVisible = true;
+        HeadersSupportFragment.sHunysFixedList = true;
         BrowseSupportFragment.sHunysHeadersListener = RAIL_LISTENER;
     }
 
@@ -255,11 +337,12 @@ public final class HunysUi {
             int headersWidth = context.getResources().getDimensionPixelSize(R.dimen.lb_browse_headers_width);
             int paddingEnd = context.getResources().getDimensionPixelSize(R.dimen.lb_browse_header_padding_end);
             lp.leftMargin = rail ? headersWidth - paddingEnd - dp(context, RAIL_PANEL_DP) : dp(context, PANEL_MARGIN_DP);
+            lp.width = rail ? ViewGroup.LayoutParams.MATCH_PARENT : openPanelWidth();
             grid.setLayoutParams(lp);
         }
 
         int side = dp(context, rail ? 7 : 8);
-        grid.setPadding(side, dp(context, 14), side, dp(context, 14));
+        grid.setPadding(side, dp(context, LIST_TOP_DP), side, dp(context, 14));
 
         if (rail) {
             // Iconițele din bara strânsă nu primesc focus; ← deschide bara / rail icons aren't focusable; ← opens the bar
@@ -273,7 +356,149 @@ public final class HunysUi {
             applyRailToItem(item, rail);
         }
 
+        updateRailSelection(grid);
         grid.requestLayout();
+
+        // Butoanele de sus: în bară când e deschisă, lângă bară când e strânsă
+        // Top buttons: inside the sidebar when open, next to it when collapsed
+        View title = root.getRootView() != null ? root.getRootView().findViewById(R.id.browse_title_group) : null;
+        layoutTitleOrbs(title, rail, true);
+    }
+
+    /**
+     * Bara strânsă: secțiunea curentă are un cerc albastru transparent; bara deschisă: pastila la focus.<br/>
+     * Collapsed rail: the current section gets a translucent blue circle; open sidebar: the pill on focus.
+     */
+    public static void updateRailSelection(VerticalGridView grid) {
+        if (grid == null) {
+            return;
+        }
+
+        Context context = grid.getContext();
+        int selected = grid.getSelectedPosition();
+
+        for (int i = 0; i < grid.getChildCount(); i++) {
+            View wrapper = grid.getChildAt(i);
+            View item = wrapper instanceof ViewGroup && ((ViewGroup) wrapper).getChildCount() > 0
+                    ? ((ViewGroup) wrapper).getChildAt(0) : wrapper;
+
+            if (item == null || item.findViewById(R.id.header_label) == null) {
+                continue;
+            }
+
+            int position = grid.getChildAdapterPosition(wrapper);
+            String state = sRail ? (position == selected ? "rail_on" : "rail_off") : "open";
+
+            if (state.equals(item.getTag(R.id.header_icon))) {
+                continue;
+            }
+
+            item.setTag(R.id.header_icon, state);
+            int left = item.getPaddingLeft();
+            int top = item.getPaddingTop();
+            int right = item.getPaddingRight();
+            int bottom = item.getPaddingBottom();
+
+            if ("open".equals(state)) {
+                item.setBackground(focusPill(context, 11));
+            } else if ("rail_on".equals(state)) {
+                GradientDrawable circle = new GradientDrawable();
+                circle.setShape(GradientDrawable.OVAL);
+                circle.setColor((accent(context) & 0x00FFFFFF) | 0x61000000); // ~38%
+                item.setBackground(circle);
+            } else {
+                item.setBackground(null);
+            }
+
+            item.setPadding(left, top, right, bottom);
+        }
+    }
+
+    /**
+     * Culorile butoanelor rotunde de sus: sticlă, mai deschis la focus, iconiță albă.<br/>
+     * Colors of the round top buttons: glass, lighter on focus, white icon.
+     */
+    public static SearchOrbView.Colors orbColors(Context context) {
+        int base = themeColor(context, R.attr.hunysSidebarTop, 0xFF183A70);
+        int glass = blend(base, Color.WHITE, 0.17f);
+        int bright = blend(glass, accent(context), 0.55f);
+        return new SearchOrbView.Colors(glass, bright, Color.WHITE);
+    }
+
+    private static int blend(int from, int to, float amount) {
+        int r = Math.round(Color.red(from) + (Color.red(to) - Color.red(from)) * amount);
+        int g = Math.round(Color.green(from) + (Color.green(to) - Color.green(from)) * amount);
+        int b = Math.round(Color.blue(from) + (Color.blue(to) - Color.blue(from)) * amount);
+        return Color.rgb(r, g, b);
+    }
+
+    /**
+     * Butoanele de sus (căutare, cont, lună) în același stil și la aceeași mărime.<br/>
+     * The top buttons (search, account, moon) in the same style and size.
+     */
+    public static void styleTitleOrbs(View title) {
+        if (title == null || !isHunys(title.getContext())) {
+            return;
+        }
+
+        Context context = title.getContext();
+        SearchOrbView.Colors colors = orbColors(context);
+
+        for (int id : new int[] {R.id.title_orb, R.id.account_orb, R.id.hunys_dim_orb}) {
+            View view = title.findViewById(id);
+            if (view instanceof SearchOrbView) {
+                ((SearchOrbView) view).setOrbColors(colors);
+            }
+        }
+
+        for (int id : new int[] {R.id.account_orb, R.id.hunys_dim_orb, R.id.language_orb, R.id.exit_pip, R.id.pip_title}) {
+            View view = title.findViewById(id);
+            if (view != null && view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+                ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
+                lp.setMarginStart(dp(context, ORB_GAP_DP));
+                view.setLayoutParams(lp);
+            }
+        }
+
+        layoutTitleOrbs(title, sRail, false);
+    }
+
+    private static void layoutTitleOrbs(View title, boolean rail, boolean animate) {
+        if (title == null || !isHunys(title.getContext())) {
+            return;
+        }
+
+        View account = title.findViewById(R.id.account_orb);
+        View container = account != null ? (View) account.getParent() : null;
+
+        if (container == null) {
+            return;
+        }
+
+        if (container.getWidth() == 0) {
+            // încă nu e așezat / not laid out yet
+            container.post(() -> layoutTitleOrbs(title, sRail, false));
+            return;
+        }
+
+        // Ecranele fără bară laterală: butoanele stau ca lângă bara strânsă / screens without a sidebar: buttons sit as next to the rail
+        if (!rail && title.getRootView().findViewById(R.id.browse_headers) == null) {
+            rail = true;
+        }
+
+        Context context = title.getContext();
+        container.setPivotX(0);
+        container.setPivotY(container.getHeight() / 2f);
+        container.setScaleX(ORB_SCALE);
+        container.setScaleY(ORB_SCALE);
+
+        float target = dp(context, rail ? ORBS_LEFT_RAIL_DP : ORBS_LEFT_OPEN_DP) - container.getLeft();
+
+        if (animate) {
+            container.animate().translationX(target).setDuration(180).start();
+        } else {
+            container.setTranslationX(target);
+        }
     }
 
     /**
@@ -293,7 +518,9 @@ public final class HunysUi {
         }
 
         label.setVisibility(rail ? View.GONE : View.VISIBLE);
-        item.setMinimumWidth(dp(context, rail ? RAIL_PANEL_DP - 14 : 156));
+        // Deschisă: pastila pe toată lățimea barei / open: the pill spans the sidebar width
+        item.setMinimumWidth(rail ? dp(context, RAIL_PANEL_DP - 14)
+                : (sPanelWidthPx > 0 ? sPanelWidthPx - dp(context, 16) : dp(context, PANEL_MAX_DP - 16)));
         item.setPadding(dp(context, rail ? 8 : 11), item.getPaddingTop(), dp(context, rail ? 8 : 10), item.getPaddingBottom());
     }
 

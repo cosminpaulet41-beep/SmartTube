@@ -17,6 +17,7 @@ import androidx.leanback.app.HeadersSupportFragment;
 import androidx.leanback.widget.ArrayObjectAdapter;
 import androidx.leanback.widget.HeaderItem;
 import androidx.leanback.widget.ListRowPresenter;
+import androidx.leanback.widget.ObjectAdapter;
 import androidx.leanback.widget.PageRow;
 import androidx.leanback.widget.Presenter;
 import androidx.leanback.widget.PresenterSelector;
@@ -40,7 +41,9 @@ import com.liskovsoft.smartyoutubetv2.tv.ui.browse.dialog.ErrorDialogFragment;
 import com.liskovsoft.smartyoutubetv2.tv.ui.mod.leanback.headers.ExtendedHeadersSupportFragment;
 import com.liskovsoft.smartyoutubetv2.tv.ui.mod.leanback.misc.ProgressBarManager;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /*
@@ -181,7 +184,36 @@ public class BrowseFragment extends BrowseSupportFragment implements BrowseView 
         // This Adapter is used to render the MainFragment sidebar labels.
         mSectionRowAdapter = new ArrayObjectAdapter(new ListRowPresenter());
         setAdapter(mSectionRowAdapter);
+
+        if (HunysUi.isHunys(getContext())) {
+            // Hunys mod: bara deschisă se termină puțin după cel mai lung nume de secțiune
+            // Hunys mod: the open sidebar ends just after the longest section name
+            mSectionRowAdapter.registerObserver(new ObjectAdapter.DataObserver() {
+                @Override
+                public void onChanged() {
+                    mHandler.removeCallbacks(mHunysPanelUpdate);
+                    mHandler.postDelayed(mHunysPanelUpdate, 100);
+                }
+            });
+        }
     }
+
+    private final Runnable mHunysPanelUpdate = () -> {
+        if (getContext() == null || mSectionRowAdapter == null) {
+            return;
+        }
+
+        List<CharSequence> labels = new ArrayList<>();
+        for (Object item : mSectionRowAdapter.unmodifiableList()) {
+            if (item instanceof PageRow && ((PageRow) item).getHeaderItem() != null) {
+                labels.add(((PageRow) item).getHeaderItem().getName());
+            }
+        }
+
+        if (HunysUi.updatePanelWidth(getContext(), labels)) {
+            hunysRefreshHeaders();
+        }
+    };
 
     private void setupUi() {
         if (getContext() == null) {
@@ -203,7 +235,12 @@ public class BrowseFragment extends BrowseSupportFragment implements BrowseView 
         setBrandColor(ContextCompat.getColor(getContext(), brandColorRes));
 
         // Set search icon color.
-        setSearchAffordanceColor(ContextCompat.getColor(getContext(), brandAccentColorRes));
+        if (HunysUi.isHunys(getContext())) {
+            // Hunys mod: cerc de sticlă ca luna și contul / glass circle like the moon and account
+            setSearchAffordanceColors(HunysUi.orbColors(getContext()));
+        } else {
+            setSearchAffordanceColor(ContextCompat.getColor(getContext(), brandAccentColorRes));
+        }
 
         setHeaderPresenterSelector(new PresenterSelector() {
             private final Map<Integer, Presenter> mPresenterMap = new HashMap<>();

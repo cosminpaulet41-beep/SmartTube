@@ -234,6 +234,10 @@ public class NavigateTitleView extends TitleView implements OnDataChange, Accoun
         mGlobalDate.showTime(false);
         mGlobalDate.showDate(true);
 
+        // Hunys mod: căutare, cont și lună: cercuri la fel, în bara deschisă sau lângă bara strânsă
+        // Hunys mod: search, account and moon: matching circles, inside the open sidebar or next to the collapsed one
+        com.liskovsoft.smartyoutubetv2.tv.hunys.HunysUi.styleTitleOrbs(this);
+
         updateButtonsVisibility();
     }
 

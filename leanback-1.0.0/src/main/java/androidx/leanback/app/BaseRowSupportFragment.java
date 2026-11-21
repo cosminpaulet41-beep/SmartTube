@@ -300,6 +300,12 @@ abstract class BaseRowSupportFragment extends Fragment {
             mVerticalGridView.setWindowAlignmentOffsetPercent(
                     VerticalGridView.WINDOW_ALIGN_OFFSET_PERCENT_DISABLED);
             mVerticalGridView.setWindowAlignment(VerticalGridView.WINDOW_ALIGN_NO_EDGE);
+
+            // SmartTube Hunys mod: bara laterală nu se mai derulează când încape pe ecran
+            // SmartTube Hunys mod: the sidebar doesn't scroll anymore when it fits on screen
+            if (this instanceof HeadersSupportFragment && HeadersSupportFragment.sHunysFixedList) {
+                mVerticalGridView.setWindowAlignment(VerticalGridView.WINDOW_ALIGN_BOTH_EDGE);
+            }
         }
     }
 }

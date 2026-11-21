@@ -55,7 +55,7 @@ public class IconHeaderItemPresenter extends RowHeaderPresenter {
             mUnselectedAlpha = Math.max(mUnselectedAlpha, 0.85f);
             view = inflater.inflate(R.layout.hunys_header_item, viewGroup, false);
             view.setBackground(HunysUi.focusPill(viewGroup.getContext(), 11));
-            view.setMinimumWidth(HunysUi.dp(viewGroup.getContext(), 156)); // pastila pe toată lățimea / full-width pill
+            // pastila pe toată lățimea barei (layout match_parent) / full-width pill (layout match_parent)
             TextView label = view.findViewById(R.id.header_label);
             if (label != null) {
                 label.setTextColor(HunysUi.focusInk(viewGroup.getContext()));
